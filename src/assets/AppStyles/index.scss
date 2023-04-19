@@ -15,3 +15,19 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+a {
+  text-decoration: none;
+  color: $text-title;
+  transition: all .4s ease;
+}
+
+li {
+  list-style: none;
+}
+
+.grid-container {
+  max-width: 1240px;
+  margin-right: auto;
+  margin-left: auto;
+}

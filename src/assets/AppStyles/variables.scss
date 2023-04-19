@@ -1,20 +1,88 @@
-$body-bg: #fff;
-$text-color: #000000;
-$link-hover-color: #68a4c4;
-$main-color: #26a4ba;
-$header-color: #2e475c;
-$subtitle-color: #656565;
-$btn-hover-color: #5f778e;
-$text-hover-color: #889fa5;
-$shadow-color: #888888;
-$bg-question-color: #ffe7e6;
-$bg-introduce-color: #cefae0;
-$bg-event-color: #ffe1cf;
-$bg-topic-color: #d3f6ff;
-$border-color: #e1e1e1;
-$color-text-event: #656565;
-$danger-color: #dc3545;
-$gold-color: #ffd700;
+$body-bg: #f2fcf9;
+// $body-bg: #E6F9F4;
+$text-body: #353a44;
+$text-title: #333333;
+$border-color: #272727;
+
+$primary-light: #f2fcf9;
+$primary-light-hover: #d9f6ef;
+$primary-light-active: #b0eddd;
+$primary-normal: #00c491;
+$primary-normal-hover: #00b083;
+$primary-normal-active: #009d74;
+$primary-dark: #00936d;
+$primary-dark-hover: #007657;
+$primary-dark-active: #005841;
+$primary-darker: #004533;
+
+$secondary-light: #fff9ef;
+$secondary-light-hover: #fff6e7;
+$secondary-light-active: #ffeccd;
+$secondary-normal: #ffc15e;
+$secondary-normal-hover: #e6ae55;
+$secondary-normal-active: #cc9a4b;
+$secondary-dark: #bf9147;
+$secondary-dark-hover: #997438;
+$secondary-dark-active: #73572a;
+$secondary-darker: #594421;
+
+$gray-25: #fcfcfd;
+$gray-50: #f9fafb;
+$gray-100: #f2f4f7;
+$gray-200: #e4e7ec;
+$gray-300: #d0d5dd;
+$gray-400: #98a2b3;
+$gray-500: #667085;
+$gray-600: #475467;
+$gray-700: #344054;
+$gray-800: #1d2939;
+$gray-900: #101828;
+
+$error-25: #fffbfa;
+$error-50: #fef3f2;
+$error-100: #fee4e2;
+$error-200: #fecdca;
+$error-300: #fda29b;
+$error-400: #f97066;
+$error-500: #f04438;
+$error-600: #d92d20;
+$error-700: #b42318;
+$error-800: #912018;
+$error-900: #7a271a;
+
+$success-25: #f6fef9;
+$success-50: #ecfdf3;
+$success-100: #d1fadf;
+$success-200: #a6f4c5;
+$success-300: #6ce9a6;
+$success-400: #32d583;
+$success-500: #12b76a;
+$success-600: #039855;
+$success-700: #027a48;
+$success-800: #05603a;
+$success-900: #054f31;
+
+$warning-25: #fffcf5;
+$warning-50: #fffaeb;
+$warning-100: #fedf89;
+$warning-200: #fef0c7;
+$warning-300: #fec84b;
+$warning-400: #fdb022;
+$warning-500: #f79009;
+$warning-600: #dc6803;
+$warning-700: #b54708;
+$warning-800: #93370d;
+$warning-900: #792e0d;
+
+$tag-color-1: #f9b439;
+$tag-color-2: #49dfd4;
+$tag-color-3: #fb0699;
+$tag-color-4: #3f8cff;
+$tag-color-5: #ff486a;
+$tag-color-6: #7171e2;
+$tag-color-7: #83ea6c;
+$tag-color-8: #10bed2;
+$tag-color-9: #f5891d;
 
 $font-super-small: 10px;
 $font-small: 12px;
@@ -26,3 +94,107 @@ $font-super-large: 30px;
 $font-bg: 36px;
 $font-title: 40px;
 $font-big-title: 60px;
+
+$boxes-shadow: 0px 0px 0px 0px #333;
+$small-shadow: 2px 2px 0px 0px #333;
+$medium-shadow: 4px 4px 0px 0px #333;
+
+$transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
+
+@mixin font-body {
+  font-size: 16px;
+  font-weight: 400;
+  color: $text-body;
+}
+
+@mixin font-title-3 {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+@mixin font-button-18 {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+@mixin button-primary {
+  @include font-button-18;
+  cursor: pointer;
+  border: none;
+  border-radius: 50px;
+  background-color: $primary-normal;
+  color: white;
+  padding: 12px 24px;
+  transition: all 0.25s linear 0s;
+  border: 1px solid $primary-normal;
+}
+
+@mixin button-primary-hover {
+  background: white;
+  border: 1px solid $primary-normal;
+  color: $primary-normal-active;
+  box-sizing: border-box;
+  box-shadow: 0 0.1rem 0.8rem $primary-normal;
+}
+
+@mixin button-black {
+  @include font-button-18;
+  cursor: pointer;
+  border-radius: 50px;
+  background-color: $primary-normal;
+  color: white;
+  padding: 12px 24px;
+  transition: all .3s $transition-bezier;
+  border: 1px solid $border-color;
+}
+
+@mixin button-black-hover {
+  box-shadow: $small-shadow;
+  transform: translate(-2px, -2px);
+}
+
+@mixin tag-a-hover {
+  background-size: 100% 5%;
+  color: $primary-normal-hover;
+  background-size: 100% $primary-normal-hover;
+}
+
+@mixin background-hover {
+  background-image: linear-gradient(90deg, currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0% bottom;
+  transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline;
+}
+
+@mixin image-hover-small {
+  box-shadow: $small-shadow;
+  transform: translate(-2px, -2px);
+}
+
+@mixin image-hover-medium {
+  box-shadow: $medium-shadow;
+  transform: translate(-4px, -4px);
+}
+
+@mixin button-no-color {
+  @include font-button-18;
+  cursor: pointer;
+  border-radius: 50px;
+  background-color: white;
+  color: $text-title;
+  padding: 12px 24px;
+  transition: all .3s $transition-bezier;
+  border: 1px solid $border-color;
+  box-shadow: $small-shadow;
+  transform: translate(-2px, -2px);
+}
+
+@mixin button-no-color-hover {
+  box-shadow: none;
+  transform: translate(0px, 0px);
+}

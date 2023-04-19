@@ -1,12 +1,14 @@
 import React from "react";
 import "./MainLayout.scss";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 const MainLayout = (props) => {
   return (
-    <div>
-      <p>Header</p>
-      {props.children}
-      <p>Footer</p>
+    <div className="main-layout">
+      <Header />
+      <div className="main-children">{props.children}</div>
+      <Footer />
     </div>
   );
 };
