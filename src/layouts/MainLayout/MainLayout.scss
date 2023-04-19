@@ -1,0 +1,13 @@
+@import '../../assets/AppStyles/variables.scss';
+
+.main-layout {
+  background-color: $body-bg;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .main-children{
+    flex-grow: 1;
+  }
+}
