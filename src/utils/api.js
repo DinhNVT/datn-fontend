@@ -1,10 +1,51 @@
-import axios from 'axios';
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_URL, // địa chỉ của server nodejs
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-export default instance;
+const refreshToken = async () => {
+  try {
+    const res = await instance.post(
+      "/v1/auth/refresh-token",
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const instanceJWT = axios.create({
+  baseURL: process.env.REACT_APP_API_URL, // địa chỉ của server nodejs
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+instanceJWT.interceptors.request.use(
+  async (config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    let date = new Date();
+    config.headers.Authorization = `Bearer ${accessToken}`;
+    const decodedToken = jwt_decode(accessToken);
+    if (decodedToken.exp < date.getTime() / 1000) {
+      const data = await refreshToken();
+      localStorage.setItem("accessToken", data?.accessToken);
+      config.headers.Authorization = `Bearer ${data?.accessToken}`;
+    }
+    return config;
+  },
+  (err) => {
+    return Promise.reject(err);
+  }
+);
+
+export { instance, instanceJWT };

@@ -1,0 +1,81 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.avatar-dropdown {
+  position: absolute;
+  background-color: $primary-light;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 16px 24px;
+  right: 0;
+  top: 60px;
+  z-index: 10000;
+  min-width: 300px;
+  max-width: 350px;
+
+  .info-user {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    cursor: default;
+
+    .avt {
+      height: 62px;
+      max-width: 62px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 8px;
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+    }
+
+    .info-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      width: 300px;
+
+      p,
+      h4 {
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  hr {
+    margin: 20px 0;
+    width: 150%;
+    transform: translateX(-10%);
+    height: 0px;
+    border: 1px solid $gray-300;
+  }
+
+  .logout-btn {
+    padding: 20px 0;
+
+    .btn {
+      font-weight: 500;
+      display: block;
+      transition: all 0.2s ease-in-out !important;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+
+      &:hover {
+        color: $primary-normal !important;
+      }
+    }
+  }
+}
