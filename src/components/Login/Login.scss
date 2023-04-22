@@ -1,0 +1,142 @@
+@import "../../assets/AppStyles/variables.scss";
+
+.login-form-container {
+  padding: 40px 60px;
+  max-width: 500px;
+
+  .close {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    cursor: pointer;
+  }
+
+  .header-login {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    .error-text {
+      @include error-text;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    img {
+      width: auto;
+      height: 60px;
+      object-fit: cover;
+      display: block;
+      margin-bottom: 10px;
+    }
+  }
+
+  .input-container {
+    label {
+      @include label-input;
+
+      .form-control-input {
+        display: block;
+        margin-top: 10px;
+        position: relative;
+
+        .input {
+          @include input;
+          margin-bottom: 10px;
+
+          &:focus {
+            box-shadow: $box-shadow-input;
+          }
+
+          &.input-password {
+            padding-right: 40px;
+          }
+        }
+
+        .btn-show-password {
+          position: absolute;
+          top: 58%;
+          right: 10px;
+          transform: translateY(-50%);
+
+          svg {
+            color: $gray-600;
+          }
+        }
+
+        .error-text {
+          @include error-text;
+        }
+      }
+    }
+  }
+
+  .forgot-password {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      color: $primary-normal;
+    }
+  }
+
+  .btn-login {
+    a {
+      display: block;
+    }
+
+    .login {
+      @include button-black;
+      margin: 20px 0;
+      text-align: center;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.error-disable[disabled] {
+        @include button-disable;
+
+        &:hover {
+          @include button-disable-hover;
+        }
+      }
+
+      &:hover {
+        @include button-black-hover;
+      }
+    }
+
+    .google {
+      @include button-no-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(0px, 0px);
+      box-shadow: none;
+      margin-bottom: 20px;
+
+      &:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: $small-shadow;
+      }
+
+      img {
+        height: 24px;
+        width: auto;
+        object-fit: cover;
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .sign-up {
+    text-align: center;
+
+    a {
+      color: $primary-normal;
+    }
+  }
+}

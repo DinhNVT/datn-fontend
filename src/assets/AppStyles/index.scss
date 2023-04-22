@@ -7,19 +7,36 @@
   src: local("Quicksand"), url(./fonts/Quicksand-Light.ttf) format("truetype");
   src: local("Quicksand"), url(./fonts/Quicksand-Medium.ttf) format("truetype");
   src: local("Quicksand"), url(./fonts/Quicksand-Regular.ttf) format("truetype");
-  src: local("Quicksand"), url(./fonts/Quicksand-SemiBold.ttf) format("truetype");
+  src: local("Quicksand"),
+    url(./fonts/Quicksand-SemiBold.ttf) format("truetype");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
+}
+
+*::selection {
+  background-color: $text-selection;
+  color: white;
+}
+
+input::placeholder {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
+}
+
+input {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
 }
 
 a {
   text-decoration: none;
   color: $text-title;
-  transition: all .4s ease;
+  transition: all 0.4s ease;
 }
 
 li {
@@ -30,4 +47,13 @@ li {
   max-width: 1240px;
   margin-right: auto;
   margin-left: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $text-title;
 }
