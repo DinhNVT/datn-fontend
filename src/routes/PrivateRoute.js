@@ -1,17 +1,19 @@
-import React, { useEffect } from "react"
-import { Route } from "react-router-dom"
-// import ROUTES from "../constants/routes"
-// import AuthenticationService from "../config/service/AuthenticationService"
-// import { useNavigate  } from "react-router-dom"
+import React, { useEffect } from "react";
+import ROUTES from "../constants/routes";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const PrivateRoute = ({ ...rest }) => {
-  // const navigate  = useNavigate ()
+const PrivateRoute = (props) => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state?.auth?.login);
 
   useEffect(() => {
+    if (!user) {
+      navigate(ROUTES.HOME_PAGE.path);
+    }
+  }, [navigate, user]);
 
-  }, [])
+  return <>{props.children}</>;
+};
 
-  return <Route {...rest} />
-}
-
-export default PrivateRoute
+export default PrivateRoute;

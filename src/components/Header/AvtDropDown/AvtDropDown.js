@@ -3,13 +3,14 @@ import "./AvtDropDown.scss";
 import avtDefault from "../../../assets/images/avatar_default.png";
 import { useDispatch } from "react-redux";
 import { logoutUserFetch } from "../../../stores/apiAuthRequest";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
 
 const AvtDropDown = (props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogoutClick = () => {
-    logoutUserFetch(dispatch, props.handleAvatarClick);
+    logoutUserFetch(dispatch, props.handleAvatarClick, navigate);
   };
   return (
     <div className="avatar-dropdown">
@@ -24,6 +25,15 @@ const AvtDropDown = (props) => {
           <h4>{props.user?.name}</h4>
           <p>{props.user?.email}</p>
         </div>
+      </div>
+      <hr />
+      <div className="logout-btn">
+        <Link to={`/profile/${props.user?.username}`} className={"btn more-item"}>
+          Thông tin cá nhân
+        </Link>
+        <Link to={"/"} className={"btn more-item"}>
+          Quản lý bài viết
+        </Link>
       </div>
       <hr />
       <div className="logout-btn">

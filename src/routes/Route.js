@@ -10,13 +10,15 @@ const AppRouter = () => {
         {Object.values(ROUTES).map((route, index) => {
           if (route.isPrivate) {
             return (
-              <PrivateRoute
+              <Route
                 path={route.path}
                 exact
                 element={
-                  <route.layout>
-                    <route.component />
-                  </route.layout>
+                  <PrivateRoute>
+                    <route.layout>
+                      <route.component />
+                    </route.layout>
+                  </PrivateRoute>
                 }
                 key={index}
               />

@@ -1,0 +1,248 @@
+@import "../../assets/AppStyles/variables.scss";
+
+.write-container {
+  width: 100%;
+  margin: auto;
+  margin-bottom: 50px;
+
+  .write-content {
+    margin-top: 20px;
+
+    .btn-post-group {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 20px;
+
+      .btn-item-post {
+        &.btn-save {
+          @include button-no-color;
+          box-shadow: none;
+          transform: translate(0px, 0px);
+
+          &:hover {
+            @include button-black-hover;
+          }
+        }
+
+        &.btn-post {
+          @include button-black;
+          background-color: $primary-normal;
+
+          &:hover {
+            @include button-black-hover;
+          }
+        }
+      }
+    }
+
+    .input-container {
+      margin-bottom: 20px;
+
+      label {
+        @include label-input;
+
+        .form-control-input {
+          display: block;
+          margin-top: 10px;
+          position: relative;
+
+          .input {
+            @include input;
+
+            &:focus {
+              box-shadow: $box-shadow-input;
+            }
+          }
+          .input-select {
+            @include input;
+            padding: 0 20px;
+            font-weight: 600;
+            color: $gray-600;
+
+            option {
+              font-weight: 500;
+            }
+
+            &:focus {
+              box-shadow: $box-shadow-input;
+            }
+          }
+
+          .error-text {
+            @include error-text;
+          }
+        }
+      }
+    }
+
+    .tag-container {
+      margin-bottom: 20px;
+
+      .title {
+        @include label-input;
+        cursor: default;
+
+        .form-control-input {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 10px;
+          position: relative;
+          gap: 8px;
+          font-weight: 500;
+          border-radius: 5px;
+          border: 1px solid $border-color;
+          padding: 4px 20px;
+          background-color: white;
+
+          .tag-display {
+            @include button-black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: white;
+            color: $text-title;
+            padding: 4px 16px;
+            text-transform: uppercase;
+            cursor: default;
+            line-height: 1.8;
+
+            .tag-item {
+              font-size: 16px;
+              font-weight: 600;
+            }
+
+            .tag-1 {
+              color: $tag-color-1;
+            }
+
+            .tag-2 {
+              color: $tag-color-2;
+            }
+
+            .tag-3 {
+              color: $tag-color-3;
+            }
+
+            .tag-4 {
+              color: $tag-color-4;
+            }
+
+            .tag-5 {
+              color: $tag-color-5;
+            }
+
+            .tag-6 {
+              color: $tag-color-6;
+            }
+
+            .close {
+              vertical-align: middle;
+              font-size: 20px;
+              margin-left: 8px;
+              margin-bottom: 1px;
+              // color: $error-400;
+            }
+          }
+
+          .input-tag {
+            outline: none;
+            border: none;
+            font-size: 16px;
+            color: $gray-600;
+            padding: 8px 0;
+          }
+        }
+      }
+    }
+
+    .input-image-container {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+
+      .choose-image {
+        border: 3px dashed $gray-400;
+        border-radius: 8px;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 600px;
+        max-height: 300px;
+        overflow: hidden;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s $transition-bezier;
+
+        &.have-image {
+          border: 1px solid $border-color;
+
+          &:hover {
+            box-shadow: $medium-shadow;
+            transform: translate(-4px, -4px);
+          }
+        }
+
+        .icon-upload {
+          color: $gray-500;
+        }
+
+        .image-none {
+          display: contents;
+        }
+
+        .image {
+          width: 600px;
+          height: auto;
+          object-fit: cover;
+        }
+      }
+
+      .delete-image {
+        position: absolute;
+        z-index: 1000;
+        top: 0px;
+        cursor: pointer;
+        color: $error-400;
+        left: 80%;
+        transform: translateX(-50%);
+      }
+
+      .image-input {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+.ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable,
+.ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+
+  &:focus {
+    border-color: $border-color;
+    box-shadow: $box-shadow-input;
+  }
+}
+
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+.ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-width: 0;
+}

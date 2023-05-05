@@ -57,13 +57,14 @@ export const checkRefreshTokenFetch = async (dispatch) => {
   }
 };
 
-export const logoutUserFetch = async (dispatch, closeDropdown) => {
+export const logoutUserFetch = async (dispatch, closeDropdown, navigate) => {
   try {
     await logoutUser();
     closeDropdown();
     dispatch(clearUser());
     localStorage.removeItem("accessToken");
     localStorage.clear();
+    navigate("/");
   } catch (error) {
     console.log(error);
   }
