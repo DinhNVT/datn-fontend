@@ -34,6 +34,7 @@ const authSlice = createSlice({
     clearErrorLogin: (state) => {
       state.login.error = false;
       state.login.errorMessage = null;
+      state.login.isLoading = false;
     },
   },
 });

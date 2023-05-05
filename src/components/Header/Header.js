@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Header.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MENU_ITEMS } from "../../constants/routes";
 import LogoHorizontal from "../../assets/images/LogoHorizontal.png";
 import { FaRegUser, FaRegEdit } from "react-icons/fa";
@@ -14,9 +14,11 @@ import { registerReset, forgetReset } from "../../stores/authNotSaveSlice";
 import avtDefault from "../../assets/images/avatar_default.png";
 import AvtDropDown from "./AvtDropDown/AvtDropDown";
 import { clearErrorLogin } from "../../stores/authSlice";
+import ROUTES from "../../constants/routes";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [fix, setFix] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -55,6 +57,7 @@ const Header = () => {
     setIsLogin(true);
     dispatch(registerReset());
     dispatch(forgetReset());
+    dispatch(clearErrorLogin());
   };
 
   const closeModal = () => {
@@ -105,9 +108,16 @@ const Header = () => {
             ))}
           </ul>
           <div className="right-header">
-            <button>
-              Viết bài <FaRegEdit className="write-icon" />
-            </button>
+            {!!user && location.pathname !== ROUTES.WRITE_PAGE.path ? (
+              <button
+                onClick={() => {
+                  navigate(ROUTES.WRITE_PAGE.path);
+                }}
+              >
+                Viết bài <FaRegEdit className="write-icon" />
+              </button>
+            ) : undefined}
+
             <Link>
               <FiSearch className={"icon-search"} />
             </Link>
