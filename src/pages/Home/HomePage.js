@@ -1,168 +1,144 @@
+import { Link } from "react-router-dom";
 import "./HomePage.scss";
 import React from "react";
+import avtDefault from "../../assets/images/avatar_default.png";
+import { RxCountdownTimer } from "react-icons/rx";
+import { FaRegComment } from "react-icons/fa";
+import { AiOutlineEye } from "react-icons/ai";
+import { BsArrowRight } from "react-icons/bs";
+import ROUTES from "../../constants/routes";
 
 const HomePage = () => {
-  
   return (
-    <div className="home-container">
-      HomePage Lorem Ipsum "Neque porro quisquam est qui dolorem ipsum quia
-      dolor sit amet, consectetur, adipisci velit..." "There is no one who loves
-      pain itself, who seeks after it and wants to have it, simply because it is
-      pain..." Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Pellentesque diam tortor, ullamcorper id metus quis, tincidunt feugiat
-      nibh. Vivamus convallis dignissim mi, vitae tempor dui pretium vitae.
-      Maecenas eget feugiat lectus. Vivamus accumsan, odio quis mattis suscipit,
-      nunc purus pretium velit, et posuere mi purus sit amet lacus. Vestibulum
-      congue vitae tortor vitae iaculis. Nunc bibendum id lorem sit amet
-      hendrerit. Integer erat urna, sagittis viverra mauris eu, aliquam volutpat
-      diam. Sed ultrices tellus a orci eleifend vulputate. In blandit sagittis
-      volutpat. Fusce eleifend nisi vel eros tincidunt iaculis sed in orci. Sed
-      euismod ex in justo pulvinar feugiat. Pellentesque ut quam ac mi egestas
-      lobortis. Mauris elementum orci lorem, sed congue sapien convallis sed.
-      Morbi ac nisi in sem condimentum fermentum. Phasellus fermentum hendrerit
-      diam at gravida. Quisque ultricies diam nec augue tempus, a tempor erat
-      venenatis. Aenean sed urna mi. Ut ligula tortor, ultrices id maximus nec,
-      fermentum vel libero. Nunc fermentum risus nec metus sollicitudin luctus.
-      Aliquam at cursus metus, sed finibus leo. Morbi a suscipit tortor. Quisque
-      scelerisque accumsan elit, sit amet fermentum dolor condimentum eu. Morbi
-      malesuada, odio a volutpat euismod, ante sapien ultrices felis, vitae
-      vehicula orci ipsum id justo. Fusce massa quam, mattis vehicula molestie
-      id, scelerisque et leo. In eu dictum felis. Class aptent taciti sociosqu
-      ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus
-      nisl risus, tincidunt at justo vel, tempor posuere ex. Ut eros tortor,
-      sollicitudin vel sem in, elementum pulvinar libero. Maecenas posuere eget
-      felis vel lacinia. Mauris ut augue at purus luctus consectetur ut sed
-      purus. Proin fringilla metus ac sapien ornare congue vel eget lacus. Nulla
-      turpis mi, laoreet ornare egestas quis, dapibus ac mauris. Maecenas nec
-      nibh a velit auctor vestibulum et eget felis. Vestibulum ante ipsum primis
-      in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus dolor
-      ligula, efficitur eu ipsum vitae, dictum vestibulum justo. In blandit
-      neque at laoreet faucibus. Proin vel est mauris. Praesent auctor quam non
-      velit luctus, nec placerat mauris porttitor. Morbi auctor sem non lacinia
-      convallis. Etiam quis porttitor quam, eu pellentesque justo. Quisque
-      finibus feugiat molestie. Nunc ex libero, placerat vel tellus tincidunt,
-      posuere venenatis est. In non fermentum velit. Maecenas vulputate nunc in
-      commodo luctus. Integer vulputate nisi id diam interdum, et vestibulum
-      nisi consectetur. Curabitur ac lacus sit amet nisl accumsan pulvinar.
-      Vivamus laoreet eros non sem luctus imperdiet. Duis eu massa tellus. Morbi
-      tristique, lectus id vestibulum condimentum, ex arcu auctor ante, at
-      laoreet mi quam id velit. Aenean sit amet massa in purus tristique
-      fermentum at fringilla turpis. Aliquam nec porta elit, eget tincidunt
-      lorem. Pellentesque quis libero sed ex pharetra rhoncus. Duis laoreet,
-      magna at feugiat dignissim, mauris urna rhoncus nibh, nec facilisis sem
-      lacus at est. Sed accumsan nec est vel blandit. Sed porta, ipsum ut
-      bibendum sagittis, massa ante tristique sem, vel eleifend augue sem sed
-      leo. Nulla vehicula arcu at nisi efficitur, eu auctor augue scelerisque.
-      Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-      inceptos himenaeos. Quisque magna lacus, iaculis non nunc et, aliquet
-      ullamcorper arcu. Duis consectetur lectus nec ex ullamcorper, sit amet
-      scelerisque lacus eleifend. Cras vehicula condimentum nisi, vel dapibus
-      lacus tristique id. Nulla interdum ornare odio, ac vehicula elit sagittis
-      sed. Aliquam pulvinar magna at arcu rutrum, nec blandit neque ullamcorper.
-      Nullam risus purus, rutrum sit amet molestie at, iaculis molestie nisi.
-      Nunc pellentesque et augue a sagittis. Fusce vel dui commodo, tempor lorem
-      sed, porttitor tellus. Duis in lacus ornare, convallis ex id, venenatis
-      massa. Curabitur vulputate erat ac maximus porttitor. Generated 5
-      paragraphs, 590 words, 3934 bytes of Lorem Ipsum Lorem Ipsum "Neque porro
-      quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci
-      velit..." "There is no one who loves pain itself, who seeks after it and
-      wants to have it, simply because it is pain..." Lorem ipsum dolor sit
-      amet, consectetur adipiscing elit. Pellentesque diam tortor, ullamcorper
-      id metus quis, tincidunt feugiat nibh. Vivamus convallis dignissim mi,
-      vitae tempor dui pretium vitae. Maecenas eget feugiat lectus. Vivamus
-      accumsan, odio quis mattis suscipit, nunc purus pretium velit, et posuere
-      mi purus sit amet lacus. Vestibulum congue vitae tortor vitae iaculis.
-      Nunc bibendum id lorem sit amet hendrerit. Integer erat urna, sagittis
-      viverra mauris eu, aliquam volutpat diam. Sed ultrices tellus a orci
-      eleifend vulputate. In blandit sagittis volutpat. Fusce eleifend nisi vel
-      eros tincidunt iaculis sed in orci. Sed euismod ex in justo pulvinar
-      feugiat. Pellentesque ut quam ac mi egestas lobortis. Mauris elementum
-      orci lorem, sed congue sapien convallis sed. Morbi ac nisi in sem
-      condimentum fermentum. Phasellus fermentum hendrerit diam at gravida.
-      Quisque ultricies diam nec augue tempus, a tempor erat venenatis. Aenean
-      sed urna mi. Ut ligula tortor, ultrices id maximus nec, fermentum vel
-      libero. Nunc fermentum risus nec metus sollicitudin luctus. Aliquam at
-      cursus metus, sed finibus leo. Morbi a suscipit tortor. Quisque
-      scelerisque accumsan elit, sit amet fermentum dolor condimentum eu. Morbi
-      malesuada, odio a volutpat euismod, ante sapien ultrices felis, vitae
-      vehicula orci ipsum id justo. Fusce massa quam, mattis vehicula molestie
-      id, scelerisque et leo. In eu dictum felis. Class aptent taciti sociosqu
-      ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus
-      nisl risus, tincidunt at justo vel, tempor posuere ex. Ut eros tortor,
-      sollicitudin vel sem in, elementum pulvinar libero. Maecenas posuere eget
-      felis vel lacinia. Mauris ut augue at purus luctus consectetur ut sed
-      purus. Proin fringilla metus ac sapien ornare congue vel eget lacus. Nulla
-      turpis mi, laoreet ornare egestas quis, dapibus ac mauris. Maecenas nec
-      nibh a velit auctor vestibulum et eget felis. Vestibulum ante ipsum primis
-      in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus dolor
-      ligula, efficitur eu ipsum vitae, dictum vestibulum justo. In blandit
-      neque at laoreet faucibus. Proin vel est mauris. Praesent auctor quam non
-      velit luctus, nec placerat mauris porttitor. Morbi auctor sem non lacinia
-      convallis. Etiam quis porttitor quam, eu pellentesque justo. Quisque
-      finibus feugiat molestie. Nunc ex libero, placerat vel tellus tincidunt,
-      posuere venenatis est. In non fermentum velit. Maecenas vulputate nunc in
-      commodo luctus. Integer vulputate nisi id diam interdum, et vestibulum
-      nisi consectetur. Curabitur ac lacus sit amet nisl accumsan pulvinar.
-      Vivamus laoreet eros non sem luctus imperdiet. Duis eu massa tellus. Morbi
-      tristique, lectus id vestibulum condimentum, ex arcu auctor ante, at
-      laoreet mi quam id velit. Aenean sit amet massa in purus tristique
-      fermentum at fringilla turpis. Aliquam nec porta elit, eget tincidunt
-      lorem. Pellentesque quis libero sed ex pharetra rhoncus. Duis laoreet,
-      magna at feugiat dignissim, mauris urna rhoncus nibh, nec facilisis sem
-      lacus at est. Sed accumsan nec est vel blandit. Sed porta, ipsum ut
-      bibendum sagittis, massa ante tristique sem, vel eleifend augue sem sed
-      leo. Nulla vehicula arcu at nisi efficitur, eu auctor augue scelerisque.
-      Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-      inceptos himenaeos. Quisque magna lacus, iaculis non nunc et, aliquet
-      ullamcorper arcu. Duis consectetur lectus nec ex ullamcorper, sit amet
-      scelerisque lacus eleifend. Cras vehicula condimentum nisi, vel dapibus
-      lacus tristique id. Nulla interdum ornare odio, ac vehicula elit sagittis
-      sed. Aliquam pulvinar magna at arcu rutrum, nec blandit neque ullamcorper.
-      Nullam risus purus, rutrum sit amet molestie at, iaculis molestie nisi.
-      Nunc pellentesque et augue a sagittis. Fusce vel dui commodo, tempor lorem
-      sed, porttitor tellus. Duis in lacus ornare, convallis ex id, venenatis
-      massa. Curabitur vulputate erat ac maximus porttitor. Generated 5
-      paragraphs, 590 words, 3934 bytes of Lorem Ipsum Lorem Ipsum "Neque porro
-      quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci
-      velit..." "There is no one who loves pain itself, who seeks after it and
-      wants to have it, simply because it is pain..." Lorem ipsum dolor sit
-      amet, consectetur adipiscing elit. Pellentesque diam tortor, ullamcorper
-      id metus quis, tincidunt feugiat nibh. Vivamus convallis dignissim mi,
-      vitae tempor dui pretium vitae. Maecenas eget feugiat lectus. Vivamus
-      accumsan, odio quis mattis suscipit, nunc purus pretium velit, et posuere
-      mi purus sit amet lacus. Vestibulum congue vitae tortor vitae iaculis.
-      Nunc bibendum id lorem sit amet hendrerit. Integer erat urna, sagittis
-      viverra mauris eu, aliquam volutpat diam. Sed ultrices tellus a orci
-      eleifend vulputate. In blandit sagittis volutpat. Fusce eleifend nisi vel
-      eros tincidunt iaculis sed in orci. Sed euismod ex in justo pulvinar
-      feugiat. Pellentesque ut quam ac mi egestas lobortis. Mauris elementum
-      orci lorem, sed congue sapien convallis sed. Morbi ac nisi in sem
-      condimentum fermentum. Phasellus fermentum hendrerit diam at gravida.
-      Quisque ultricies diam nec augue tempus, a tempor erat venenatis. Aenean
-      sed urna mi. Ut ligula tortor, ultrices id maximus nec, fermentum vel
-      libero. Nunc fermentum risus nec metus sollicitudin luctus. Aliquam at
-      cursus metus, sed finibus leo. Morbi a suscipit tortor. Quisque
-      scelerisque accumsan elit, sit amet fermentum dolor condimentum eu. Morbi
-      malesuada, odio a volutpat euismod, ante sapien ultrices felis, vitae
-      vehicula orci ipsum id justo. Fusce massa quam, mattis vehicula molestie
-      id, scelerisque et leo. In eu dictum felis. Class aptent taciti sociosqu
-      ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus
-      nisl risus, tincidunt at justo vel, tempor posuere ex. Ut eros tortor,
-      sollicitudin vel sem in, elementum pulvinar libero. Maecenas posuere eget
-      felis vel lacinia. Mauris ut augue at purus luctus consectetur ut sed
-      purus. Proin fringilla metus ac sapien ornare congue vel eget lacus. Nulla
-      turpis mi, laoreet ornare egestas quis, dapibus ac mauris. Maecenas nec
-      nibh a velit auctor vestibulum et eget felis. Vestibulum ante ipsum primis
-      in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus dolor
-      ligula, efficitur eu ipsum vitae, dictum vestibulum justo. In blandit
-      neque at laoreet faucibus. Proin vel est mauris. Praesent auctor quam non
-      velit luctus, nec placerat mauris porttitor. Morbi auctor sem non lacinia
-      convallis. Etiam quis porttitor quam, eu pellentesque justo. Quisque
-      finibus feugiat molestie. Nunc ex libero, placerat vel tellus tincidunt,
-      posuere venenatis est. In non fermentum velit. Maecenas vulputate nunc in
-      commodo luctus. Integer vulputate nisi id diam interdum, et vestibulum
-      nisi consectetur. Curabitur ac lacus sit amet nisl accumsan pulvinar.
-      Vivamus laoreet eros non sem luctus imperdiet.
+    <div className="for-you-container">
+      <div className="for-you-item">
+        <div className="for-you-item-content">
+          <Link to={ROUTES.POST_DETAIL_PAGE.path}>
+            <img
+              src="https://i.ex-cdn.com/nongnghiep.vn/files/dungct/2021/04/10/tac-dung-cua-cay-oi_nongnghiep-120034_919.jpg"
+              alt=""
+            />
+          </Link>
+          <div className="for-you-post-info">
+            <Link className="title">
+              <h2>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h2>
+            </Link>
+            <div className="interact">
+              <div className="interact-item">
+                <RxCountdownTimer className={"icon"} size={22} />{" "}
+                <p>04-04-2023</p>
+              </div>
+              <div className="interact-item">
+                <FaRegComment className={"icon"} size={22} />{" "}
+                <p>34 bình luận</p>
+              </div>
+              <div className="interact-item">
+                <AiOutlineEye className={"icon"} size={24} /> <p>33 lượt xem</p>
+              </div>
+            </div>
+            <div className="info-post">
+              <div className="author">
+                <Link>
+                  <img src={avtDefault} alt="" className="avt" />
+                  <h4>Nguyễn Hữu Dinh</h4>
+                </Link>
+              </div>
+            </div>
+            <p>
+              Thành lập tháng 4/2013, Đặng Gia Trang hiện là đơn vị cung cấp
+              phân trùn quế hàng đầu Việt Nam với thương hiệu Sfarm. Đồng thời
+              cũng đã phát triển thêm các sản phẩm vật tư khác cung cấp cho
+              ngành nông nghiệp đô thị chủ yếu là dòng giá thể và phân bón hữu
+              cơ, sinh học như đất sạch hữu cơ, mụn dừa xử lý, trấu hun nguyên
+              cánh,…
+            </p>
+            <div className="tags">
+              <Link className={"item-tag tag-1"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+              <Link className={"item-tag tag-2"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+              <Link className={"item-tag tag-3"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+            </div>
+            <div className="read-more-btn">
+              <Link>
+                Đọc thêm
+                <BsArrowRight size={24} className={"arrow"} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="for-you-item">
+        <div className="for-you-item-content">
+          <Link to={ROUTES.POST_DETAIL_PAGE.path}>
+            <img
+              src="https://i.ex-cdn.com/nongnghiep.vn/files/dungct/2021/04/10/tac-dung-cua-cay-oi_nongnghiep-120034_919.jpg"
+              alt=""
+            />
+          </Link>
+          <div className="for-you-post-info">
+            <Link className="title">
+              <h2>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h2>
+            </Link>
+            <div className="interact">
+              <div className="interact-item">
+                <RxCountdownTimer className={"icon"} size={22} />{" "}
+                <p>04-04-2023</p>
+              </div>
+              <div className="interact-item">
+                <FaRegComment className={"icon"} size={22} />{" "}
+                <p>34 bình luận</p>
+              </div>
+              <div className="interact-item">
+                <AiOutlineEye className={"icon"} size={24} /> <p>33 lượt xem</p>
+              </div>
+            </div>
+            <div className="info-post">
+              <div className="author">
+                <Link>
+                  <img src={avtDefault} alt="" className="avt" />
+                  <h4>Nguyễn Hữu Dinh</h4>
+                </Link>
+              </div>
+            </div>
+            <p>
+              Thành lập tháng 4/2013, Đặng Gia Trang hiện là đơn vị cung cấp
+              phân trùn quế hàng đầu Việt Nam với thương hiệu Sfarm. Đồng thời
+              cũng đã phát triển thêm các sản phẩm vật tư khác cung cấp cho
+              ngành nông nghiệp đô thị chủ yếu là dòng giá thể và phân bón hữu
+              cơ, sinh học như đất sạch hữu cơ, mụn dừa xử lý, trấu hun nguyên
+              cánh,…
+            </p>
+            <div className="tags">
+              <Link className={"item-tag tag-1"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+              <Link className={"item-tag tag-2"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+              <Link className={"item-tag tag-3"}>
+                {" "}
+                <span># </span>Trồng ổi
+              </Link>
+            </div>
+            <div className="read-more-btn">
+              <Link>
+                Đọc thêm
+                <BsArrowRight size={24} className={"arrow"} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

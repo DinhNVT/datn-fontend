@@ -1,12 +1,14 @@
 import React from "react";
 import "./ProfileLayout.scss";
 import Header from "../../components/Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import avtDefault from "../../assets/images/avatar_default.png";
 import { useSelector } from "react-redux";
 
 const ProfileLayout = (props) => {
   const { user } = useSelector((state) => state?.auth?.login);
+  const location = useLocation();
+  const params = useParams();
   return (
     <div className="profile-layout">
       <Header />
@@ -16,7 +18,7 @@ const ProfileLayout = (props) => {
             <div className="profile-info">
               <div className="avt">
                 <img
-                  src={user.avatar ? user.avatar : avtDefault}
+                  src={user?.avatar ? user?.avatar : avtDefault}
                   alt={user?.name}
                 />
               </div>
@@ -29,16 +31,59 @@ const ProfileLayout = (props) => {
             <div className="profile-navbar">
               <ul>
                 <li>
-                  <Link className="active">Bài viết</Link>
+                  <Link
+                    className={
+                      location.pathname.includes("/profile/") &&
+                      !!params.username &&
+                      ["/favorites", "/following", "follower"].every(
+                        (path) => !location.pathname.includes(path)
+                      )
+                        ? "active"
+                        : ""
+                    }
+                    to={`/profile/${user?.username}`}
+                  >
+                    Bài viết
+                  </Link>
                 </li>
                 <li>
-                  <Link className="">Yêu thích</Link>
+                  <Link
+                    className={
+                      location.pathname.includes("/profile/") &&
+                      location.pathname.includes("/favorites")
+                        ? "active"
+                        : ""
+                    }
+                    to={`/profile/${user?.username}/favorites`}
+                  >
+                    Yêu thích
+                  </Link>
                 </li>
                 <li>
-                  <Link>Đang theo dõi</Link>
+                  <Link
+                    className={
+                      location.pathname.includes("/profile/") &&
+                      location.pathname.includes("/following")
+                        ? "active"
+                        : ""
+                    }
+                    to={`/profile/${user?.username}/following`}
+                  >
+                    Đang theo dõi
+                  </Link>
                 </li>
                 <li>
-                  <Link>Người theo dõi</Link>
+                  <Link
+                    className={
+                      location.pathname.includes("/profile/") &&
+                      location.pathname.includes("/follower")
+                        ? "active"
+                        : ""
+                    }
+                    to={`/profile/${user?.username}/follower`}
+                  >
+                    Người theo dõi
+                  </Link>
                 </li>
               </ul>
             </div>

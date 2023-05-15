@@ -193,8 +193,8 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   padding: 12px 24px;
   transition: all 0.3s $transition-bezier;
   border: 1px solid $border-color;
-  box-shadow: $small-shadow;
-  transform: translate(-2px, -2px);
+  box-shadow: none;
+  transform: translate(0, 0);
 }
 
 @mixin button-no-color-hover {
@@ -222,6 +222,32 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
+}
+
+@mixin input-textarea {
+  display: block;
+  background: #fff;
+  border: 1px solid transparent;
+  color: $text-color;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0.25px;
+  padding: 15px 20px;
+  width: 100%;
+  margin-bottom: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: 0;
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  resize: none;
+}
+
+@mixin input-focus {
+  box-shadow: $box-shadow-input;
 }
 
 @mixin label-input {
@@ -259,4 +285,102 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
 @mixin button-disable-hover {
   box-shadow: none;
   transform: translate(0px, 0px);
+}
+
+@mixin content {
+  img {
+    object-fit: cover;
+    width: 100%;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  > * {
+    margin: revert;
+  }
+
+  figure {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+
+    figcaption {
+      text-align: center;
+    }
+  }
+}
+
+@mixin tag-number {
+  .tag-1 {
+    span {
+      color: $tag-color-1;
+    }
+  }
+
+  .tag-2 {
+    span {
+      color: $tag-color-2;
+    }
+  }
+
+  .tag-3 {
+    span {
+      color: $tag-color-3;
+    }
+  }
+
+  .tag-4 {
+    span {
+      color: $tag-color-4;
+    }
+  }
+
+  .tag-5 {
+    span {
+      color: $tag-color-5;
+    }
+  }
+
+  .tag-6 {
+    span {
+      color: $tag-color-6;
+    }
+  }
+  .tag-7 {
+    span {
+      color: $tag-color-7;
+    }
+  }
+
+  .tag-8 {
+    span {
+      color: $tag-color-8;
+    }
+  }
+
+  .tag-9 {
+    span {
+      color: $tag-color-9;
+    }
+  }
+}
+
+@mixin skeleton {
+  opacity: 0.7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
 }

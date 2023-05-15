@@ -22,14 +22,17 @@
     .avt {
       height: 62px;
       width: 62px;
-      border-radius: 50%;
-      overflow: hidden;
       margin-right: 8px;
+      border: 1px solid $gray-400;
+      background-color: white;
+      border-radius: 500px;
 
       img {
-        width: 100%;
+        width: 62px;
         height: 100%;
         object-fit: cover;
+        border-radius: 500px;
+        overflow: hidden;
       }
     }
 

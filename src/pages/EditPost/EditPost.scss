@@ -1,12 +1,17 @@
 @import "../../assets/AppStyles/variables.scss";
 
-.write-container {
+.edit-post-container {
   width: 100%;
   margin: auto;
   margin-bottom: 50px;
 
-  .write-content {
+  .edit-post-content {
     margin-top: 20px;
+
+    .title-edit-post {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
     .btn-post-group {
       display: flex;
@@ -224,33 +229,5 @@
         visibility: hidden;
       }
     }
-  }
-}
-
-.ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable,
-.ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
-  border-radius: 5px;
-  border: 1px solid $border-color;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-
-  &:focus {
-    border-color: $border-color;
-    box-shadow: $box-shadow-input;
-  }
-}
-
-.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
-.ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
-  border-radius: 5px;
-  border: 1px solid $border-color;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-width: 0;
-}
-
-.ck.ck-sticky-panel {
-  .ck-sticky-panel__content_sticky {
-    margin-top:100px ;
   }
 }

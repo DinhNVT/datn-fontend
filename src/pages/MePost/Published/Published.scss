@@ -1,6 +1,10 @@
-@import "../../assets/AppStyles/variables.scss";
-.profile-container {
-  .profile-content {
+@import "../../../assets/AppStyles/variables.scss";
+.me-published-container {
+  .me-published-content {
+    .total-post {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
     .blog-item {
       border-radius: 16px;
       border: 1px solid $border-color;
@@ -100,12 +104,21 @@
             gap: 8px;
 
             a {
-              @include button-no-color;
+              @include button-black;
               padding: 8px 16px;
+              display: flex;
+              align-items: center;
+
+              &.btn-edit {
+                background-color: $gray-500;
+              }
+              &.btn-delete {
+                background-color: $error-400;
+              }
 
               .arrow {
                 vertical-align: middle;
-                margin-left: 8px;
+                margin-left: 6px;
               }
 
               &:hover {
@@ -116,6 +129,7 @@
         }
       }
     }
+
     .see-more {
       display: flex;
       justify-content: center;
