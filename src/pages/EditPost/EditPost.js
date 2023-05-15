@@ -1,51 +1,107 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Editor as ClassicEditor } from "ckeditor5-custom-build/build/ckeditor";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import "./WritePost.scss";
+import "./EditPost.scss";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
-import { getAllCategories } from "../../apis/category";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setCategoryId,
-  setTitle,
-  setThumbnail,
-  setImage,
-  setContent,
-  setTags,
-  clearCreatePost,
-} from "../../stores/postSlice";
-import { createPost } from "../../apis/post";
 import Loader from "../../components/Loader/Loader";
+import { Editor as ClassicEditor } from "ckeditor5-custom-build/build/ckeditor";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { apiGetDetailPostByRole, updatePost } from "../../apis/post";
+import { getAllCategories } from "../../apis/category";
 import { errorAlert, successAlert } from "../../utils/customAlert";
 
-const WritePost = () => {
-  const inputRef = useRef(null);
-  // const [content, setContent] = useState("");
-  // const [title, setTitle] = useState("");
-  // const [thumbnail, setThumbnail] = useState(null);
-  // const [image, setImage] = useState("");
-  const [options, setOptions] = useState([]);
-  // const [tags, setTags] = useState([]);
+const EditPost = () => {
+  const { id } = useParams();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("");
-  const dispatch = useDispatch();
-  const { categoryId, title, thumbnail, image, content, tags } = useSelector(
-    (state) => state?.post?.createPost
-  );
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [thumbnail, setThumbnail] = useState(null);
+  const [image, setImage] = useState("");
+  const [options, setOptions] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [tags, setTags] = useState([]);
+  const inputRef = useRef(null);
 
+  const getPostDetailByRole = async (id) => {
+    try {
+      const res = await apiGetDetailPostByRole(id);
+      setTitle(res.data.result.title);
+      setCategoryId(res.data.result.categoryId);
+      setTags(res.data.result.tags.map((tag) => tag.name));
+      setImage(res.data.result.thumbnail_url);
+      setContent(res.data.result.content);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getPostDetailByRole(id);
+    renderAllCategories();
+  }, [id]);
+
+  const handleTitleChange = (e) => {
+    const title = e.target.value;
+    setTitle(title);
+  };
+
+  const handleChangeCategoryId = (event) => {
+    setCategoryId(event.target.value);
+  };
+
+  const renderAllCategories = async () => {
+    const categories = await getAllCategories();
+    const option = categories.data.sortedCategories.map((category) => ({
+      id: category._id,
+      name: category.name,
+    }));
+    setOptions(option);
+  };
+
+  //Tag
+  const handleClose = (removedTag) => {
+    const newTags = tags.filter((tag) => tag !== removedTag);
+    setTags(newTags);
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputConfirm = () => {
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      setTags([...tags, inputValue]);
+      inputRef.current?.focus();
+    }
+    setInputValue("");
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleInputConfirm();
+    }
+  };
+
+  //content
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setContent(data);
+  };
+
+  //image
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const extension = file.name.split(".").pop().toLowerCase();
       if (["jpg", "jpeg", "png"].indexOf(extension) !== -1) {
-        dispatch(setThumbnail(file));
+        setThumbnail(file);
         const reader = new FileReader();
 
         reader.onload = (e) => {
-          dispatch(setImage(e.target.result));
+          setImage(e.target.result);
         };
 
         reader.readAsDataURL(file);
@@ -58,91 +114,7 @@ const WritePost = () => {
     }
   };
 
-  const handleEditorChange = (event, editor) => {
-    const data = editor.getData();
-    dispatch(setContent(data));
-  };
-
-  const renderAllCategories = async () => {
-    const categories = await getAllCategories();
-    const option = categories.data.sortedCategories.map((category) => ({
-      id: category._id,
-      name: category.name,
-    }));
-    setOptions(option);
-  };
-
-  useEffect(() => {
-    renderAllCategories();
-    const unloadHandler = (event) => {
-      event.preventDefault();
-      event.returnValue = "Bạn có chắc chắn muốn thoát không?";
-    };
-
-    window.addEventListener("beforeunload", unloadHandler);
-    return () => {
-      window.removeEventListener("beforeunload", unloadHandler);
-    };
-  }, []);
-
-  const handleTitleChange = (e) => {
-    const title = e.target.value;
-    dispatch(setTitle(title));
-  };
-
-  const handleChange = (event) => {
-    dispatch(setCategoryId(event.target.value));
-  };
-
-  //Tag
-  const handleClose = (removedTag) => {
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    dispatch(setTags(newTags));
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputConfirm = () => {
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      dispatch(setTags([...tags, inputValue]));
-      inputRef.current?.focus();
-    }
-    setInputValue("");
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleInputConfirm();
-    }
-  };
-
-  // const uploadAdapter = (loader) => {
-  //   return {
-  //     upload: () => {
-  //       return new Promise((resolve, reject) => {
-  //         const formData = new FormData();
-  //         loader.file.then(async (file) => {
-  //           formData.append("image", file);
-  //           try {
-  //             const res = await uploadImagePost(formData);
-  //             resolve({ default: res.data.url });
-  //           } catch (error) {
-  //             console.log(error)
-  //             reject(error);
-  //           }
-  //         });
-  //       });
-  //     },
-  //   };
-  // };
-
-  // const uploadPlugin = (editor) => {
-  //   editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-  //     return uploadAdapter(loader);
-  //   };
-  // };
+  //handle update post
   const handleSubmitPost = async (status) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -166,7 +138,7 @@ const WritePost = () => {
       setIsLoading(false);
       return;
     }
-    if (!thumbnail) {
+    if (!thumbnail && !image) {
       errorAlert("Lỗi", "Vui lòng chọn ảnh bìa");
       setIsLoading(false);
       return;
@@ -178,16 +150,17 @@ const WritePost = () => {
     }
     formData.append("categoryId", categoryId);
     formData.append("title", title);
-    formData.append("thumbnail", thumbnail);
+    if (!!thumbnail) {
+      formData.append("thumbnail", thumbnail);
+    }
     formData.append("content", content);
     formData.append("status", status);
     formData.append("tags", tags.join(","));
 
     try {
-      const res = await createPost(formData);
+      const res = await updatePost(formData, id);
       if (res.status >= 200 && res.status < 300) {
         successAlert("Thành công", "", 2000);
-        dispatch(clearCreatePost());
       }
     } catch (error) {
       errorAlert("Đã xảy ra lỗi");
@@ -198,8 +171,9 @@ const WritePost = () => {
   };
 
   return (
-    <div className="write-container">
-      <div className="write-content grid-container">
+    <div className="edit-post-container">
+      <div className="edit-post-content grid-container">
+        <h1 className="title-edit-post">Chỉnh sửa bài viết</h1>
         <div className="btn-post-group">
           <button
             onClick={() => {
@@ -224,7 +198,7 @@ const WritePost = () => {
             {isLoading === true && status === "published" ? (
               <Loader />
             ) : (
-              "Đăng bài viết"
+              "Lưu bài viết"
             )}
           </button>
         </div>
@@ -257,21 +231,15 @@ const WritePost = () => {
                 <select
                   id="cars"
                   value={categoryId}
-                  onChange={handleChange}
+                  onChange={handleChangeCategoryId}
                   className="input-select"
                 >
-                  <option value="">--Chọn chủ đề--</option>
                   {options?.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.name}
                     </option>
                   ))}
                 </select>
-                {/* {!!errorInput.email && (
-                  <span className="error-text" aria-hidden="true">
-                    {errorInput.email}
-                  </span>
-                )} */}
               </span>
             </label>
           </p>
@@ -306,10 +274,10 @@ const WritePost = () => {
           </p>
           <p className="input-image-container">
             <label
-              className={`choose-image${!!thumbnail ? " have-image" : ""}`}
+              className={`choose-image${!!image ? " have-image" : ""}`}
               htmlFor="imageInput"
             >
-              {!!thumbnail ? (
+              {!!image ? (
                 <img className="image" src={image} alt="" />
               ) : (
                 <div className="image-none">
@@ -319,16 +287,6 @@ const WritePost = () => {
                 </div>
               )}
             </label>
-            {/* {!!thumbnail && (
-              <IoClose
-                onClick={() => {
-                  setImage("");
-                  setThumbnail(null);
-                }}
-                size={48}
-                className={"delete-image"}
-              />
-            )} */}
             <input
               type="file"
               id="imageInput"
@@ -336,18 +294,11 @@ const WritePost = () => {
               accept="image/jpeg, image/png, image/jpg"
               onChange={handleFileChange}
             />
-
-            {/* {!!errorInput.email && (
-                  <span className="error-text" aria-hidden="true">
-                    {errorInput.email}
-                  </span>
-                )} */}
           </p>
         </form>
         <CKEditor
           editor={ClassicEditor}
           config={{
-            // extraPlugins: [uploadPlugin],
             removePlugins: ["MarkDown"],
             placeholder: "Nhập nội dung ở đây...",
             toolbar: { shouldNotGroupWhenFull: true },
@@ -357,15 +308,10 @@ const WritePost = () => {
           }}
           data={content}
           onChange={handleEditorChange}
-          // onReady={(editor) => {
-          //   // You can store the "editor" and use when it is needed.
-          //   console.log("Editor is ready to use!", editor);
-          // }}
         />
       </div>
-      {/* <div dangerouslySetInnerHTML={{ __html: content }} /> */}
     </div>
   );
 };
 
-export default WritePost;
+export default EditPost;

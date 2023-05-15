@@ -63,3 +63,38 @@ h6 {
   font-weight: 500;
   font-size: 16px;
 }
+
+.text-hover {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  @include background-hover;
+
+  &:hover {
+    @include tag-a-hover;
+    color: $primary-normal;
+    background-size: 100% $primary-normal;
+  }
+}
+
+.skeleton {
+  opacity: 0.7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
+
+.skeleton-img {
+  animation: skeleton-loading 1s linear infinite alternate;
+}

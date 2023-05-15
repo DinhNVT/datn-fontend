@@ -1,68 +1,49 @@
 @import "../../assets/AppStyles/variables.scss";
 
-.profile-layout {
+.me-post-layout {
   background-color: $body-bg;
   min-height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
 
-  .profile-children {
+  .me-post-children {
     flex-grow: 1;
     width: 100%;
 
-    .profile-container {
+    .me-post-container {
       max-width: 1240px;
       margin: auto;
       padding-bottom: 40px;
 
-      .profile-menu {
+      .me-post-menu {
         border-bottom: 1px solid $gray-300;
         padding: 10px 0;
         margin-bottom: 40px;
 
-        .profile-info {
+        .me-post-title {
           display: flex;
           align-items: center;
           justify-content: flex-start;
           margin-bottom: 30px;
 
-          .avt {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 20px;
-            border: 1px solid $gray-400;
-
-            img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              background-color: white;
-            }
+          h1 {
+            margin-right: 20px
           }
 
-          .name {
-            h3 {
-              font-weight: 500;
-              margin-bottom: 10px;
-            }
+          a {
+            @include button-black;
+            transform: translate(0, 0);
+            box-shadow: none;
 
-            button {
-              @include button-no-color;
-              transform: translate(0, 0);
-              box-shadow: none;
-
-              &:hover {
-                box-shadow: $small-shadow;
-                transform: translate(-2px, -2px);
-              }
+            &:hover {
+              box-shadow: $small-shadow;
+              transform: translate(-2px, -2px);
             }
           }
         }
 
-        .profile-navbar {
+        .me-post-navbar {
           ul {
             display: flex;
             gap: 16px;

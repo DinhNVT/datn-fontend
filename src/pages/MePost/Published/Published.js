@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
-import "./Profile.scss";
-import { Link, useParams } from "react-router-dom";
+import "./Published.scss";
+import { Link } from "react-router-dom";
 import { FaRegComment } from "react-icons/fa";
-import { BsCheckAll, BsArrowRight } from "react-icons/bs";
+import { BsCheckAll } from "react-icons/bs";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import {
   AiOutlineEye,
   AiOutlineShareAlt,
-  AiOutlineHeart,
+  AiOutlineDelete,
 } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
 import { RxCountdownTimer } from "react-icons/rx";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { apiGetPostsOption } from "../../apis/post";
-import { createSummary, truncateTitle } from "../../utils/truncateString";
-import { getCreatedAtString } from "../../utils/convertTime";
-import Loader from "../../components/Loader/Loader";
+import { createSummary, truncateTitle } from "../../../utils/truncateString";
+import { getCreatedAtString } from "../../../utils/convertTime";
+import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
+import Loader from "../../../components/Loader/Loader";
+import { deleteAlert } from "../../../utils/customAlert";
 
-const Profile = () => {
-  const { username } = useParams();
+const Published = () => {
   const [posts, setPosts] = useState([]);
+  const [totalPosts, setTotalPost] = useState(0);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
@@ -36,10 +38,10 @@ const Profile = () => {
       });
   };
 
-  const getAllPost = async (page, userName) => {
-    const query = `limit=${10}&userAllPost=${userName}&page=${page}`;
+  const getAllPostMe = async (page) => {
+    const query = `limit=${10}&status=published&page=${page}`;
     try {
-      const res = await apiGetPostsOption(query);
+      const res = await apiGetPostsMe(query);
       if (res.data.posts.length > 0) {
         setPosts((prevPosts) => [...prevPosts, ...res.data.posts]);
       }
@@ -48,6 +50,7 @@ const Profile = () => {
       } else {
         setPage(0);
       }
+      setTotalPost(res.data.total);
       setIsLoadingSeeMore(false);
     } catch (error) {
       console.log(error.message);
@@ -57,15 +60,38 @@ const Profile = () => {
 
   const handleClickSeeMore = () => {
     setIsLoadingSeeMore(true);
-    getAllPost(page, username);
+    getAllPostMe(page);
+  };
+  useEffect(() => {
+    getAllPostMe(1);
+  }, []);
+
+  const handleDelete = (id) => {
+    const confirmDelete = () => {
+      return apiDeletePost(id);
+    };
+
+    const deletePostInState = () => {
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+      setTotalPost((pre) => pre - 1);
+    };
+
+    deleteAlert(
+      "Xóa bài viết",
+      "Sau khi bạn xóa thì không thể hoàn tác",
+      confirmDelete,
+      deletePostInState
+    );
   };
 
-  useEffect(() => {
-    getAllPost(1, username);
-  }, [username]);
   return (
-    <div className="profile-container">
-      <div className="profile-content">
+    <div className="me-published-container">
+      <div className="me-published-content">
+        {totalPosts > 0 ? (
+          <p className="total-post">{`Có ${totalPosts} bài viết công khai`}</p>
+        ) : (
+          "Không có bài viết nào"
+        )}
         {posts.length > 0 &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
@@ -131,12 +157,17 @@ const Profile = () => {
                       to={`/me/post/edit/${post._id}`}
                       className=" btn-edit"
                     >
-                      Yêu thích
-                      <AiOutlineHeart size={24} className={"arrow"} />
+                      Chỉnh sửa
+                      <FiEdit size={24} className={"arrow"} />
                     </Link>
-                    <Link target="_blank" to={`/post/${post.slug}`}>
-                      Đọc thêm
-                      <BsArrowRight size={24} className={"arrow"} />
+                    <Link
+                      onClick={() => {
+                        handleDelete(post._id);
+                      }}
+                      className="btn-delete"
+                    >
+                      Xóa
+                      <AiOutlineDelete size={24} className={"arrow"} />
                     </Link>
                   </div>
                 </div>
@@ -162,4 +193,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Published;

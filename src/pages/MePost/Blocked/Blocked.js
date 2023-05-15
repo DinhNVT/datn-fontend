@@ -1,45 +1,26 @@
 import React, { useEffect, useState } from "react";
-import "./Profile.scss";
-import { Link, useParams } from "react-router-dom";
+import "./Blocked.scss";
+import { Link } from "react-router-dom";
 import { FaRegComment } from "react-icons/fa";
-import { BsCheckAll, BsArrowRight } from "react-icons/bs";
-import {
-  AiOutlineEye,
-  AiOutlineShareAlt,
-  AiOutlineHeart,
-} from "react-icons/ai";
-import { RxCountdownTimer } from "react-icons/rx";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { apiGetPostsOption } from "../../apis/post";
-import { createSummary, truncateTitle } from "../../utils/truncateString";
-import { getCreatedAtString } from "../../utils/convertTime";
-import Loader from "../../components/Loader/Loader";
+import { AiOutlineEye, AiOutlineDelete } from "react-icons/ai";
+import { RxCountdownTimer } from "react-icons/rx";
+import { createSummary, truncateTitle } from "../../../utils/truncateString";
+import { getCreatedAtString } from "../../../utils/convertTime";
+import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
+import Loader from "../../../components/Loader/Loader";
+import { deleteAlert } from "../../../utils/customAlert";
 
-const Profile = () => {
-  const { username } = useParams();
+const Blocked = () => {
   const [posts, setPosts] = useState([]);
+  const [totalPosts, setTotalPost] = useState(0);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
-  const [copied, setCopied] = useState(false);
-  const [copySlug, setCopySlug] = useState("");
-  const handleCopyClick = (slug) => {
-    navigator.clipboard
-      .writeText(`${window.location.origin}/post/${slug}`)
-      .then(() => {
-        setCopied(true);
-        setCopySlug(slug);
-        setTimeout(() => {
-          setCopied(false);
-          setCopySlug("");
-        }, 5000);
-      });
-  };
-
-  const getAllPost = async (page, userName) => {
-    const query = `limit=${10}&userAllPost=${userName}&page=${page}`;
+  const getAllPostMe = async (page) => {
+    const query = `limit=${10}&status=blocked&page=${page}`;
     try {
-      const res = await apiGetPostsOption(query);
+      const res = await apiGetPostsMe(query);
       if (res.data.posts.length > 0) {
         setPosts((prevPosts) => [...prevPosts, ...res.data.posts]);
       }
@@ -48,6 +29,7 @@ const Profile = () => {
       } else {
         setPage(0);
       }
+      setTotalPost(res.data.total);
       setIsLoadingSeeMore(false);
     } catch (error) {
       console.log(error.message);
@@ -57,30 +39,44 @@ const Profile = () => {
 
   const handleClickSeeMore = () => {
     setIsLoadingSeeMore(true);
-    getAllPost(page, username);
+    getAllPostMe(page);
   };
-
   useEffect(() => {
-    getAllPost(1, username);
-  }, [username]);
+    getAllPostMe(1);
+  }, []);
+
+  const handleDelete = (id) => {
+    const confirmDelete = () => {
+      return apiDeletePost(id);
+    };
+
+    const deletePostInState = () => {
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+      setTotalPost((pre) => pre - 1);
+    };
+
+    deleteAlert(
+      "Xóa bài viết",
+      "Sau khi bạn xóa thì không thể hoàn tác",
+      confirmDelete,
+      deletePostInState
+    );
+  };
   return (
-    <div className="profile-container">
-      <div className="profile-content">
+    <div className="me-blocked-container">
+      <div className="me-blocked-content">
+        {totalPosts > 0 ? (
+          <p className="total-post">{`Có ${totalPosts} bài viết bị chặn`}</p>
+        ) : (
+          "Không có bài viết nào bị chặn"
+        )}
         {posts.length > 0 &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
               <div className="blog-item-content">
-                <Link target="_blank" to={`/post/${post.slug}`}>
-                  <img src={post?.thumbnail_url} alt={post?.title} />
-                </Link>
+                <img src={post?.thumbnail_url} alt={post?.title} />
                 <div className="blog-post-info">
-                  <Link
-                    target="_blank"
-                    to={`/post/${post.slug}`}
-                    className="title"
-                  >
-                    <h2>{truncateTitle(post.title, 85)}</h2>
-                  </Link>
+                  <h2>{truncateTitle(post.title, 85)}</h2>
                   <div className="interact">
                     <div className="interact-item">
                       <RxCountdownTimer className={"icon"} size={22} />{" "}
@@ -111,32 +107,12 @@ const Profile = () => {
                   <div className="read-more-btn">
                     <Link
                       onClick={() => {
-                        handleCopyClick(post.slug);
+                        handleDelete(post._id);
                       }}
-                      className="btn-share"
+                      className="btn-delete"
                     >
-                      {copied && copySlug === post.slug ? (
-                        <p>
-                          Copied
-                          <BsCheckAll size={24} className={"arrow"} />
-                        </p>
-                      ) : (
-                        <p>
-                          Chia sẻ
-                          <AiOutlineShareAlt size={24} className={"arrow"} />
-                        </p>
-                      )}
-                    </Link>
-                    <Link
-                      to={`/me/post/edit/${post._id}`}
-                      className=" btn-edit"
-                    >
-                      Yêu thích
-                      <AiOutlineHeart size={24} className={"arrow"} />
-                    </Link>
-                    <Link target="_blank" to={`/post/${post.slug}`}>
-                      Đọc thêm
-                      <BsArrowRight size={24} className={"arrow"} />
+                      Xóa
+                      <AiOutlineDelete size={24} className={"arrow"} />
                     </Link>
                   </div>
                 </div>
@@ -162,4 +138,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Blocked;

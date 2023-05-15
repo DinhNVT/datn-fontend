@@ -1,6 +1,10 @@
-@import "../../assets/AppStyles/variables.scss";
-.profile-container {
-  .profile-content {
+@import "../../../assets/AppStyles/variables.scss";
+.me-blocked-container {
+  .me-blocked-content {
+    .total-post {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
     .blog-item {
       border-radius: 16px;
       border: 1px solid $border-color;
@@ -13,41 +17,16 @@
         display: flex;
         gap: 20px;
 
-        a {
-          img {
-            width: 300px;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid $border-color;
-            transition: all 0.3s $transition-bezier;
-          }
-
-          &:hover img {
-            box-shadow: $medium-shadow;
-            transform: translate(-4px, -4px);
-          }
+        img {
+          width: 300px;
+          height: 300px;
+          object-fit: cover;
+          border-radius: 10px;
+          border: 1px solid $border-color;
+          transition: all 0.3s $transition-bezier;
         }
 
         .blog-post-info {
-          .title {
-            h2 {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-              @include background-hover;
-            }
-
-            &:hover h2 {
-              @include tag-a-hover;
-              color: $primary-normal;
-              background-size: 100% $primary-normal;
-            }
-          }
-
           .interact {
             display: flex;
             flex-wrap: wrap;
@@ -100,12 +79,21 @@
             gap: 8px;
 
             a {
-              @include button-no-color;
+              @include button-black;
               padding: 8px 16px;
+              display: flex;
+              align-items: center;
+
+              &.btn-edit {
+                background-color: $gray-500;
+              }
+              &.btn-delete {
+                background-color: $error-400;
+              }
 
               .arrow {
                 vertical-align: middle;
-                margin-left: 8px;
+                margin-left: 6px;
               }
 
               &:hover {
@@ -116,6 +104,7 @@
         }
       }
     }
+
     .see-more {
       display: flex;
       justify-content: center;

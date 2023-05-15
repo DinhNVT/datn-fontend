@@ -17,25 +17,28 @@ const Footer = () => {
             <div className="title">
               <h3>Bài viết mới nhất</h3>
             </div>
-            <Link>
-              <div className="item-blog-container">
-                <div className="item-blog">
-                  <div className="img-blog">
+
+            <div className="item-blog-container">
+              <div className="item-blog">
+                <div className="img-blog">
+                  <Link>
                     <img
                       src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
                       alt=""
                     />
-                  </div>
-                  <div className="title-blog">
+                  </Link>
+                </div>
+                <div className="title-blog">
+                  <Link>
                     <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                    <p>
-                      <RxCountdownTimer className={"icon-time"} />
-                      20-04-2023
-                    </p>
-                  </div>
+                  </Link>
+                  <p>
+                    <RxCountdownTimer className={"icon-time"} />
+                    20-04-2023
+                  </p>
                 </div>
               </div>
-            </Link>
+            </div>
             <div className="item-blog-container">
               <div className="item-blog">
                 <div className="img-blog">

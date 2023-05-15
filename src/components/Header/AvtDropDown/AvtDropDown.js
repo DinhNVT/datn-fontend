@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { logoutUserFetch } from "../../../stores/apiAuthRequest";
 import { Link, useNavigate } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
+import ROUTES from "../../../constants/routes";
 
 const AvtDropDown = (props) => {
   const navigate = useNavigate();
@@ -28,10 +29,13 @@ const AvtDropDown = (props) => {
       </div>
       <hr />
       <div className="logout-btn">
-        <Link to={`/profile/${props.user?.username}`} className={"btn more-item"}>
+        <Link
+          to={`/profile/${props.user?.username}`}
+          className={"btn more-item"}
+        >
           Thông tin cá nhân
         </Link>
-        <Link to={"/"} className={"btn more-item"}>
+        <Link to={ROUTES.PUBLISHED_PAGE.path} className={"btn more-item"}>
           Quản lý bài viết
         </Link>
       </div>
