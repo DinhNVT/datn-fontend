@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Header.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MENU_ITEMS } from "../../constants/routes";
 import LogoHorizontal from "../../assets/images/LogoHorizontal.png";
 import { FaRegUser, FaRegEdit } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
@@ -94,18 +93,24 @@ const Header = () => {
     <div className="header-base">
       <div className={`header-container${fix ? " header-fixed" : ""}`}>
         <div className="menu-bar grid-container">
-          <Link to="/">
+          {/* <Link to="/">
             <img src={LogoHorizontal} alt="GaFast" />
-          </Link>
+          </Link> */}
           <ul className="ul-menu">
-            {MENU_ITEMS.map((item) => (
-              <li
-                key={item.link}
-                className={location.pathname === item.link ? "active" : ""}
-              >
-                <Link to={item.link}>{item.name}</Link>
-              </li>
-            ))}
+            <li
+              className={
+                location.pathname.includes("/post") || location.pathname === "/"
+                  ? "active"
+                  : ""
+              }
+            >
+              <Link to={"/"}>Bài viết</Link>
+            </li>
+            <li
+              className={location.pathname.includes("/contact") ? "active" : ""}
+            >
+              <Link to={"/contact"}>Liên hệ</Link>
+            </li>
           </ul>
           <div className="right-header">
             {!!user && location.pathname !== ROUTES.WRITE_PAGE.path ? (

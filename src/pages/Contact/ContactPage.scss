@@ -1,3 +1,91 @@
+@import "../../assets/AppStyles/variables.scss";
 .contact-container {
- 
+  width: 100%;
+  margin-top: 10px;
+
+  .contact-content {
+    margin: auto;
+
+    .title {
+      border-bottom: 2px solid $primary-normal;
+      padding-bottom: 8px;
+    }
+
+    .form-container {
+      margin-top: 30px;
+
+      .input-container {
+        margin-bottom: 30px;
+
+        label {
+          @include label-input;
+
+          .form-control-input {
+            display: block;
+            margin-top: 8px;
+            position: relative;
+
+            .input {
+              @include input;
+              margin-bottom: 8px;
+
+              &:focus {
+                box-shadow: $box-shadow-input;
+              }
+
+              &.input-password {
+                padding-right: 40px;
+              }
+            }
+
+            .btn-show-password {
+              position: absolute;
+              top: 58%;
+              right: 10px;
+              transform: translateY(-50%);
+
+              svg {
+                color: $gray-600;
+              }
+            }
+
+            .error-text {
+              @include error-text;
+            }
+          }
+
+          .input-text-area {
+            @include input-textarea;
+            width: 100%;
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 8px;
+            border-radius: 5px;
+            min-height: 190px;
+          }
+        }
+
+        .error-text {
+          @include error-text;
+        }
+      }
+
+      .btn-send-contact {
+        @include button-black;
+        min-width: 120px;
+
+        &:hover {
+          @include button-black-hover;
+        }
+
+        &.error-disable[disabled] {
+          @include button-disable;
+
+          &:hover {
+            @include button-disable-hover;
+          }
+        }
+      }
+    }
+  }
 }
