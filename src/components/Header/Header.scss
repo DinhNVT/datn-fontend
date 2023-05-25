@@ -29,6 +29,55 @@
         padding: 0 5px;
         @include font-title-3;
         position: relative;
+        cursor: pointer;
+
+        &.category-menu {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          line-height: 1.1;
+          position: relative;
+
+          .arrow {
+            vertical-align: middle;
+            margin-left: 4px;
+          }
+
+          .category-list {
+            position: absolute;
+            background-color: white;
+            z-index: 10000;
+            border: 1px solid $gray-400;
+            border-radius: 5px;
+            padding: 10px 0;
+            bottom: -10px;
+            transform: translateY(100%);
+            overflow: hidden;
+            min-width: 300px;
+            left: -30px;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+
+            ul {
+              a {
+                padding: 10px 10px;
+                color: $gray-600;
+                display: block;
+                font-size: 16px;
+
+                &:hover {
+                  background-color: $gray-100;
+                }
+              }
+            }
+          }
+
+          &:hover .category-list  {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
 
         a {
           color: $text-title;

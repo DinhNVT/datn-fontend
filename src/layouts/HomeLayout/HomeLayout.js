@@ -5,7 +5,7 @@ import "./HomeLayout.scss";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Slider from "react-slick";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RxCountdownTimer } from "react-icons/rx";
 import { FaRegComment } from "react-icons/fa";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
@@ -15,6 +15,8 @@ import ROUTES from "../../constants/routes";
 import { getLatestPost } from "../../apis/post";
 import { getCreatedAtString } from "../../utils/convertTime";
 import { truncateTitle } from "../../utils/truncateString";
+import { useSelector } from "react-redux";
+import { errorAlert } from "../../utils/customAlert";
 
 const HomeLayout = (props) => {
   const [latestPosts, setLatestPosts] = useState([]);
@@ -33,6 +35,20 @@ const HomeLayout = (props) => {
     autoplay: true,
   };
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state?.auth?.login);
+
+  const handleFollowingClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      errorAlert(
+        "Bạn phải đăng nhập",
+        "Bạn hãy đăng nhập để có xem những bài viết bạn theo dõi"
+      );
+    } else {
+      navigate(ROUTES.HOME_FOLLOWING_PAGE.path);
+    }
+  };
 
   return (
     <div className="home-layout">
@@ -141,7 +157,16 @@ const HomeLayout = (props) => {
                   </Link>
                 </li>
                 <li>
-                  <Link>Đang theo dõi</Link>
+                  <Link
+                    className={
+                      location.pathname === ROUTES.HOME_FOLLOWING_PAGE.path
+                        ? "active"
+                        : ""
+                    }
+                    onClick={handleFollowingClick}
+                  >
+                    Đang theo dõi
+                  </Link>
                 </li>
               </ul>
             </div>

@@ -14,6 +14,9 @@ import avtDefault from "../../assets/images/avatar_default.png";
 import AvtDropDown from "./AvtDropDown/AvtDropDown";
 import { clearErrorLogin } from "../../stores/authSlice";
 import ROUTES from "../../constants/routes";
+import SearchModal from "../SearchModal/SearchModal";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { getAllCategories } from "../../apis/category";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -22,6 +25,8 @@ const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForget, setIsForget] = useState(false);
+  const [isShowSearch, setIsShowSearch] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const { user } = useSelector((state) => state?.auth?.login);
   const setFixed = () => {
@@ -68,6 +73,15 @@ const Header = () => {
     setIsForget(false);
   };
 
+  //Search
+  const showModalSearch = () => {
+    setIsShowSearch(true);
+  };
+
+  const closeModalSearch = () => {
+    setIsShowSearch(false);
+  };
+
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -89,13 +103,31 @@ const Header = () => {
 
   window.addEventListener("scroll", setFixed);
   const location = useLocation();
+
+  const getAllCategoriesPost = async () => {
+    try {
+      const res = await getAllCategories();
+      if (res.data.sortedCategories.length > 0) {
+        setCategories(res.data.sortedCategories);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllCategoriesPost();
+  }, []);
   return (
     <div className="header-base">
+      <SearchModal
+        isShowSearch={isShowSearch}
+        closeModalSearch={closeModalSearch}
+      />
       <div className={`header-container${fix ? " header-fixed" : ""}`}>
         <div className="menu-bar grid-container">
-          {/* <Link to="/">
+          <Link to="/">
             <img src={LogoHorizontal} alt="GaFast" />
-          </Link> */}
+          </Link>
           <ul className="ul-menu">
             <li
               className={
@@ -105,6 +137,30 @@ const Header = () => {
               }
             >
               <Link to={"/"}>Bài viết</Link>
+            </li>
+            <li
+              className={`category-menu ${
+                location.pathname.includes("/category") ? "active" : ""
+              }`}
+            >
+              Danh mục <MdKeyboardArrowDown size={24} className={"arrow"} />
+              {categories.length > 0 && (
+                <div className="category-list">
+                  <ul>
+                    {categories.map((category, index) => (
+                      <Link
+                        to={ROUTES.CATEGORY_PAGE.path.replace(
+                          ":slug",
+                          category.slug
+                        )}
+                        key={category._id}
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </li>
             <li
               className={location.pathname.includes("/contact") ? "active" : ""}
@@ -123,7 +179,12 @@ const Header = () => {
               </button>
             ) : undefined}
 
-            <Link>
+            <Link
+              onClick={(e) => {
+                e.preventDefault();
+                showModalSearch();
+              }}
+            >
               <FiSearch className={"icon-search"} />
             </Link>
             {!!user ? (

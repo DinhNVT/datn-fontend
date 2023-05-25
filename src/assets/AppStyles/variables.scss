@@ -222,6 +222,10 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  
+  &:focus {
+    box-shadow: $box-shadow-input;
+  }
 }
 
 @mixin input-textarea {
@@ -244,6 +248,10 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
   resize: none;
+
+  &:focus {
+    box-shadow: $box-shadow-input;
+  }
 }
 
 @mixin input-focus {

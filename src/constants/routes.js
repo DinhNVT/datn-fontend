@@ -17,6 +17,9 @@ import Blocked from "../pages/MePost/Blocked/Blocked";
 import HomeLayout from "../layouts/HomeLayout/HomeLayout";
 import PostDetail from "../pages/PostDetail/PostDetail";
 import EditPost from "../pages/EditPost/EditPost";
+import FollowingHome from "../pages/Home/Following/Following";
+import Search from "../pages/Search/Search";
+import Category from "../pages/Category/Category";
 
 const ROUTES = {
   HOME_PAGE: {
@@ -24,6 +27,13 @@ const ROUTES = {
     component: HomePage,
     layout: HomeLayout,
     isPrivate: false,
+  },
+
+  HOME_FOLLOWING_PAGE: {
+    path: "/following",
+    component: FollowingHome,
+    layout: HomeLayout,
+    isPrivate: true,
   },
 
   CONTACT_PAGE: {
@@ -99,6 +109,20 @@ const ROUTES = {
   POST_DETAIL_PAGE: {
     path: "/post/:slug",
     component: PostDetail,
+    layout: MainLayout,
+    isPrivate: false,
+  },
+
+  POST_SEARCH_PAGE: {
+    path: "/post",
+    component: Search,
+    layout: MainLayout,
+    isPrivate: false,
+  },
+
+  CATEGORY_PAGE: {
+    path: "/category/:slug",
+    component: Category,
     layout: MainLayout,
     isPrivate: false,
   },

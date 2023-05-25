@@ -31,3 +31,6 @@ export const apiCreatePostComments = (status, comment) =>
 export const apiGetPostsOption = (query) =>
   instance.get(`/posts/option?${query}`);
 export const apiGetPostsMe = (query) => instanceJWT.get(`/posts/me?${query}`);
+export const apiGetAllPosts = (query) =>
+  instance.get(`/posts/get-all?${query}`);
+export const apiGetAllTags = () => instanceJWT.get(`/posts/tags`);

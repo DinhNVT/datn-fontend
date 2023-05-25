@@ -51,7 +51,7 @@
           gap: 8px;
 
           &:hover {
-            @include button-no-color-hover;
+            @include button-black-hover;
           }
 
           .icon {

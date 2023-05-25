@@ -154,12 +154,39 @@
             }
           }
 
-          .input-tag {
-            outline: none;
-            border: none;
-            font-size: 16px;
-            color: $gray-600;
-            padding: 8px 0;
+          .input-tag-container {
+            position: relative;
+            
+            .input-tag {
+              outline: none;
+              border: none;
+              font-size: 16px;
+              color: $gray-600;
+              padding: 8px 0;
+            }
+
+            .dropdown-tag {
+              position: absolute;
+              background-color: white;
+              z-index: 10000;
+              border: 1px solid $gray-400;
+              border-radius: 5px;
+              padding: 10px 0;
+              bottom: 0;
+              transform: translateY(100%);
+              overflow: hidden;
+              min-width: 300px;
+              ul {
+                li {
+                  padding: 6px 10px;
+                  display: block;
+
+                  &:hover {
+                    background-color: $gray-100;
+                  }
+                }
+              }
+            }
           }
         }
       }

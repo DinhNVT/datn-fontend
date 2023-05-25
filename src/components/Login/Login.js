@@ -38,15 +38,15 @@ const Login = (props) => {
     const email = e.target.value;
     setEmail(email);
     if (!validateEmail(email)) {
-      setErrorInput({
-        ...error,
+      setErrorInput((prevError) => ({
+        ...prevError,
         email: "Email không hợp lệ",
-      });
+      }));
     } else {
-      setErrorInput({
-        ...error,
+      setErrorInput((prevError) => ({
+        ...prevError,
         email: "",
-      });
+      }));
     }
   };
 
