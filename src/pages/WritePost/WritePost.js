@@ -16,9 +16,11 @@ import {
   setTags,
   clearCreatePost,
 } from "../../stores/postSlice";
-import { createPost } from "../../apis/post";
+import { apiGetAllTags, createPost } from "../../apis/post";
 import Loader from "../../components/Loader/Loader";
 import { errorAlert, successAlert } from "../../utils/customAlert";
+import { deburr } from "lodash";
+import { truncateTitle } from "../../utils/truncateString";
 
 const WritePost = () => {
   const inputRef = useRef(null);
@@ -31,6 +33,9 @@ const WritePost = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const [filteredTags, setFilteredTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+
   const dispatch = useDispatch();
   const { categoryId, title, thumbnail, image, content, tags } = useSelector(
     (state) => state?.post?.createPost
@@ -72,7 +77,19 @@ const WritePost = () => {
     setOptions(option);
   };
 
+  const getAllTags = async () => {
+    try {
+      const res = await apiGetAllTags();
+      if (res.data.tags.length > 0) {
+        setAllTags(res.data.tags);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getAllTags();
     renderAllCategories();
     const unloadHandler = (event) => {
       event.preventDefault();
@@ -101,7 +118,14 @@ const WritePost = () => {
   };
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+
+    const normalizedValue = deburr(value.toLowerCase());
+    const filtered = allTags.filter((tag) =>
+      deburr(tag.name.toLowerCase()).includes(normalizedValue)
+    );
+    setFilteredTags(filtered);
   };
 
   const handleInputConfirm = () => {
@@ -118,31 +142,6 @@ const WritePost = () => {
     }
   };
 
-  // const uploadAdapter = (loader) => {
-  //   return {
-  //     upload: () => {
-  //       return new Promise((resolve, reject) => {
-  //         const formData = new FormData();
-  //         loader.file.then(async (file) => {
-  //           formData.append("image", file);
-  //           try {
-  //             const res = await uploadImagePost(formData);
-  //             resolve({ default: res.data.url });
-  //           } catch (error) {
-  //             console.log(error)
-  //             reject(error);
-  //           }
-  //         });
-  //       });
-  //     },
-  //   };
-  // };
-
-  // const uploadPlugin = (editor) => {
-  //   editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-  //     return uploadAdapter(loader);
-  //   };
-  // };
   const handleSubmitPost = async (status) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -291,16 +290,42 @@ const WritePost = () => {
                     </Link>
                   </span>
                 ))}
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="input-tag"
-                  placeholder="Thêm thẻ..."
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onBlur={handleInputConfirm}
-                  onKeyDown={handleKeyDown}
-                />
+                <div className="input-tag-container">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="input-tag"
+                    placeholder="Thêm thẻ..."
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onBlur={() => {
+                      if (filteredTags.length === 0) {
+                        handleInputConfirm();
+                      }
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                  {!!filteredTags.length > 0 && !!inputValue ? (
+                    <div className="dropdown-tag">
+                      <ul>
+                        {filteredTags.map((tag, index) => (
+                          <li
+                            onClick={() => {
+                              if (tags.indexOf(tag.name) === -1) {
+                                dispatch(setTags([...tags, tag.name]));
+                                inputRef.current?.focus();
+                              }
+                              setInputValue("");
+                            }}
+                            key={tag._id}
+                          >
+                            {truncateTitle(tag.name, 30)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
               </span>
             </span>
           </p>

@@ -198,4 +198,28 @@
       }
     }
   }
+
+  .see-more {
+    display: flex;
+    justify-content: center;
+
+    .btn-see-more {
+      min-width: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include button-no-color;
+      transform: translate(0, 0);
+      box-shadow: none;
+
+      &:hover {
+        @include button-black-hover;
+      }
+
+      .arrow {
+        vertical-align: middle;
+        margin-left: 6px;
+      }
+    }
+  }
 }

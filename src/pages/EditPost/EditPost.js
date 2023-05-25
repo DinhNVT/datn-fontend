@@ -7,9 +7,15 @@ import { FiUpload } from "react-icons/fi";
 import Loader from "../../components/Loader/Loader";
 import { Editor as ClassicEditor } from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { apiGetDetailPostByRole, updatePost } from "../../apis/post";
+import {
+  apiGetAllTags,
+  apiGetDetailPostByRole,
+  updatePost,
+} from "../../apis/post";
 import { getAllCategories } from "../../apis/category";
 import { errorAlert, successAlert } from "../../utils/customAlert";
+import { deburr } from "lodash";
+import { truncateTitle } from "../../utils/truncateString";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -24,6 +30,8 @@ const EditPost = () => {
   const [categoryId, setCategoryId] = useState("");
   const [tags, setTags] = useState([]);
   const inputRef = useRef(null);
+  const [filteredTags, setFilteredTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
 
   const getPostDetailByRole = async (id) => {
     try {
@@ -38,7 +46,19 @@ const EditPost = () => {
     }
   };
 
+  const getAllTags = async () => {
+    try {
+      const res = await apiGetAllTags();
+      if (res.data.tags.length > 0) {
+        setAllTags(res.data.tags);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getAllTags();
     getPostDetailByRole(id);
     renderAllCategories();
   }, [id]);
@@ -68,7 +88,14 @@ const EditPost = () => {
   };
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+
+    const normalizedValue = deburr(value.toLowerCase());
+    const filtered = allTags.filter((tag) =>
+      deburr(tag.name.toLowerCase()).includes(normalizedValue)
+    );
+    setFilteredTags(filtered);
   };
 
   const handleInputConfirm = () => {
@@ -259,16 +286,42 @@ const EditPost = () => {
                     </Link>
                   </span>
                 ))}
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="input-tag"
-                  placeholder="Thêm thẻ..."
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onBlur={handleInputConfirm}
-                  onKeyDown={handleKeyDown}
-                />
+                <div className="input-tag-container">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="input-tag"
+                    placeholder="Thêm thẻ..."
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onBlur={() => {
+                      if (filteredTags.length === 0) {
+                        handleInputConfirm();
+                      }
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                  {!!filteredTags.length > 0 && !!inputValue ? (
+                    <div className="dropdown-tag">
+                      <ul>
+                        {filteredTags.map((tag, index) => (
+                          <li
+                            onClick={() => {
+                              if (tags.indexOf(tag.name) === -1) {
+                                setTags([...tags, tag.name]);
+                                inputRef.current?.focus();
+                              }
+                              setInputValue("");
+                            }}
+                            key={tag._id}
+                          >
+                            {truncateTitle(tag.name, 30)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
               </span>
             </span>
           </p>
