@@ -38,8 +38,8 @@ export const deleteAlert = (
     showCancelButton: true,
     confirmButtonColor: "#00c491",
     cancelButtonColor: "#98a2b3",
+    cancelButtonText: "Hủy",
     confirmButtonText: "Xóa",
-    cancelButtonText: "Thoát",
     allowOutsideClick: () => !Swal.isLoading(),
     showLoaderOnConfirm: true,
     preConfirm: async () => {
@@ -55,7 +55,57 @@ export const deleteAlert = (
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      successAlert("Đã xóa", "Bài viết của bạn đã xóa thành công", 1500, true);
+      successAlert("Đã xóa", "Bài viết của bạn đã xóa thành công", 1200, false);
+    }
+  });
+};
+
+export const confirmAlert = (
+  title,
+  text,
+  textConfirm,
+  confirmFunction,
+  handleConfirmSuccess,
+  valueAlertSuccess
+) => {
+  Swal.fire({
+    title: title,
+    text: text,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#00c491",
+    cancelButtonColor: "#98a2b3",
+    cancelButtonText: "Hủy",
+    confirmButtonText: textConfirm,
+    allowOutsideClick: () => !Swal.isLoading(),
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      try {
+        await confirmFunction();
+        handleConfirmSuccess();
+      } catch (error) {
+        const errorTitle = "Lỗi hệ thống";
+        const errorMessage =
+          "Có một số lỗi khi thực hiện thao tác. Vui lòng thử lại sau";
+        errorAlert(errorTitle, errorMessage);
+        throw new Error("Confirm failed.");
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed && !valueAlertSuccess) {
+      successAlert(
+        "Đã thực hiện",
+        "Thao tác bạn vừa thực hiện thành công",
+        1200,
+        false
+      );
+    } else if (result.isConfirmed && !!valueAlertSuccess) {
+      successAlert(
+        valueAlertSuccess?.title,
+        valueAlertSuccess?.text,
+        valueAlertSuccess?.timer,
+        valueAlertSuccess?.isShowConfirmButton
+      );
     }
   });
 };

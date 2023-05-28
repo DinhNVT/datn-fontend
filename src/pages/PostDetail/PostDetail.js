@@ -9,9 +9,12 @@ import { BsCheckAll } from "react-icons/bs";
 import NotFoundPage from "../404/NotFoundPage";
 import {
   apiCreatePostComments,
+  apiCreateReportPostComments,
+  apiDeletePostComments,
   apiGetDetailPost,
   apiGetPostComments,
   apiGetPostsOption,
+  apiUpdatePostComments,
 } from "../../apis/post";
 import { getCreatedAtString } from "../../utils/convertTime";
 import avtDefault from "../../assets/images/avatar_default.png";
@@ -20,9 +23,11 @@ import youtubeIcon from "../../assets/images/youtube.png";
 import instagramIcon from "../../assets/images/instagram.png";
 import tiktokIcon from "../../assets/images/tiktok.png";
 import { useSelector } from "react-redux";
-import { errorAlert } from "../../utils/customAlert";
+import { confirmAlert, deleteAlert, errorAlert } from "../../utils/customAlert";
 import Loader from "../../components/Loader/Loader";
 import { truncateTitle } from "../../utils/truncateString";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 const PostDetail = () => {
   const { slug } = useParams();
@@ -32,9 +37,12 @@ const PostDetail = () => {
   const [found, setFound] = useState(true);
   const [replyInputVisible, setReplyInputVisible] = useState(false);
   const [commentId, setCommentId] = useState("");
+  const [subCommentId, setSubCommentId] = useState("");
   const [subCommentInput, setSubCommentInput] = useState("");
   const [commentInput, setCommentInput] = useState("");
   const [isLoadingComment, setIsLoadingComment] = useState(false);
+  const [isLoadingEditBaseComment, setIsLoadingEditBaseComment] =
+    useState(false);
   const [isLoadingSubComment, setIsLoadingSubComment] = useState(false);
   const inputRef = useRef(null);
   const { user } = useSelector((state) => state?.auth?.login);
@@ -47,6 +55,37 @@ const PostDetail = () => {
       setTimeout(() => setCopied(false), 5000);
     });
   };
+
+  const dropdownRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdownBaseId, setShowDropdownBaseId] = useState("");
+  const [showDropdownSubId, setShowDropdownSubId] = useState("");
+  const [isBaseEdit, setIsBaseEdit] = useState(false);
+  const [isSubEdit, setIsSubEdit] = useState(false);
+
+  const [visibleComments, setVisibleComments] = useState(5);
+  const numberCommentVisible = 5;
+  const handleViewMoreComments = () => {
+    setVisibleComments(postComments.length);
+  };
+
+  const handleHideLessComments = () => {
+    setVisibleComments(numberCommentVisible);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+        setShowDropdownBaseId("");
+        setShowDropdownSubId("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const getPostComment = (postId) => {
     apiGetPostComments(postId)
@@ -80,7 +119,7 @@ const PostDetail = () => {
           setFound(false);
         } else {
           setPost(res.data.result);
-          window.scrollTo(0, 0);
+          // window.scrollTo(0, 0);
           return res.data.result;
         }
       })
@@ -109,7 +148,12 @@ const PostDetail = () => {
       setReplyInputVisible(true);
       setCommentId(baseId);
     }
-    if (replyInputVisible && !!commentId) {
+    if (!subCommentInput || baseId !== commentId) {
+      setIsBaseEdit(false);
+      setIsSubEdit(false);
+      setSubCommentId("");
+      setSubCommentInput("");
+    } else if (replyInputVisible && !!commentId) {
       setIsLoadingSubComment(true);
       apiCreatePostComments("sub", {
         baseId: baseId,
@@ -160,6 +204,124 @@ const PostDetail = () => {
           setIsLoadingComment(false);
         });
     }
+  };
+
+  const handleEditCommentClick = (commentId, comment) => {
+    setIsBaseEdit(true);
+    setCommentId(commentId);
+    setShowDropdown(!showDropdown);
+    setSubCommentInput(comment);
+    setReplyInputVisible(true);
+    setIsSubEdit(false);
+    setSubCommentId("");
+  };
+
+  const handleCancelEditCommentClick = () => {
+    setIsBaseEdit(false);
+    setCommentId("");
+    setIsSubEdit(false);
+    setSubCommentId("");
+  };
+
+  const handleEditSubCommentClick = (subCommentId, comment) => {
+    setCommentId("");
+    setIsBaseEdit(false);
+    setIsSubEdit(true);
+    setSubCommentId(subCommentId);
+    setShowDropdown(!showDropdown);
+    setSubCommentInput(comment);
+    setReplyInputVisible(true);
+  };
+
+  const handleUpdateBaseComment = (id) => {
+    setIsLoadingEditBaseComment(true);
+    apiUpdatePostComments(id, "base", {
+      comment: subCommentInput,
+    })
+      .then((res) => {
+        if (res.data.result) {
+          setSubCommentInput("");
+          getPostComment(post._id);
+          setIsLoadingEditBaseComment(false);
+          setIsBaseEdit(false);
+          setReplyInputVisible(false);
+        } else {
+          errorAlert("Lỗi", "Xin vui lòng thử lại sau");
+          setIsLoadingEditBaseComment(false);
+        }
+      })
+      .catch(() => {
+        errorAlert("Lỗi", "Xin vui lòng thử lại sau");
+        setIsLoadingEditBaseComment(false);
+      });
+  };
+
+  const handleUpdateSubComment = (id) => {
+    setIsLoadingEditBaseComment(true);
+    apiUpdatePostComments(id, "sub", {
+      comment: subCommentInput,
+    })
+      .then((res) => {
+        if (res.data.result) {
+          setSubCommentInput("");
+          getPostComment(post._id);
+          setIsLoadingEditBaseComment(false);
+          setIsBaseEdit(false);
+          setReplyInputVisible(false);
+          setIsSubEdit(false);
+        } else {
+          errorAlert("Lỗi", "Xin vui lòng thử lại sau");
+          setIsLoadingEditBaseComment(false);
+        }
+      })
+      .catch(() => {
+        errorAlert("Lỗi", "Xin vui lòng thử lại sau");
+        setIsLoadingEditBaseComment(false);
+      });
+  };
+
+  const handleDeleteCommentClick = (status, id) => {
+    setShowDropdown(false);
+    const confirmDelete = () => {
+      return apiDeletePostComments(id, status);
+    };
+
+    const deletePostInState = () => {
+      getPostComment(post._id);
+    };
+
+    deleteAlert(
+      "Xóa bình luận",
+      "Bạn có chắc chắn muốn xóa bình luận không?",
+      confirmDelete,
+      deletePostInState
+    );
+  };
+
+  const handleReportCommentClick = (status, id) => {
+    setShowDropdown(false);
+    const confirmReport = () => {
+      return apiCreateReportPostComments({
+        commentId: id,
+        typeComment: status,
+      });
+    };
+
+    const deletePostInState = () => {};
+
+    confirmAlert(
+      "Báo cáo bình luận",
+      "Bạn cho rằng bình luận này là xấu?",
+      "Báo cáo",
+      confirmReport,
+      deletePostInState,
+      {
+        title: "Đã báo cáo bình luận",
+        text: "Báo cáo bình luận thành công",
+        timer: 1500,
+        isShowConfirmButton: false,
+      }
+    );
   };
 
   if (!found) {
@@ -324,92 +486,6 @@ const PostDetail = () => {
                 <h1>Bình luận</h1>
               </div>
               <div className="comment-content">
-                {!!postComments &&
-                  postComments.map((comment, index) => (
-                    <div>
-                      <div key={comment._id} className="base-comment">
-                        <img
-                          src={
-                            !!comment.userId.avatar
-                              ? comment.userId.avatar
-                              : avtDefault
-                          }
-                          alt=""
-                        />
-                        <div className="main-content">
-                          <div className="info">
-                            <h3>{comment.userId.name}</h3>
-                            <p>{getCreatedAtString(comment.createdAt)}</p>
-                          </div>
-                          <p>{comment.comment}</p>
-                          <form
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              handleCreateSubComment(comment._id);
-                            }}
-                          >
-                            {replyInputVisible && commentId === comment._id ? (
-                              <textarea
-                                ref={inputRef}
-                                value={subCommentInput}
-                                onChange={(e) =>
-                                  setSubCommentInput(e.target.value)
-                                }
-                                required
-                                placeholder="Trả lời..."
-                                className="input"
-                              />
-                            ) : undefined}
-                            <button
-                              disabled={
-                                isLoadingSubComment === true &&
-                                isLoadingComment === true
-                              }
-                              type="submit"
-                              className="btn-reply"
-                            >
-                              {isLoadingSubComment &&
-                              commentId === comment._id ? (
-                                <Loader />
-                              ) : (
-                                "Trả lời"
-                              )}
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                      {!!comment.subComments &&
-                        comment.subComments.map((subComments, index) => (
-                          <div className="base-comment sub-comment">
-                            <img
-                              src={
-                                !!subComments.userId.avatar
-                                  ? subComments.userId.avatar
-                                  : avtDefault
-                              }
-                              alt=""
-                            />
-                            <div className="main-content">
-                              <div className="info">
-                                <h3>{subComments.userId.name}</h3>
-                                <p>
-                                  {getCreatedAtString(subComments.createdAt)}
-                                </p>
-                              </div>
-                              <p>{subComments.comment}</p>
-                              {/* <textarea
-                              // value={this.state.text}
-                              // onChange={this.handleChange}
-                              required
-                              placeholder="Bình luận..."
-                              className="input"
-                            />
-                            <button className="btn-reply">Trả lời</button> */}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  ))}
                 <div className="main-input">
                   <h2>Viết bình luận</h2>
                   <form
@@ -437,6 +513,334 @@ const PostDetail = () => {
                     </button>
                   </form>
                 </div>
+                {!!postComments &&
+                  postComments
+                    .slice(0, visibleComments)
+                    .map((comment, index) => (
+                      <div key={comment._id}>
+                        <div
+                          className={`base-comment${
+                            index === -1 ? " border-none" : ""
+                          }`}
+                        >
+                          <img
+                            src={
+                              !!comment.userId.avatar
+                                ? comment.userId.avatar
+                                : avtDefault
+                            }
+                            alt=""
+                          />
+                          <div className="main-content">
+                            <div className="info">
+                              <h3>{comment.userId.name}</h3>
+                              <p>{getCreatedAtString(comment.createdAt)}</p>
+                            </div>
+                            {isBaseEdit && commentId === comment._id ? null : (
+                              <p>{comment.comment}</p>
+                            )}
+                            <form
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                if (isBaseEdit && commentId === comment._id) {
+                                  handleUpdateBaseComment(comment._id);
+                                } else {
+                                  handleCreateSubComment(comment._id);
+                                  setIsBaseEdit(false);
+                                }
+                              }}
+                            >
+                              {replyInputVisible &&
+                              commentId === comment._id ? (
+                                <textarea
+                                  ref={inputRef}
+                                  value={subCommentInput}
+                                  onChange={(e) =>
+                                    setSubCommentInput(e.target.value)
+                                  }
+                                  required
+                                  placeholder="Trả lời..."
+                                  className="input"
+                                />
+                              ) : undefined}
+                              {isBaseEdit && commentId === comment._id ? (
+                                <div className="btn-edit-container">
+                                  <button
+                                    onClick={handleCancelEditCommentClick}
+                                    type="button"
+                                    className="btn-cancel"
+                                  >
+                                    Hủy
+                                  </button>
+                                  <button
+                                    disabled={
+                                      isLoadingComment === true ||
+                                      isLoadingEditBaseComment === true
+                                    }
+                                    type="submit"
+                                    className="btn-reply"
+                                  >
+                                    {isLoadingEditBaseComment &&
+                                    commentId === comment._id ? (
+                                      <Loader />
+                                    ) : (
+                                      "Lưu"
+                                    )}
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  disabled={
+                                    isLoadingSubComment === true ||
+                                    isLoadingComment === true
+                                  }
+                                  type="submit"
+                                  className="btn-reply"
+                                >
+                                  {isLoadingSubComment &&
+                                  commentId === comment._id ? (
+                                    <Loader />
+                                  ) : (
+                                    "Trả lời"
+                                  )}
+                                </button>
+                              )}
+                            </form>
+                          </div>
+                          <div
+                            ref={
+                              showDropdownBaseId === comment._id
+                                ? dropdownRef
+                                : null
+                            }
+                            className="action-comment"
+                          >
+                            <BiDotsVerticalRounded
+                              onClick={() => {
+                                setShowDropdownBaseId(comment._id);
+                                setShowDropdownSubId("");
+                                setShowDropdown(!showDropdown);
+                              }}
+                              className={"icon-three-dot"}
+                            />
+                            {showDropdown &&
+                            showDropdownBaseId === comment._id ? (
+                              <div className="dropdown-action">
+                                <ul>
+                                  {user?._id === comment.userId._id && (
+                                    <li
+                                      onClick={() => {
+                                        handleEditCommentClick(
+                                          comment._id,
+                                          comment.comment
+                                        );
+                                      }}
+                                    >
+                                      Chỉnh sửa
+                                    </li>
+                                  )}
+                                  {user?._id === comment.userId._id && (
+                                    <li
+                                      onClick={() => {
+                                        handleDeleteCommentClick(
+                                          "base",
+                                          comment._id
+                                        );
+                                      }}
+                                    >
+                                      Xóa
+                                    </li>
+                                  )}
+                                  <li
+                                    onClick={() => {
+                                      handleReportCommentClick(
+                                        "base",
+                                        comment._id
+                                      );
+                                    }}
+                                  >
+                                    Báo cáo bình luận xấu
+                                  </li>
+                                </ul>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                        {!!comment.subComments &&
+                          comment.subComments
+                            .slice(0, visibleComments)
+                            .map((subComments, index) => (
+                              <div
+                                key={subComments._id}
+                                className="base-comment sub-comment"
+                              >
+                                <img
+                                  src={
+                                    !!subComments.userId.avatar
+                                      ? subComments.userId.avatar
+                                      : avtDefault
+                                  }
+                                  alt=""
+                                />
+                                <div className="main-content">
+                                  <div className="info">
+                                    <h3>{subComments.userId.name}</h3>
+                                    <p>
+                                      {getCreatedAtString(
+                                        subComments.createdAt
+                                      )}
+                                    </p>
+                                  </div>
+                                  {isSubEdit &&
+                                  subCommentId === subComments._id ? null : (
+                                    <p>{subComments.comment}</p>
+                                  )}
+
+                                  <form
+                                    onSubmit={(e) => {
+                                      e.preventDefault();
+                                      handleUpdateSubComment(subComments._id);
+                                    }}
+                                  >
+                                    {replyInputVisible &&
+                                    subCommentId === subComments._id ? (
+                                      <textarea
+                                        ref={inputRef}
+                                        value={subCommentInput}
+                                        onChange={(e) =>
+                                          setSubCommentInput(e.target.value)
+                                        }
+                                        required
+                                        placeholder="Trả lời..."
+                                        className="input"
+                                      />
+                                    ) : undefined}
+                                    {isSubEdit &&
+                                    subCommentId === subComments._id ? (
+                                      <div className="btn-edit-container">
+                                        <button
+                                          onClick={handleCancelEditCommentClick}
+                                          type="button"
+                                          className="btn-cancel"
+                                        >
+                                          Hủy
+                                        </button>
+                                        <button
+                                          disabled={
+                                            isLoadingComment === true ||
+                                            isLoadingEditBaseComment === true
+                                          }
+                                          type="submit"
+                                          className="btn-reply"
+                                        >
+                                          {isLoadingEditBaseComment &&
+                                          subCommentId === subComments._id ? (
+                                            <Loader />
+                                          ) : (
+                                            "Lưu"
+                                          )}
+                                        </button>
+                                      </div>
+                                    ) : null}
+                                  </form>
+                                  {/* <textarea
+                              // value={this.state.text}
+                              // onChange={this.handleChange}
+                              required
+                              placeholder="Bình luận..."
+                              className="input"
+                            />
+                            <button className="btn-reply">Trả lời</button> */}
+                                </div>
+                                <div
+                                  ref={
+                                    showDropdownSubId === subComments._id
+                                      ? dropdownRef
+                                      : null
+                                  }
+                                  className="action-comment"
+                                >
+                                  <BiDotsVerticalRounded
+                                    onClick={() => {
+                                      setShowDropdownBaseId("");
+                                      setShowDropdownSubId(subComments._id);
+                                      setShowDropdown(!showDropdown);
+                                    }}
+                                    className={"icon-three-dot"}
+                                  />
+                                  {showDropdown &&
+                                  showDropdownSubId === subComments._id ? (
+                                    <div className="dropdown-action">
+                                      <ul>
+                                        {user?._id ===
+                                          subComments.userId._id && (
+                                          <li
+                                            onClick={() => {
+                                              handleEditSubCommentClick(
+                                                subComments._id,
+                                                subComments.comment
+                                              );
+                                            }}
+                                          >
+                                            Chỉnh sửa
+                                          </li>
+                                        )}
+                                        {user?._id ===
+                                          subComments.userId._id && (
+                                          <li
+                                            onClick={() => {
+                                              handleDeleteCommentClick(
+                                                "sub",
+                                                subComments._id
+                                              );
+                                            }}
+                                          >
+                                            Xóa
+                                          </li>
+                                        )}
+                                        <li
+                                          onClick={() => {
+                                            handleReportCommentClick(
+                                              "sub",
+                                              subComments._id
+                                            );
+                                          }}
+                                        >
+                                          Báo cáo bình luận xấu
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  ) : null}
+                                </div>
+                              </div>
+                            ))}
+                      </div>
+                    ))}
+                {postComments.length > numberCommentVisible && (
+                  <div className="see-more">
+                    <button
+                      onClick={() => {
+                        if (visibleComments > numberCommentVisible) {
+                          handleHideLessComments();
+                        } else {
+                          handleViewMoreComments();
+                        }
+                      }}
+                      className="btn-see-more"
+                    >
+                      <div>
+                        {visibleComments > numberCommentVisible
+                          ? "Ẩn bớt"
+                          : "Xem tất cả bình luận"}
+                        {visibleComments > numberCommentVisible ? (
+                          <MdKeyboardArrowUp size={24} className={"arrow"} />
+                        ) : (
+                          <MdKeyboardArrowDown size={24} className={"arrow"} />
+                        )}
+                      </div>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
