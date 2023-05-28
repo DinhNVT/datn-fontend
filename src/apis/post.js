@@ -24,10 +24,20 @@ export const apiGetDetailPost = (slug) =>
   instance.get(`/posts/detail?slug=${slug}`);
 export const apiGetDetailPostByRole = (id) =>
   instanceJWT.get(`/posts/detail/${id}`);
+
+//comment
 export const apiGetPostComments = (postId) =>
   instance.get(`/posts/comment?postId=${postId}`);
 export const apiCreatePostComments = (status, comment) =>
   instanceJWT.post(`/posts/comment?status=${status}`, comment);
+export const apiUpdatePostComments = (id, status, comment) =>
+  instanceJWT.put(`/posts/comment/${id}?status=${status}`, comment);
+export const apiDeletePostComments = (id, status) =>
+  instanceJWT.delete(`/posts/comment/${id}?status=${status}`);
+export const apiCreateReportPostComments = (report) =>
+  instance.post(`/posts/comment/report`, report);
+
+//get post option
 export const apiGetPostsOption = (query) =>
   instance.get(`/posts/option?${query}`);
 export const apiGetPostsMe = (query) => instanceJWT.get(`/posts/me?${query}`);

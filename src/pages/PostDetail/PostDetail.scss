@@ -316,7 +316,6 @@
         padding: 40px;
         border: 1px solid $border-color;
         border-radius: 16px;
-        overflow: hidden;
 
         .title {
           border-bottom: 2px solid $primary-normal;
@@ -329,19 +328,76 @@
             @include button-black;
             padding: 8px 24px;
             margin-top: 16px;
+            min-width: 90px;
 
             &:hover {
               @include button-black-hover;
             }
           }
 
-          .base-comment:first-child {
-            border: none;
+          .btn-edit-container {
+            .btn-cancel {
+              @include button-black;
+              background-color: $gray-200;
+              padding: 8px 24px;
+              margin-top: 16px;
+              min-width: 90px;
+              margin-right: 8px;
+              color: $gray-700;
+
+              &:hover {
+                @include button-black-hover;
+              }
+            }
           }
 
           .base-comment {
+            margin-top: 20px;
+
+            .action-comment {
+              position: relative;
+              .icon-three-dot {
+                font-size: 24px;
+                cursor: pointer;
+                color: $gray-500;
+
+                &:hover {
+                  color: $primary-normal;
+                  border-radius: 50%;
+                }
+              }
+              .dropdown-action {
+                position: absolute;
+                top: 30px;
+                right: 0;
+                background-color: white;
+                border: 1px solid $gray-500;
+                padding: 10px 0;
+                border-radius: 4px;
+                box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+                width: 250px;
+                z-index: 100;
+
+                ul {
+                  li {
+                    padding: 10px 20px;
+                    cursor: pointer;
+
+                    &:hover {
+                      background-color: $gray-100;
+                    }
+                  }
+                }
+              }
+            }
+
+            &.border-none {
+              border-top: none;
+            }
+
             &.sub-comment {
               margin-left: 48px;
+              margin-top: 0px;
             }
 
             display: flex;
@@ -379,6 +435,8 @@
 
           .main-input {
             margin-top: 16px;
+            margin-bottom: 30px;
+
             .input {
               @include input-textarea;
               margin-top: 8px;
@@ -392,7 +450,33 @@
               &.large {
                 margin-top: 0;
                 padding: 12px 24px;
+                min-width: 120px;
               }
+            }
+          }
+        }
+
+        .see-more {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+
+          .btn-see-more {
+            min-width: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            @include button-no-color;
+            transform: translate(0, 0);
+            box-shadow: none;
+
+            &:hover {
+              @include button-black-hover;
+            }
+
+            .arrow {
+              vertical-align: middle;
+              margin-left: 6px;
             }
           }
         }
@@ -640,4 +724,9 @@
       }
     }
   }
+}
+
+.swal2-cancel {
+  order: -1;
+  margin-right: 10px;
 }
