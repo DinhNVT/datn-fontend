@@ -1,0 +1,42 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.follower-container {
+  .follower-content {
+    .follower-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $gray-200;
+      padding: 10px;
+
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        img {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+
+        .info {
+          .name {
+            margin-bottom: 4px;
+          }
+        }
+      }
+
+      .btn-follower {
+        @include button-black;
+        padding: 8px 16px;
+
+        &.following {
+          background-color: white;
+          color: $gray-700;
+        }
+      }
+    }
+  }
+}

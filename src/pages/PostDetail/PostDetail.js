@@ -119,7 +119,7 @@ const PostDetail = () => {
           setFound(false);
         } else {
           setPost(res.data.result);
-          // window.scrollTo(0, 0);
+          window.scrollTo(0, 0);
           return res.data.result;
         }
       })

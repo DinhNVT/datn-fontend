@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Profile.scss";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaRegComment } from "react-icons/fa";
 import { BsCheckAll, BsArrowRight } from "react-icons/bs";
 import {
@@ -15,8 +15,7 @@ import { createSummary, truncateTitle } from "../../utils/truncateString";
 import { getCreatedAtString } from "../../utils/convertTime";
 import Loader from "../../components/Loader/Loader";
 
-const Profile = () => {
-  const { username } = useParams();
+const Profile = (props) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
@@ -57,12 +56,13 @@ const Profile = () => {
 
   const handleClickSeeMore = () => {
     setIsLoadingSeeMore(true);
-    getAllPost(page, username);
+    getAllPost(page, props.data.username);
   };
 
   useEffect(() => {
-    getAllPost(1, username);
-  }, [username]);
+    setPosts([])
+    getAllPost(1, props.data.username);
+  }, [props]);
   return (
     <div className="profile-container">
       <div className="profile-content">

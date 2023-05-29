@@ -1,0 +1,43 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.following-container {
+  .following-content {
+    .following-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $gray-200;
+      padding: 10px;
+
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        img {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+          border-radius: 50%;
+          box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        }
+
+        .info {
+          .name {
+            margin-bottom: 4px;
+          }
+        }
+      }
+
+      .btn-following {
+        @include button-black;
+        padding: 8px 16px;
+
+        &.following {
+          background-color: white;
+          color: $gray-700;
+        }
+      }
+    }
+  }
+}
