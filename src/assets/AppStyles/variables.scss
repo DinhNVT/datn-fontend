@@ -152,6 +152,11 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   padding: 12px 24px;
   transition: all 0.3s $transition-bezier;
   border: 1px solid $border-color;
+
+  &:hover {
+    box-shadow: $small-shadow;
+    transform: translate(-2px, -2px);
+  }
 }
 
 @mixin button-black-hover {
@@ -222,7 +227,7 @@ $transition-bezier: cubic-bezier(0.5, 2.5, 0.7, 0.7);
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
-  
+
   &:focus {
     box-shadow: $box-shadow-input;
   }
