@@ -20,6 +20,7 @@ import EditPost from "../pages/EditPost/EditPost";
 import FollowingHome from "../pages/Home/Following/Following";
 import Search from "../pages/Search/Search";
 import Category from "../pages/Category/Category";
+import EditProfile from "../pages/MePost/EditProfile/EditProfile";
 
 const ROUTES = {
   HOME_PAGE: {
@@ -82,6 +83,13 @@ const ROUTES = {
     path: "/me/post/drafts",
     component: Drafts,
     layout: PostLayout,
+    isPrivate: true,
+  },
+
+  EDIT_PROFILE_PAGE: {
+    path: "/me/edit/profile",
+    component: EditProfile,
+    layout: NoHeaderLayout,
     isPrivate: true,
   },
 

@@ -36,7 +36,21 @@ export const isFullNameValid = (fullName) => {
   const fullNameRegex = /^[a-zA-ZÀ-ỹ ]+$/;
   return (
     fullNameRegex.test(fullName) &&
-    fullName.length >= 3 &&
+    fullName.length >= 2 &&
     fullName.length <= 100
   );
+};
+
+export const isValidUsername = (username) => {
+  const regex = /^[a-z0-9]+$/i;
+  return regex.test(username);
+};
+
+export const isValidUrl = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

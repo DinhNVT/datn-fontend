@@ -32,10 +32,6 @@
               &:focus {
                 box-shadow: $box-shadow-input;
               }
-
-              &.input-password {
-                padding-right: 40px;
-              }
             }
 
             .btn-show-password {

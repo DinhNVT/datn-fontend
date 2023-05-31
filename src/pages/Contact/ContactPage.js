@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
 import "./ContactPage.scss";
-import { isFullNameValid, validateEmail } from "../../utils/validates";
+import { validateEmail } from "../../utils/validates";
 import Loader from "../../components/Loader/Loader";
+import { apiCreateContact } from "../../apis/contact";
+import { errorAlert, successAlert } from "../../utils/customAlert";
 
 const ContactPage = () => {
   const inputRef = useRef(null);
@@ -18,17 +20,6 @@ const ContactPage = () => {
   const handleNameChange = (e) => {
     const name = e.target.value;
     setName(name);
-    if (!isFullNameValid(name)) {
-      setErrorInput((prevError) => ({
-        ...prevError,
-        name: "Họ tên không hợp lệ",
-      }));
-    } else {
-      setErrorInput((prevError) => ({
-        ...prevError,
-        name: "",
-      }));
-    }
   };
 
   const handleEmailChange = (e) => {
@@ -50,26 +41,28 @@ const ContactPage = () => {
   const handleContentChange = (e) => {
     const content = e.target.value;
     setContent(content);
-    if (content.length < 3) {
-      setErrorInput((prevError) => ({
-        ...prevError,
-        content: "Nội dung không hợp lệ",
-      }));
-    } else {
-      setErrorInput((prevError) => ({
-        ...prevError,
-        content: "",
-      }));
-    }
   };
 
-  const hasError = () => {
-    for (const key in errorInput) {
-      if (errorInput[key]) {
-        return true;
-      }
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await apiCreateContact({
+        fullName: name,
+        email: email,
+        content: content,
+      });
+      setIsLoading(false);
+      successAlert(
+        "Đã gửi liên hệ",
+        "Chúng tôi sẽ gửi lại phản hồi cho bạn sớm qua email bạn cung cấp",
+        3000,
+        true
+      );
+    } catch (error) {
+      setIsLoading(false);
+      errorAlert("Không gửi được", "Đã xảy ra lỗi! Vui lòng thử lại sau");
     }
-    return false;
   };
 
   return (
@@ -78,7 +71,7 @@ const ContactPage = () => {
         <div className="title">
           <h1>Liên hệ</h1>
         </div>
-        <form className="form-container">
+        <form onSubmit={handleOnSubmit} className="form-container">
           <p className="input-container">
             <label>
               Họ tên
@@ -96,11 +89,6 @@ const ContactPage = () => {
                   placeholder="Nhập họ tên"
                   required
                 />
-                {!!errorInput.name && (
-                  <span className="error-text" aria-hidden="true">
-                    {errorInput.name}
-                  </span>
-                )}
               </span>
             </label>
           </p>
@@ -141,17 +129,14 @@ const ContactPage = () => {
                 placeholder="Viết nội dung..."
                 className="input-text-area"
               />
-              {!!errorInput.content && (
-                <span className="error-text" aria-hidden="true">
-                  {errorInput.content}
-                </span>
-              )}
             </label>
           </p>
           <button
             type="submit"
-            disabled={isLoading === true || hasError()}
-            className={`btn-send-contact${hasError() ? " error-disable" : ""}`}
+            disabled={isLoading === true || errorInput.email}
+            className={`btn-send-contact${
+              errorInput.email ? " error-disable" : ""
+            }`}
           >
             {isLoading ? <Loader /> : "Đăng ký"}
           </button>

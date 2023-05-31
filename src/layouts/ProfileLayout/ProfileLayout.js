@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./ProfileLayout.scss";
 import Header from "../../components/Header/Header";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import avtDefault from "../../assets/images/avatar_default.png";
 import { apiGetUserByUsername } from "../../apis/user";
 import NotFoundPage from "../../pages/404/NotFoundPage";
 import Footer from "../../components/Footer/Footer";
+import { useSelector } from "react-redux";
+import ROUTES from "../../constants/routes";
 
 const ProfileLayout = (props) => {
   const location = useLocation();
   const params = useParams();
-  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const [getUser, setGetUser] = useState(null);
+  const { user } = useSelector((state) => state?.auth?.login);
 
   const getUserByUsername = async (params) => {
     try {
       const res = await apiGetUserByUsername(params.username);
       if (res.data.user) {
-        setUser(res.data.user);
+        setGetUser(res.data.user);
       } else {
-        setUser("none");
+        setGetUser("none");
       }
     } catch (error) {
       console.log(error?.res?.data?.message);
@@ -31,21 +35,31 @@ const ProfileLayout = (props) => {
   return (
     <div className="profile-layout">
       <Header />
-      {user ? (
+      {getUser ? (
         <div className="profile-children">
           <div className="profile-container">
             <div className="profile-menu">
               <div className="profile-info">
                 <div className="avt">
                   <img
-                    src={user?.avatar ? user?.avatar : avtDefault}
-                    alt={user?.name}
+                    src={getUser?.avatar ? getUser?.avatar : avtDefault}
+                    alt={getUser?.name}
                   />
                 </div>
                 <div className="name">
-                  <h1>{user?.name}</h1>
-                  <h3>{user?.email}</h3>
-                  <button>Sửa thông tin</button>
+                  <h1>{getUser?.name}</h1>
+                  <h3>{getUser?.email}</h3>
+                  {user?.username !== getUser?.username ? (
+                    <button>Theo dõi</button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        navigate(ROUTES.EDIT_PROFILE_PAGE.path);
+                      }}
+                    >
+                      Sửa thông tin
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="profile-navbar">
@@ -61,7 +75,7 @@ const ProfileLayout = (props) => {
                           ? "active"
                           : ""
                       }
-                      to={`/profile/${user?.username}`}
+                      to={`/profile/${getUser?.username}`}
                     >
                       Bài viết
                     </Link>
@@ -74,7 +88,7 @@ const ProfileLayout = (props) => {
                           ? "active"
                           : ""
                       }
-                      to={`/profile/${user?.username}/favorites`}
+                      to={`/profile/${getUser?.username}/favorites`}
                     >
                       Yêu thích
                     </Link>
@@ -87,7 +101,7 @@ const ProfileLayout = (props) => {
                           ? "active"
                           : ""
                       }
-                      to={`/profile/${user?.username}/following`}
+                      to={`/profile/${getUser?.username}/following`}
                     >
                       Đang theo dõi
                     </Link>
@@ -100,7 +114,7 @@ const ProfileLayout = (props) => {
                           ? "active"
                           : ""
                       }
-                      to={`/profile/${user?.username}/follower`}
+                      to={`/profile/${getUser?.username}/follower`}
                     >
                       Người theo dõi
                     </Link>
@@ -108,10 +122,10 @@ const ProfileLayout = (props) => {
                 </ul>
               </div>
             </div>
-            {React.cloneElement(props.children, { data: user })}
+            {React.cloneElement(props.children, { data: getUser })}
           </div>
         </div>
-      ) : user === "none" ? (
+      ) : getUser === "none" ? (
         <div>
           <NotFoundPage />
           <Footer />

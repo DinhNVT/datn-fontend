@@ -3,16 +3,16 @@ import "./AvtDropDown.scss";
 import avtDefault from "../../../assets/images/avatar_default.png";
 import { useDispatch } from "react-redux";
 import { logoutUserFetch } from "../../../stores/apiAuthRequest";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
 import ROUTES from "../../../constants/routes";
 
 const AvtDropDown = (props) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogoutClick = () => {
-    logoutUserFetch(dispatch, props.handleAvatarClick, navigate);
+    logoutUserFetch(dispatch, props.handleAvatarClick);
   };
+
   return (
     <div className="avatar-dropdown">
       <div className="info-user">

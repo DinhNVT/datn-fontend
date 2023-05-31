@@ -63,7 +63,7 @@ const Category = () => {
       getCategoryDetail(params.slug);
       getAllPostByCategory(1, params.slug);
     }
-  }, [params]);
+  }, [params.slug]);
 
   return (
     <div className="category-container">

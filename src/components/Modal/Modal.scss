@@ -5,14 +5,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: $primary-light;
+  background-color: $body-bg;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
-  z-index: 9999;
+  z-index: 999;
   max-height: 95vh;
   overflow: auto;
 
@@ -32,7 +32,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
-  z-index: 9998;
+  z-index: 999;
 
   &.active {
     visibility: visible;

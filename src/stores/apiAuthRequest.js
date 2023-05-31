@@ -5,6 +5,7 @@ import {
   logoutUser,
   forgotPasswordUser,
 } from "../apis/auth";
+import { apiGetUserPrivateByUserId } from "../apis/user";
 import {
   registerFailed,
   registerIsLoading,
@@ -44,6 +45,7 @@ export const checkRefreshTokenFetch = async (dispatch) => {
   try {
     const response = await refreshToken();
     localStorage.setItem("accessToken", response.data.accessToken);
+    refreshUserFetch(dispatch);
   } catch (error) {
     if (
       error.response &&
@@ -57,14 +59,13 @@ export const checkRefreshTokenFetch = async (dispatch) => {
   }
 };
 
-export const logoutUserFetch = async (dispatch, closeDropdown, navigate) => {
+export const logoutUserFetch = async (dispatch, closeDropdown) => {
   try {
     await logoutUser();
     closeDropdown();
     dispatch(clearUser());
     localStorage.removeItem("accessToken");
     localStorage.clear();
-    navigate("/");
   } catch (error) {
     console.log(error);
   }
@@ -77,5 +78,15 @@ export const forgotFetch = async (user, dispatch) => {
     dispatch(forgotSuccess(response.data));
   } catch (error) {
     dispatch(forgotFailed(error.response.data));
+  }
+};
+
+// Create an async thunk for logging in
+export const refreshUserFetch = async (dispatch) => {
+  try {
+    const response = await apiGetUserPrivateByUserId();
+    dispatch(loginSuccess(response.data.user));
+  } catch (error) {
+    console.log(error);
   }
 };
