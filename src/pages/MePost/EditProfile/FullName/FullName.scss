@@ -1,0 +1,85 @@
+@import "../../../../assets/AppStyles/variables.scss";
+.full-name-content {
+  padding: 20px;
+  .input-container {
+    .input {
+      @include input;
+      margin: 10px 0;
+
+      &:focus {
+        box-shadow: $box-shadow-input;
+      }
+    }
+
+    .error-text {
+      @include error-text;
+
+      &.note {
+        color: $gray-500;
+      }
+    }
+  }
+
+  .input-container-select {
+    margin-bottom: 20px;
+    min-width: 300px;
+
+    label {
+      @include label-input;
+
+      .form-control-input {
+        display: block;
+        margin-top: 10px;
+        position: relative;
+
+        .input {
+          @include input;
+
+          &:focus {
+            box-shadow: $box-shadow-input;
+          }
+        }
+        .input-select {
+          @include input;
+          padding: 0 20px;
+          font-weight: 600;
+          color: $gray-600;
+
+          option {
+            font-weight: 500;
+          }
+
+          &:focus {
+            box-shadow: $box-shadow-input;
+          }
+        }
+
+        .error-text {
+          @include error-text;
+
+          &.note {
+            color: $gray-500;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    .btn {
+      @include button-black;
+      padding: 8px 24px;
+      min-width: 100px;
+
+      &.btn-cancel {
+        background-color: white;
+        color: $gray-700;
+      }
+    }
+  }
+}

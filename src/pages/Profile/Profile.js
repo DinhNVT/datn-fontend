@@ -62,7 +62,7 @@ const Profile = (props) => {
   useEffect(() => {
     setPosts([])
     getAllPost(1, props.data.username);
-  }, [props]);
+  }, [props.data.username]);
   return (
     <div className="profile-container">
       <div className="profile-content">

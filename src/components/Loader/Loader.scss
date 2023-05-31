@@ -9,6 +9,7 @@
   position: relative;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+  vertical-align: top;
 
   &::after {
     content: "";
