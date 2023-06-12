@@ -60,7 +60,7 @@ const HomeLayout = (props) => {
   const getLatestPostFetch = async () => {
     try {
       const res = await getLatestPost(`limit=6`);
-      setLatestPosts(res.data.result);
+      setLatestPosts(res.data.result.reverse());
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +148,7 @@ const HomeLayout = (props) => {
               {latestPosts.length > 0 ? (
                 <Slider {...settings}>
                   {latestPosts.length > 0 &&
-                    latestPosts.reverse().map((post) => (
+                    latestPosts.map((post) => (
                       <div key={post._id} className="slider-item">
                         <img src={post.thumbnail_url} alt="" />
                         <div className="tags">

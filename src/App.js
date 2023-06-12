@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { checkRefreshTokenFetch } from "./stores/apiAuthRequest";
 import { fetchFavoritePosts } from "./stores/apiPostRequest";
+import { fetchFollowingsUser } from "./stores/apiUserRequest";
 
 function App() {
   const dispatch = useDispatch();
@@ -15,10 +16,12 @@ function App() {
       checkRefreshTokenFetch(dispatch);
       setIsFetched(true);
     }
-  }, [dispatch, isFetched, user]);
+    // eslint-disable-next-line
+  }, [isFetched, user]);
 
   useEffect(() => {
     fetchFavoritePosts(dispatch);
+    fetchFollowingsUser(dispatch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return (

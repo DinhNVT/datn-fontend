@@ -55,7 +55,6 @@ const SearchModal = (props) => {
     try {
       const res = await apiGetMostPopularTags(`limit=${8}`);
       setPopularTags(res.data.tags);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -121,6 +120,7 @@ const SearchModal = (props) => {
             {popularTags.length > 0 &&
               popularTags.map((tag, index) => (
                 <Link
+                  key={tag._id}
                   to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
                   className={`item-tag tag-${index + 1}`}
                 >

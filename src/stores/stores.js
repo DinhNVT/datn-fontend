@@ -14,17 +14,19 @@ import authReducer from "./authSlice";
 import storage from "redux-persist/lib/storage";
 import authNotSaveSlice from "./authNotSaveSlice";
 import postSlice from "./postSlice";
+import userSlice from "./userSlice";
 const persistConfig = {
   key: "root",
-  version: 8,
+  version: 9,
   storage,
-  blacklist: ["auth_not_save", "post"],
+  blacklist: ["auth_not_save", "post", "user"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
   auth_not_save: authNotSaveSlice,
   post: postSlice,
+  user: userSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

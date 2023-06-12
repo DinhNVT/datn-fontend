@@ -12,10 +12,17 @@ export const apiAddToFavorites = (postId) =>
 export const apiDeleteFavoritePost = (postId) =>
   instanceJWT.delete(`/users/favorite/${postId}`);
 
+//follow
 export const apiGetFollowerUser = (id) => instance.get(`/users/follower/${id}`);
 export const apiGetFollowingUser = (id) =>
   instance.get(`/users/following/${id}`);
+export const apiGetFollowingIds = () =>
+  instanceJWT.get(`/users/following-ids/get`);
+export const apiFollowUser = (id) => instanceJWT.post(`/users/follow/${id}`);
+export const apiUnFollowUser = (id) =>
+  instanceJWT.delete(`/users/follow/${id}`);
 
+//get
 export const apiGetUserPrivateById = (id) => instanceJWT.get(`/users/${id}`);
 export const apiGetUserPrivateByUserId = () =>
   instanceJWT.get(`/users/user/id`);

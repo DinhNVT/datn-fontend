@@ -50,3 +50,5 @@ export const apiGetMostViewedPosts = (query) =>
   instance.get(`/posts/most-view?${query}`);
 export const apiGetMostPopularTags = (query) =>
   instance.get(`/posts/most-tags?${query}`);
+export const apiGetRelatedPosts = (query) =>
+  instance.get(`/posts/relate-posts?${query}`);
