@@ -266,11 +266,6 @@ const WritePost = () => {
                     </option>
                   ))}
                 </select>
-                {/* {!!errorInput.email && (
-                  <span className="error-text" aria-hidden="true">
-                    {errorInput.email}
-                  </span>
-                )} */}
               </span>
             </label>
           </p>
@@ -344,16 +339,6 @@ const WritePost = () => {
                 </div>
               )}
             </label>
-            {/* {!!thumbnail && (
-              <IoClose
-                onClick={() => {
-                  setImage("");
-                  setThumbnail(null);
-                }}
-                size={48}
-                className={"delete-image"}
-              />
-            )} */}
             <input
               type="file"
               id="imageInput"
@@ -361,12 +346,6 @@ const WritePost = () => {
               accept="image/jpeg, image/png, image/jpg"
               onChange={handleFileChange}
             />
-
-            {/* {!!errorInput.email && (
-                  <span className="error-text" aria-hidden="true">
-                    {errorInput.email}
-                  </span>
-                )} */}
           </p>
         </form>
         <CKEditor
@@ -382,13 +361,8 @@ const WritePost = () => {
           }}
           data={content}
           onChange={handleEditorChange}
-          // onReady={(editor) => {
-          //   // You can store the "editor" and use when it is needed.
-          //   console.log("Editor is ready to use!", editor);
-          // }}
         />
       </div>
-      {/* <div dangerouslySetInnerHTML={{ __html: content }} /> */}
     </div>
   );
 };

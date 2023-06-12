@@ -68,6 +68,8 @@ const Login = (props) => {
                 ? "Bạn chưa xác minh email. Vui lòng kiểm tra lại email của bạn để xác minh."
                 : errorMessage.message === "internal_server_error"
                 ? "Lỗi hệ thống. Vui lòng thử lại sau"
+                : errorMessage.message === "User is already blocked"
+                ? "Tài khoản của bạn đã bị chặn"
                 : ""}
             </span>
           </div>

@@ -57,7 +57,9 @@ const ForgetPassword = (props) => {
                     : message.message ===
                       "You have not verified your email. Please check your email to verify your account."
                     ? "Bạn chưa xác minh email. Vui lòng kiểm tra lại email của bạn để xác minh."
-                    : message.message === ""}
+                    : message.message === "User is already blocked"
+                    ? "Tài khoản của bạn đã bị chặn"
+                    : ""}
                 </span>
               </div>
             )}

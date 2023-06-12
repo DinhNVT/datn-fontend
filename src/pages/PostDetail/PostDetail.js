@@ -123,11 +123,12 @@ const PostDetail = () => {
           return res.data.result;
         }
       })
-      .catch(() => {
+      .catch((error) => {
         setFound(false);
+        console.log(error);
       });
-    getPostComment(post._id);
-    getPostOption(post.userId._id);
+    getPostComment(post?._id);
+    getPostOption(post?.userId?._id);
   }, [slug]);
 
   useEffect(() => {

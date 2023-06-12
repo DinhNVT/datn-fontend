@@ -4,13 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { TfiClose } from "react-icons/tfi";
 import { FiSearch } from "react-icons/fi";
 import ROUTES from "../../constants/routes";
+import { apiGetMostPopularTags } from "../../apis/post";
 
 const SearchModal = (props) => {
   const navigate = useNavigate();
+  const [popularTags, setPopularTags] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [errorInput, setErrorInput] = useState("");
   useEffect(() => {
-    setErrorInput("")
+    setErrorInput("");
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         props.closeModalSearch();
@@ -48,6 +50,20 @@ const SearchModal = (props) => {
       handleInputConfirm();
     }
   };
+
+  const getMostPopularTags = async () => {
+    try {
+      const res = await apiGetMostPopularTags(`limit=${8}`);
+      setPopularTags(res.data.tags);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMostPopularTags();
+  }, []);
 
   return (
     <div
@@ -102,14 +118,16 @@ const SearchModal = (props) => {
         <div className="or-keyword">
           <h3>Hoặc tìm kiếm bằng từ khóa...</h3>
           <div className="tags">
-            <Link className={`item-tag tag-1`}>
-              <span># </span>
-              Tag 1
-            </Link>
-            <Link className={`item-tag tag-2`}>
-              <span># </span>
-              Tag 1
-            </Link>
+            {popularTags.length > 0 &&
+              popularTags.map((tag, index) => (
+                <Link
+                  to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                  className={`item-tag tag-${index + 1}`}
+                >
+                  <span># </span>
+                  {tag?.name}
+                </Link>
+              ))}
           </div>
         </div>
       </div>

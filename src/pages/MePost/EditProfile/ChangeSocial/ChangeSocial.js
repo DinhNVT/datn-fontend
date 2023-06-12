@@ -38,7 +38,10 @@ const ChangeSocial = (props) => {
   const handleFacebookChange = (e) => {
     const text = e.target.value;
     setFacebook(text);
-    if (!isValidUrl(text) && text.length > 0) {
+    if (
+      (!isValidUrl(text) || !text.includes("facebook.com")) &&
+      text.length > 0
+    ) {
       setErrorInput((prevError) => ({
         ...prevError,
         facebook: "Link facebook không hợp lệ",
@@ -53,7 +56,10 @@ const ChangeSocial = (props) => {
   const handleInstagramChange = (e) => {
     const text = e.target.value;
     setInstagram(text);
-    if (!isValidUrl(text) && text.length > 0) {
+    if (
+      (!isValidUrl(text) || !text.includes("instagram.com")) &&
+      text.length > 0
+    ) {
       setErrorInput((prevError) => ({
         ...prevError,
         instagram: "Link instagram không hợp lệ",
@@ -69,7 +75,10 @@ const ChangeSocial = (props) => {
   const handleYoutubeChange = (e) => {
     const text = e.target.value;
     setYoutube(text);
-    if (!isValidUrl(text) && text.length > 0) {
+    if (
+      (!isValidUrl(text) || !text.includes("youtube.com")) &&
+      text.length > 0
+    ) {
       setErrorInput((prevError) => ({
         ...prevError,
         youtube: "Link youtube không hợp lệ",
@@ -85,7 +94,10 @@ const ChangeSocial = (props) => {
   const handleTiktokChange = (e) => {
     const text = e.target.value;
     setTiktok(text);
-    if (!isValidUrl(text) && text.length > 0) {
+    if (
+      (!isValidUrl(text) || !text.includes("tiktok.com")) &&
+      text.length > 0
+    ) {
       setErrorInput((prevError) => ({
         ...prevError,
         tiktok: "Link tiktok không hợp lệ",

@@ -19,7 +19,7 @@ export const createPost = (post) =>
     },
   });
 export const apiDeletePost = (id) => instanceJWT.delete(`/posts/${id}`);
-export const getLatestPost = () => instance.get("/posts/latest");
+export const getLatestPost = (query) => instance.get(`/posts/latest?${query}`);
 export const apiGetDetailPost = (slug) =>
   instance.get(`/posts/detail?slug=${slug}`);
 export const apiGetDetailPostByRole = (id) =>
@@ -40,7 +40,13 @@ export const apiCreateReportPostComments = (report) =>
 //get post option
 export const apiGetPostsOption = (query) =>
   instance.get(`/posts/option?${query}`);
+export const apiGetFollowedPosts = (query) =>
+  instanceJWT.get(`/posts/followed?${query}`);
 export const apiGetPostsMe = (query) => instanceJWT.get(`/posts/me?${query}`);
 export const apiGetAllPosts = (query) =>
   instance.get(`/posts/get-all?${query}`);
 export const apiGetAllTags = () => instanceJWT.get(`/posts/tags`);
+export const apiGetMostViewedPosts = (query) =>
+  instance.get(`/posts/most-view?${query}`);
+export const apiGetMostPopularTags = (query) =>
+  instance.get(`/posts/most-tags?${query}`);

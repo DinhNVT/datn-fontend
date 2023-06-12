@@ -11,6 +11,7 @@ const postSlice = createSlice({
       content: "",
       tags: [],
     },
+    favoritePosts: [],
   },
   reducers: {
     setCategoryId: (state, action) => {
@@ -39,6 +40,21 @@ const postSlice = createSlice({
       state.createPost.content = "";
       state.createPost.tags = [];
     },
+
+    setInitFavoritesPostIdsSlice: (state, action) => {
+      state.favoritePosts = action.payload;
+    },
+    addToFavoritesSlice: (state, action) => {
+      state.favoritePosts.push({ postId: action.payload });
+    },
+    removeFromFavoritesSlice: (state, action) => {
+      state.favoritePosts = state.favoritePosts.filter(
+        (favoritePost) => favoritePost.postId !== action.payload
+      );
+    },
+    clearFavoritesPostIdsSlice: (state) => {
+      state.favoritePosts = [];
+    },
   },
 });
 
@@ -50,6 +66,10 @@ export const {
   setContent,
   setTags,
   clearCreatePost,
+  setInitFavoritesPostIdsSlice,
+  addToFavoritesSlice,
+  removeFromFavoritesSlice,
+  clearFavoritesPostIdsSlice,
 } = postSlice.actions;
 
 export default postSlice.reducer;
