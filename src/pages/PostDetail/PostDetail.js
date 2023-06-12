@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./PostDetail.scss";
 import { RxCountdownTimer } from "react-icons/rx";
 import { FaRegComment } from "react-icons/fa";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEye, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
 import { MdContentCopy } from "react-icons/md";
 import { BsCheckAll } from "react-icons/bs";
@@ -12,8 +12,11 @@ import {
   apiCreateReportPostComments,
   apiDeletePostComments,
   apiGetDetailPost,
+  apiGetMostPopularTags,
+  apiGetMostViewedPosts,
   apiGetPostComments,
   apiGetPostsOption,
+  apiGetRelatedPosts,
   apiUpdatePostComments,
 } from "../../apis/post";
 import { getCreatedAtString } from "../../utils/convertTime";
@@ -22,12 +25,25 @@ import facebookIcon from "../../assets/images/facebook.png";
 import youtubeIcon from "../../assets/images/youtube.png";
 import instagramIcon from "../../assets/images/instagram.png";
 import tiktokIcon from "../../assets/images/tiktok.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { confirmAlert, deleteAlert, errorAlert } from "../../utils/customAlert";
 import Loader from "../../components/Loader/Loader";
 import { truncateTitle } from "../../utils/truncateString";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import {
+  addToFavoritesSlice,
+  removeFromFavoritesSlice,
+} from "../../stores/postSlice";
+import {
+  apiAddToFavorites,
+  apiDeleteFavoritePost,
+  apiFollowUser,
+  apiUnFollowUser,
+} from "../../apis/user";
+import { capitalizeFirstLetter } from "../../utils/convertString";
+import { followUserSlice, unFollowUserSlice } from "../../stores/userSlice";
+import ROUTES from "../../constants/routes";
 
 const PostDetail = () => {
   const { slug } = useParams();
@@ -62,6 +78,9 @@ const PostDetail = () => {
   const [showDropdownSubId, setShowDropdownSubId] = useState("");
   const [isBaseEdit, setIsBaseEdit] = useState(false);
   const [isSubEdit, setIsSubEdit] = useState(false);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [popularTags, setPopularTags] = useState([]);
+  const [mostViewedPosts, setMostViewedPosts] = useState([]);
 
   const [visibleComments, setVisibleComments] = useState(5);
   const numberCommentVisible = 5;
@@ -112,6 +131,36 @@ const PostDetail = () => {
       });
   };
 
+  const getRelatedPosts = async (postId) => {
+    const query = `limit=4&postId=${postId}`;
+    try {
+      const res = await apiGetRelatedPosts(query);
+      if (res.data.status === "success") {
+        setRelatedPosts(res.data.posts);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMostPopularTags = async () => {
+    try {
+      const res = await apiGetMostPopularTags(`limit=${6}`);
+      setPopularTags(res.data.tags);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMostViewedPosts = async () => {
+    try {
+      const res = await apiGetMostViewedPosts(`limit=${4}`);
+      setMostViewedPosts(res.data.posts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getPostDetail = useCallback(async () => {
     const post = await apiGetDetailPost(slug)
       .then((res) => {
@@ -128,12 +177,15 @@ const PostDetail = () => {
         console.log(error);
       });
     getPostComment(post?._id);
+    getRelatedPosts(post?._id);
     getPostOption(post?.userId?._id);
   }, [slug]);
 
   useEffect(() => {
     setFound(true);
     getPostDetail();
+    getMostPopularTags();
+    getMostViewedPosts();
   }, [slug, getPostDetail]);
 
   useEffect(() => {
@@ -200,9 +252,10 @@ const PostDetail = () => {
             setIsLoadingComment(false);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           errorAlert("Lỗi", "Xin vui lòng thử lại sau");
           setIsLoadingComment(false);
+          console.log(error);
         });
     }
   };
@@ -251,9 +304,10 @@ const PostDetail = () => {
           setIsLoadingEditBaseComment(false);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         errorAlert("Lỗi", "Xin vui lòng thử lại sau");
         setIsLoadingEditBaseComment(false);
+        console.log(error);
       });
   };
 
@@ -325,6 +379,54 @@ const PostDetail = () => {
     );
   };
 
+  const dispatch = useDispatch();
+  const { favoritePosts } = useSelector((state) => state?.post);
+  const { followingIds } = useSelector((state) => state?.user);
+
+  const addToFavorites = async (postId) => {
+    try {
+      dispatch(addToFavoritesSlice(postId));
+      await apiAddToFavorites({ postId: postId });
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const removeFromFavorites = async (postId) => {
+    try {
+      dispatch(removeFromFavoritesSlice(postId));
+      await apiDeleteFavoritePost(postId);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const isPostLiked = (postId) => {
+    return favoritePosts.some((favoritePost) => favoritePost.postId === postId);
+  };
+
+  const followUserOnClick = async (userId) => {
+    try {
+      dispatch(followUserSlice(userId));
+      await apiFollowUser(userId);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const unFollowUserOnClick = async (userId) => {
+    try {
+      dispatch(unFollowUserSlice(userId));
+      await apiUnFollowUser(userId);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const isFollowed = (userId) => {
+    return followingIds.some((followingId) => followingId.following === userId);
+  };
+
   if (!found) {
     return <NotFoundPage />;
   }
@@ -351,6 +453,33 @@ const PostDetail = () => {
                     <AiOutlineEye className={"icon"} size={24} />{" "}
                     <p>{post?.view_count} lượt xem</p>
                   </div>
+                  <button
+                    className="interact-item"
+                    onClick={() => {
+                      if (!user) {
+                        errorAlert(
+                          "Bạn chưa đăng nhập",
+                          "Bạn cần phải đăng nhập để thêm bài viết vào yêu thích"
+                        );
+                      } else {
+                        isPostLiked(post._id)
+                          ? removeFromFavorites(post._id)
+                          : addToFavorites(post._id);
+                      }
+                    }}
+                  >
+                    {isPostLiked(post._id) && !!user ? (
+                      <>
+                        <AiFillHeart size={24} className={"arrow liked"} />
+                        Yêu thích
+                      </>
+                    ) : (
+                      <>
+                        <AiOutlineHeart size={24} className={"arrow"} /> Yêu
+                        thích
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
               <div
@@ -361,7 +490,11 @@ const PostDetail = () => {
                 <h1 className="tags-title">Tags</h1>
                 <div className="tags-list">
                   {post?.tags?.map((tag, index) => (
-                    <Link key={tag._id} className={`item-tag tag-${index + 1}`}>
+                    <Link
+                      to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                      key={tag._id}
+                      className={`item-tag tag-${index + 1}`}
+                    >
                       <span># </span>
                       {tag.name}
                     </Link>
@@ -397,7 +530,12 @@ const PostDetail = () => {
               <div className="author-content">
                 <div className="author-content-info">
                   <div className="left">
-                    <Link>
+                    <Link
+                      to={ROUTES.PROFILE_PAGE.path.replace(
+                        ":username",
+                        post?.userId?.username
+                      )}
+                    >
                       <img
                         src={
                           !!post?.userId?.avatar
@@ -409,7 +547,14 @@ const PostDetail = () => {
                     </Link>
                   </div>
                   <div className="right">
-                    <h2>{post?.userId?.name}</h2>
+                    <Link
+                      to={ROUTES.PROFILE_PAGE.path.replace(
+                        ":username",
+                        post?.userId?.username
+                      )}
+                    >
+                      <h2> {post?.userId?.name}</h2>
+                    </Link>
                     <p>{post?.userId?.bio}</p>
                     {!!post?.userId?.social && (
                       <div className="social">
@@ -447,7 +592,29 @@ const PostDetail = () => {
                         )}
                       </div>
                     )}
-                    <Link className="btn-see-all">Xem tất cả bài viết</Link>
+                    {user && user?._id === post?.userId?._id ? null : (
+                      <button
+                        className={`btn-see-all ${
+                          isFollowed(post?.userId?._id) ? "" : "follow"
+                        }`}
+                        onClick={() => {
+                          if (!user) {
+                            errorAlert(
+                              "Bạn chưa đăng nhập",
+                              "Bạn cần phải đăng nhập theo dõi"
+                            );
+                          } else {
+                            isFollowed(post?.userId?._id)
+                              ? unFollowUserOnClick(post?.userId?._id)
+                              : followUserOnClick(post?.userId?._id);
+                          }
+                        }}
+                      >
+                        {isFollowed(post?.userId?._id) && !!user
+                          ? "Đang theo dõi"
+                          : "Theo dõi"}
+                      </button>
+                    )}
                   </div>
                 </div>
                 {!!postsUserNewest && (
@@ -465,7 +632,12 @@ const PostDetail = () => {
                           </div>
                           <div className="title-blog">
                             <Link to={`/post/${postUserNewest.slug}`}>
-                              <h4>{truncateTitle(postUserNewest.title, 60)}</h4>
+                              <h4>
+                                {truncateTitle(
+                                  capitalizeFirstLetter(postUserNewest.title),
+                                  55
+                                )}
+                              </h4>
                             </Link>
                             <p>
                               <RxCountdownTimer className={"icon-time"} />
@@ -851,90 +1023,42 @@ const PostDetail = () => {
               <h1>Bài viết liên quan</h1>
             </div>
             <div className="posts">
-              <div className="item-blog-container">
-                <div className="item-blog">
-                  <div className="img-blog">
-                    <Link>
-                      <img
-                        src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
-                        alt=""
-                      />
-                    </Link>
+              {relatedPosts.length > 0 &&
+                relatedPosts.map((post) => (
+                  <div key={post._id} className="item-blog-container">
+                    <div className="item-blog">
+                      <div className="img-blog">
+                        <Link
+                          to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                            ":slug",
+                            post?.slug
+                          )}
+                        >
+                          <img src={post?.thumbnail_url} alt={post?.title} />
+                        </Link>
+                      </div>
+                      <div className="title-blog">
+                        <Link
+                          to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                            ":slug",
+                            post?.slug
+                          )}
+                        >
+                          <h4>
+                            {truncateTitle(
+                              capitalizeFirstLetter(post?.title),
+                              55
+                            )}
+                          </h4>
+                        </Link>
+                        <p>
+                          <RxCountdownTimer className={"icon-time"} />
+                          {getCreatedAtString(post?.createdAt)}
+                        </p>
+                      </div>
+                    </div>{" "}
                   </div>
-                  <div className="title-blog">
-                    <Link>
-                      <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                    </Link>
-                    <p>
-                      <RxCountdownTimer className={"icon-time"} />
-                      20-04-2023
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="item-blog-container">
-                <div className="item-blog">
-                  <div className="img-blog">
-                    <Link>
-                      <img
-                        src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="title-blog">
-                    <Link>
-                      <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                    </Link>
-                    <p>
-                      <RxCountdownTimer className={"icon-time"} />
-                      20-04-2023
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="item-blog-container">
-                <div className="item-blog">
-                  <div className="img-blog">
-                    <Link>
-                      <img
-                        src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="title-blog">
-                    <Link>
-                      <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                    </Link>
-                    <p>
-                      <RxCountdownTimer className={"icon-time"} />
-                      20-04-2023
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="item-blog-container">
-                <div className="item-blog">
-                  <div className="img-blog">
-                    <Link>
-                      <img
-                        src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="title-blog">
-                    <Link>
-                      <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                    </Link>
-                    <p>
-                      <RxCountdownTimer className={"icon-time"} />
-                      20-04-2023
-                    </p>
-                  </div>
-                </div>
-              </div>
+                ))}
             </div>
           </div>
         </div>
@@ -947,7 +1071,12 @@ const PostDetail = () => {
               <div className="author-content">
                 <div className="author-content-info">
                   <div className="left">
-                    <Link>
+                    <Link
+                      to={ROUTES.PROFILE_PAGE.path.replace(
+                        ":username",
+                        post?.userId?.username
+                      )}
+                    >
                       <img
                         src={
                           !!post?.userId?.avatar
@@ -959,7 +1088,14 @@ const PostDetail = () => {
                     </Link>
                   </div>
                   <div className="right">
-                    <h3>{post?.userId?.name}</h3>
+                    <Link
+                      to={ROUTES.PROFILE_PAGE.path.replace(
+                        ":username",
+                        post?.userId?.username
+                      )}
+                    >
+                      <h3>{post?.userId?.name}</h3>
+                    </Link>
                     <p>{post?.userId?.bio}</p>
                     {!!post?.userId?.social && (
                       <div className="social">
@@ -997,12 +1133,93 @@ const PostDetail = () => {
                         )}
                       </div>
                     )}
-                    <Link className="btn-see-all">Xem tất cả bài viết</Link>
+                    {user && user?._id === post?.userId?._id ? null : (
+                      <button
+                        className={`btn-see-all ${
+                          isFollowed(post?.userId?._id) ? "" : "follow"
+                        }`}
+                        onClick={() => {
+                          if (!user) {
+                            errorAlert(
+                              "Bạn chưa đăng nhập",
+                              "Bạn cần phải đăng nhập theo dõi"
+                            );
+                          } else {
+                            isFollowed(post?.userId?._id)
+                              ? unFollowUserOnClick(post?.userId?._id)
+                              : followUserOnClick(post?.userId?._id);
+                          }
+                        }}
+                      >
+                        {isFollowed(post?.userId?._id) && !!user
+                          ? "Đang theo dõi"
+                          : "Theo dõi"}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           )}
+          <div className="post-most">
+            <div className="title">
+              <h2>Bài viết nổi bật</h2>
+            </div>
+            <div className="item-blog-container">
+              {mostViewedPosts.length > 0 &&
+                mostViewedPosts.map((post, index) => (
+                  <div key={post._id} className="item-blog">
+                    <div className="img-blog">
+                      <Link
+                        to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                          ":slug",
+                          post?.slug
+                        )}
+                      >
+                        <img src={post?.thumbnail_url} alt="" />
+                      </Link>
+                    </div>
+                    <div className="title-blog">
+                      <Link
+                        to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                          ":slug",
+                          post?.slug
+                        )}
+                      >
+                        <h4>
+                          {truncateTitle(
+                            capitalizeFirstLetter(post?.title),
+                            40
+                          )}
+                        </h4>
+                      </Link>
+                      <p>
+                        <RxCountdownTimer className={"icon-time"} />
+                        {getCreatedAtString(post?.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <div className="tag-cloud">
+            <div className="title">
+              <h3>Khám phá</h3>
+            </div>
+            <div className="tag-container">
+              {popularTags.length > 0 &&
+                popularTags.map((tag, index) => (
+                  <Link
+                    to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                    key={tag._id}
+                    className={`item-tag tag-${index + 1}`}
+                  >
+                    <span># </span>
+                    {truncateTitle(tag.name, 25)}
+                  </Link>
+                ))}
+            </div>
+          </div>
           <div className="follow-me">
             <div className="title">
               <h2>Theo dõi chúng tôi</h2>

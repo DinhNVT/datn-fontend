@@ -21,7 +21,6 @@ const Footer = () => {
     try {
       const res = await getLatestPost(`limit=3`);
       setLatestPosts(res.data.result);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -31,7 +30,6 @@ const Footer = () => {
     try {
       const res = await apiGetMostPopularTags(`limit=${6}`);
       setPopularTags(res.data.tags);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
