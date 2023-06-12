@@ -35,14 +35,13 @@
 
       .latest-blog {
         .item-blog-container {
-          margin-bottom: 20px;
-
           .item-blog {
             display: flex;
             flex-wrap: nowrap;
             justify-content: space-between;
             align-items: flex-start;
             gap: 8px;
+            margin-bottom: 20px;
 
             .img-blog {
               width: 62px;

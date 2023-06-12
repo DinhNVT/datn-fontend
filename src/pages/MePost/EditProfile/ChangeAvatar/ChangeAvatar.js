@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ChangeAvatar.scss";
 import avtDefault from "../../../../assets/images/avatar_default.png";
 import Loader from "../../../../components/Loader/Loader";
@@ -8,6 +8,7 @@ import { errorAlert, successAlert } from "../../../../utils/customAlert";
 import { apiChangeAvatarUser } from "../../../../apis/user";
 
 const ChangeAvatar = (props) => {
+  const inputFileRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [avtUrl, setAvtUrl] = useState(null);
   const [avt, setAvt] = useState(null);
@@ -49,6 +50,7 @@ const ChangeAvatar = (props) => {
   const handleDeleteImage = () => {
     setAvtUrl(null);
     setAvt(null);
+    inputFileRef.current.value = "";
   };
 
   const handleOnSave = async (e) => {
@@ -95,6 +97,7 @@ const ChangeAvatar = (props) => {
             className="image-input"
             accept="image/jpeg, image/png, image/jpg"
             onChange={handleFileChange}
+            ref={inputFileRef}
           />
           <button onClick={handleDeleteImage} className="btn btn-delete">
             Xóa ảnh

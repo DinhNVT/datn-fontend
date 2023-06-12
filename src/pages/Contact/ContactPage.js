@@ -138,7 +138,7 @@ const ContactPage = () => {
               errorInput.email ? " error-disable" : ""
             }`}
           >
-            {isLoading ? <Loader /> : "Đăng ký"}
+            {isLoading ? <Loader /> : "Gửi"}
           </button>
         </form>
       </div>

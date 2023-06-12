@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Footer.scss";
 import { RxCountdownTimer } from "react-icons/rx";
 import { Link } from "react-router-dom";
@@ -7,8 +7,40 @@ import youtube from "../../assets/images/youtube.png";
 import instagram from "../../assets/images/instagram.png";
 import tiktok from "../../assets/images/tiktok.png";
 import gafastIcon from "../../assets/images/LogoHorizontal.png";
+import { apiGetMostPopularTags, getLatestPost } from "../../apis/post";
+import { truncateTitle } from "../../utils/truncateString";
+import ROUTES from "../../constants/routes";
+import { capitalizeFirstLetter } from "../../utils/convertString";
+import { getCreatedAtString } from "../../utils/convertTime";
 
 const Footer = () => {
+  const [latestPosts, setLatestPosts] = useState([]);
+  const [popularTags, setPopularTags] = useState([]);
+
+  const getLatestPostFetch = async () => {
+    try {
+      const res = await getLatestPost(`limit=3`);
+      setLatestPosts(res.data.result);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMostPopularTags = async () => {
+    try {
+      const res = await apiGetMostPopularTags(`limit=${6}`);
+      setPopularTags(res.data.tags);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getLatestPostFetch();
+    getMostPopularTags();
+  },[]);
   return (
     <div className="footer-container">
       <div className="grid-container">
@@ -17,63 +49,41 @@ const Footer = () => {
             <div className="title">
               <h3>Bài viết mới nhất</h3>
             </div>
-
             <div className="item-blog-container">
-              <div className="item-blog">
-                <div className="img-blog">
-                  <Link>
-                    <img
-                      src="https://traicaycaonghe.vn/wp-content/uploads/2021/05/oinuhoang13.jpg"
-                      alt=""
-                    />
-                  </Link>
-                </div>
-                <div className="title-blog">
-                  <Link>
-                    <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                  </Link>
-                  <p>
-                    <RxCountdownTimer className={"icon-time"} />
-                    20-04-2023
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="item-blog-container">
-              <div className="item-blog">
-                <div className="img-blog">
-                  <img
-                    src="https://pgdconcuong.edu.vn/wp-content/uploads/2023/03/1678477180_Gia-thit-soc-bao-nhieu-tien-1kg-Gia-thit-soc-768x529.jpeg"
-                    alt=""
-                  />
-                </div>
-                <div className="title-blog">
-                  <h4>
-                    Kỹ thuật trồng ổi trong chậu mới nhất cho quả sai lúc lỉu
-                  </h4>
-                  <p>
-                    <RxCountdownTimer className={"icon-time"} />
-                    20-04-2023
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="item-blog-container">
-              <div className="item-blog">
-                <div className="img-blog">
-                  <img
-                    src="https://vuongquocloaivat.com/wp-content/uploads/2020/05/ca-canh-compressed.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="title-blog">
-                  <h4>Kỹ thuật trồng ổi trong chậu cho quả sai lúc lỉu</h4>
-                  <p>
-                    <RxCountdownTimer className={"icon-time"} />
-                    20-04-2023
-                  </p>
-                </div>
-              </div>
+              {latestPosts.length > 0 &&
+                latestPosts.map((post, index) => (
+                  <div key={post._id} className="item-blog">
+                    <div className="img-blog">
+                      <Link
+                        to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                          ":slug",
+                          post?.slug
+                        )}
+                      >
+                        <img src={post?.thumbnail_url} alt="" />
+                      </Link>
+                    </div>
+                    <div className="title-blog">
+                      <Link
+                        to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                          ":slug",
+                          post?.slug
+                        )}
+                      >
+                        <h4>
+                          {truncateTitle(
+                            capitalizeFirstLetter(post?.title),
+                            45
+                          )}
+                        </h4>
+                      </Link>
+                      <p>
+                        <RxCountdownTimer className={"icon-time"} />
+                        {getCreatedAtString(post?.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
           <div className="item tag-cloud">
@@ -81,27 +91,17 @@ const Footer = () => {
               <h3>Khám phá</h3>
             </div>
             <div className="tag-container">
-              <Link className={"item-tag tag-1"}>
-                <span># </span>Trồng ổi
-              </Link>
-              <Link className={"item-tag tag-2"}>
-                <span># </span>Trồng mít
-              </Link>
-              <Link className={"item-tag tag-3"}>
-                <span># </span>Nuôi sóc
-              </Link>
-              <Link className={"item-tag tag-4"}>
-                <span># </span>Phân bón
-              </Link>
-              <Link className={"item-tag tag-5"}>
-                <span># </span>Chăn nuôi
-              </Link>
-              <Link className={"item-tag tag-6"}>
-                <span># </span>Sâu
-              </Link>
-              <Link className={"item-tag tag-6"}>
-                <span># </span>Bò
-              </Link>
+              {popularTags.length > 0 &&
+                popularTags.map((tag, index) => (
+                  <Link
+                    to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                    key={tag._id}
+                    className={`item-tag tag-${index + 1}`}
+                  >
+                    <span># </span>
+                    {truncateTitle(tag.name, 25)}
+                  </Link>
+                ))}
             </div>
           </div>
           <div className="item follow-me">

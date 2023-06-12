@@ -36,7 +36,7 @@ export const deleteAlert = (
     text: text,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#00c491",
+    confirmButtonColor: "#f97066",
     cancelButtonColor: "#98a2b3",
     cancelButtonText: "Hủy",
     confirmButtonText: "Xóa",
