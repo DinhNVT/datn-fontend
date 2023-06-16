@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./Following.scss";
 import avtDefault from "../../../assets/images/avatar_default.png";
-import { apiGetFollowingUser } from "../../../apis/user";
+import {
+  apiFollowUser,
+  apiGetFollowingUser,
+  apiUnFollowUser,
+} from "../../../apis/user";
+import { useDispatch, useSelector } from "react-redux";
+import { followUserSlice, unFollowUserSlice } from "../../../stores/userSlice";
+import { errorAlert } from "../../../utils/customAlert";
+import { Link } from "react-router-dom";
+import ROUTES from "../../../constants/routes";
 
 const Following = (props) => {
+  const dispatch = useDispatch();
   const [followings, setFollowings] = useState([]);
   const getFollowersUser = async (id) => {
     try {
       const res = await apiGetFollowingUser(id);
-      console.log(res);
       if (res.data.data) {
         setFollowings(res.data.data);
       }
@@ -19,6 +28,31 @@ const Following = (props) => {
   useEffect(() => {
     getFollowersUser(props.data._id);
   }, [props]);
+
+  const { followingIds } = useSelector((state) => state?.user);
+  const { user } = useSelector((state) => state?.auth?.login);
+
+  const followUserOnClick = async (userId) => {
+    try {
+      dispatch(followUserSlice(userId));
+      await apiFollowUser(userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const unFollowUserOnClick = async (userId) => {
+    try {
+      dispatch(unFollowUserSlice(userId));
+      await apiUnFollowUser(userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isFollowed = (userId) => {
+    return followingIds.some((followingId) => followingId.following === userId);
+  };
   return (
     <div className="following-container">
       <div className="following-content">
@@ -26,20 +60,55 @@ const Following = (props) => {
           followings.map((following, index) => (
             <div className="following-item">
               <div className="right">
-                <img
-                  src={
-                    following?.following?.avatar
-                      ? following?.following?.avatar
-                      : avtDefault
-                  }
-                  alt=""
-                />
-                <div className="info">
+                <Link
+                  to={ROUTES.PROFILE_PAGE.path.replace(
+                    ":username",
+                    following?.following?.username
+                  )}
+                >
+                  <img
+                    src={
+                      following?.following?.avatar
+                        ? following?.following?.avatar
+                        : avtDefault
+                    }
+                    alt=""
+                  />
+                </Link>
+                <Link
+                  to={ROUTES.PROFILE_PAGE.path.replace(
+                    ":username",
+                    following?.following?.username
+                  )}
+                  className="info"
+                >
                   <h3 className="name">{following.following.name}</h3>
                   <p className="email">{following.following.email}</p>
-                </div>
+                </Link>
               </div>
-              <button className="btn-following">Theo dõi</button>
+              {user && user?._id === following.following._id ? null : (
+                <button
+                  className={`btn-following ${
+                    isFollowed(following.following._id) ? "follow" : ""
+                  }`}
+                  onClick={() => {
+                    if (!user) {
+                      errorAlert(
+                        "Bạn chưa đăng nhập",
+                        "Bạn cần phải đăng nhập theo dõi"
+                      );
+                    } else {
+                      isFollowed(following.following._id)
+                        ? unFollowUserOnClick(following.following._id)
+                        : followUserOnClick(following.following._id);
+                    }
+                  }}
+                >
+                  {isFollowed(following.following._id) && !!user
+                    ? "Đang theo dõi"
+                    : "Theo dõi"}
+                </button>
+              )}
             </div>
           ))}
         {followings.length <= 0 && <p>Không có người theo dõi</p>}

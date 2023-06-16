@@ -121,7 +121,7 @@ const HomeLayout = (props) => {
       dispatch(addToFavoritesSlice(postId));
       await apiAddToFavorites({ postId: postId });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -130,7 +130,7 @@ const HomeLayout = (props) => {
       dispatch(removeFromFavoritesSlice(postId));
       await apiDeleteFavoritePost(postId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 

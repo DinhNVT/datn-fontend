@@ -11,6 +11,7 @@ import { getCreatedAtString } from "../../../utils/convertTime";
 import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
 import Loader from "../../../components/Loader/Loader";
 import { deleteAlert } from "../../../utils/customAlert";
+import ROUTES from "../../../constants/routes";
 
 const Drafts = () => {
   const [posts, setPosts] = useState([]);
@@ -33,7 +34,7 @@ const Drafts = () => {
       setTotalPost(res.data.total);
       setIsLoadingSeeMore(false);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       setIsLoadingSeeMore(false);
     }
   };
@@ -43,6 +44,7 @@ const Drafts = () => {
     getAllPostMe(page);
   };
   useEffect(() => {
+    setPosts([]);
     getAllPostMe(1);
   }, []);
 
@@ -77,33 +79,36 @@ const Drafts = () => {
               <div className="blog-item-content">
                 <img src={post?.thumbnail_url} alt={post?.title} />
                 <div className="blog-post-info">
-                  <h2>{truncateTitle(post.title, 85)}</h2>
-                  <div className="interact">
-                    <div className="interact-item">
-                      <RxCountdownTimer className={"icon"} size={22} />{" "}
-                      <p>{getCreatedAtString(post.createdAt)}</p>
+                  <div>
+                    <h2>{truncateTitle(post.title, 85)}</h2>
+                    <div className="interact">
+                      <div className="interact-item">
+                        <RxCountdownTimer className={"icon"} size={22} />{" "}
+                        <p>{getCreatedAtString(post.createdAt)}</p>
+                      </div>
+                      <div className="interact-item">
+                        <FaRegComment className={"icon"} size={22} />{" "}
+                        <p>{post.comment_count} bình luận</p>
+                      </div>
+                      <div className="interact-item">
+                        <AiOutlineEye className={"icon"} size={24} />{" "}
+                        <p>{post.view_count} lượt xem</p>
+                      </div>
                     </div>
-                    <div className="interact-item">
-                      <FaRegComment className={"icon"} size={22} />{" "}
-                      <p>{post.comment_count} bình luận</p>
+                    {createSummary(post.content, 300)}
+                    <div className="tags">
+                      {post.tags.length > 0 &&
+                        post.tags.map((tag, index) => (
+                          <Link
+                            to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                            key={tag._id}
+                            className={`item-tag tag-${index + 1}`}
+                          >
+                            <span># </span>
+                            {tag.name}
+                          </Link>
+                        ))}
                     </div>
-                    <div className="interact-item">
-                      <AiOutlineEye className={"icon"} size={24} />{" "}
-                      <p>{post.view_count} lượt xem</p>
-                    </div>
-                  </div>
-                  {createSummary(post.content, 300)}
-                  <div className="tags">
-                    {post.tags.length > 0 &&
-                      post.tags.map((tag, index) => (
-                        <Link
-                          key={tag._id}
-                          className={`item-tag tag-${index + 1}`}
-                        >
-                          <span># </span>
-                          {tag.name}
-                        </Link>
-                      ))}
                   </div>
                   <div className="read-more-btn">
                     <Link

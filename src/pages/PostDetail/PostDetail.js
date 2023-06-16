@@ -114,7 +114,7 @@ const PostDetail = () => {
         }
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
       });
   };
 
@@ -127,7 +127,7 @@ const PostDetail = () => {
         }
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
       });
   };
 
@@ -388,7 +388,7 @@ const PostDetail = () => {
       dispatch(addToFavoritesSlice(postId));
       await apiAddToFavorites({ postId: postId });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -397,7 +397,7 @@ const PostDetail = () => {
       dispatch(removeFromFavoritesSlice(postId));
       await apiDeleteFavoritePost(postId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -410,7 +410,7 @@ const PostDetail = () => {
       dispatch(followUserSlice(userId));
       await apiFollowUser(userId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -419,7 +419,7 @@ const PostDetail = () => {
       dispatch(unFollowUserSlice(userId));
       await apiUnFollowUser(userId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -696,17 +696,31 @@ const PostDetail = () => {
                             index === -1 ? " border-none" : ""
                           }`}
                         >
-                          <img
-                            src={
-                              !!comment.userId.avatar
-                                ? comment.userId.avatar
-                                : avtDefault
-                            }
-                            alt=""
-                          />
+                          <Link
+                            to={ROUTES.PROFILE_PAGE.path.replace(
+                              ":username",
+                              comment?.userId?.username
+                            )}
+                          >
+                            <img
+                              src={
+                                !!comment.userId.avatar
+                                  ? comment.userId.avatar
+                                  : avtDefault
+                              }
+                              alt=""
+                            />
+                          </Link>
                           <div className="main-content">
                             <div className="info">
-                              <h3>{comment.userId.name}</h3>
+                              <Link
+                                to={ROUTES.PROFILE_PAGE.path.replace(
+                                  ":username",
+                                  comment?.userId?.username
+                                )}
+                              >
+                                <h3>{comment.userId.name}</h3>
+                              </Link>
                               <p>{getCreatedAtString(comment.createdAt)}</p>
                             </div>
                             {isBaseEdit && commentId === comment._id ? null : (
@@ -847,17 +861,31 @@ const PostDetail = () => {
                                 key={subComments._id}
                                 className="base-comment sub-comment"
                               >
-                                <img
-                                  src={
-                                    !!subComments.userId.avatar
-                                      ? subComments.userId.avatar
-                                      : avtDefault
-                                  }
-                                  alt=""
-                                />
+                                <Link
+                                  to={ROUTES.PROFILE_PAGE.path.replace(
+                                    ":username",
+                                    subComments?.userId?.username
+                                  )}
+                                >
+                                  <img
+                                    src={
+                                      !!subComments.userId.avatar
+                                        ? subComments.userId.avatar
+                                        : avtDefault
+                                    }
+                                    alt=""
+                                  />
+                                </Link>
                                 <div className="main-content">
                                   <div className="info">
-                                    <h3>{subComments.userId.name}</h3>
+                                    <Link
+                                      to={ROUTES.PROFILE_PAGE.path.replace(
+                                        ":username",
+                                        subComments?.userId?.username
+                                      )}
+                                    >
+                                      <h3>{subComments.userId.name}</h3>
+                                    </Link>
                                     <p>
                                       {getCreatedAtString(
                                         subComments.createdAt

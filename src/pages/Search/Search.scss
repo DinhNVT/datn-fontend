@@ -72,6 +72,7 @@
               border-radius: 10px;
               border: 1px solid $border-color;
               transition: all 0.3s $transition-bezier;
+              vertical-align: top;
             }
 
             &:hover img {
@@ -81,6 +82,11 @@
           }
 
           .for-you-post-info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
             .title {
               h2 {
                 display: -webkit-box;
@@ -196,6 +202,8 @@
               display: flex;
               align-items: center;
               margin-top: 16px;
+              gap: 8px;
+              justify-content: space-between;
               a {
                 @include button-black;
                 padding: 8px 16px;
@@ -207,6 +215,29 @@
 
                 &:hover {
                   @include button-black-hover;
+                }
+              }
+
+              button {
+                margin: 0 4px;
+                background-color: white;
+                color: $gray-500;
+                border: none;
+                cursor: pointer;
+                .arrow {
+                  margin-left: 0px;
+
+                  &.check-all {
+                    color: $primary-normal;
+                  }
+
+                  &.liked {
+                    color: #e81224;
+                  }
+                }
+
+                &:hover {
+                  color: $gray-800;
                 }
               }
             }

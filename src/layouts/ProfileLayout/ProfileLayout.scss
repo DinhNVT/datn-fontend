@@ -24,8 +24,15 @@
         .profile-info {
           display: flex;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: space-between;
           margin-bottom: 30px;
+
+          .left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 30px;
+          }
 
           .avt {
             width: 130px;
@@ -57,6 +64,40 @@
               &:hover {
                 box-shadow: $small-shadow;
                 transform: translate(-2px, -2px);
+              }
+            }
+
+            .btn-following {
+              @include button-black;
+              padding: 12px 16px;
+
+              &.follow {
+                background-color: white;
+                color: $gray-700;
+              }
+            }
+          }
+
+          .social {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+
+            a {
+              &:hover img {
+                opacity: 1;
+              }
+
+              img {
+                width: 24px;
+                height: auto;
+                transition: all 0.3s $transition-bezier;
+                object-fit: contain;
+                overflow: hidden;
+                opacity: 0.8;
               }
             }
           }

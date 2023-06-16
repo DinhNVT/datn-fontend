@@ -55,7 +55,7 @@ const Following = () => {
       dispatch(addToFavoritesSlice(postId));
       await apiAddToFavorites({ postId: postId });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -64,7 +64,7 @@ const Following = () => {
       dispatch(removeFromFavoritesSlice(postId));
       await apiDeleteFavoritePost(postId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
