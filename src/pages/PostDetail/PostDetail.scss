@@ -3,6 +3,11 @@
 .post-detail-container {
   width: 100%;
 
+  .text-not-found {
+    text-align: center;
+    margin: auto;
+  }
+
   .post-detail-content {
     max-width: 1240px;
     margin: auto;
@@ -614,6 +619,7 @@
         border-radius: 16px;
         overflow: hidden;
         background-color: white;
+        margin-bottom: 40px;
 
         .title {
           border-bottom: 2px solid $primary-normal;
@@ -696,6 +702,11 @@
                   transform: translate(-2px, -2px);
                   box-shadow: $small-shadow;
                 }
+                
+                &.follow {
+                  background-color: $primary-normal;
+                  color: white;
+                }
               }
             }
           }
@@ -708,7 +719,7 @@
         border-radius: 16px;
         overflow: hidden;
         background-color: white;
-        margin-top: 40px;
+        margin-bottom: 40px;
 
         .title {
           border-bottom: 2px solid $primary-normal;
@@ -794,7 +805,7 @@
         border-radius: 16px;
         overflow: hidden;
         background-color: white;
-        margin-top: 40px;
+        margin-bottom: 40px;
 
         .title {
           border-bottom: 2px solid $primary-normal;
@@ -836,7 +847,7 @@
         border-radius: 16px;
         overflow: hidden;
         background-color: white;
-        margin-top: 40px;
+        margin-bottom: 40px;
 
         .title {
           border-bottom: 2px solid $primary-normal;

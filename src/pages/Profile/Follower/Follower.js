@@ -11,11 +11,16 @@ import { followUserSlice, unFollowUserSlice } from "../../../stores/userSlice";
 import { errorAlert } from "../../../utils/customAlert";
 import { Link } from "react-router-dom";
 import ROUTES from "../../../constants/routes";
+import FollowListSkeleton from "../../../components/Skeleton/FollowListSkeleton/FollowListSkeleton";
 
 const Follower = (props) => {
   const dispatch = useDispatch();
   const [followers, setFollowers] = useState([]);
+  const [followersLoading, setFollowersLoading] = useState(false);
+  const [isFetchFollowers, setIsFetchFollowers] = useState(true);
+
   const getFollowersUser = async (id) => {
+    setFollowersLoading(true);
     try {
       const res = await apiGetFollowerUser(id);
       if (res.data.data) {
@@ -23,6 +28,9 @@ const Follower = (props) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setFollowersLoading(false);
+      setIsFetchFollowers(false);
     }
   };
   useEffect(() => {
@@ -56,7 +64,17 @@ const Follower = (props) => {
   return (
     <div className="follower-container">
       <div className="follower-content">
+        {isFetchFollowers && followersLoading && (
+          <>
+            <FollowListSkeleton />
+            <FollowListSkeleton />
+          </>
+        )}
+        {followers.length <= 0 && !isFetchFollowers && (
+          <p>Không có người theo dõi</p>
+        )}
         {followers.length > 0 &&
+          !isFetchFollowers &&
           followers.map((follower, index) => (
             <div className="follower-item">
               <div className="right">
@@ -111,7 +129,6 @@ const Follower = (props) => {
               )}
             </div>
           ))}
-        {followers.length <= 0 && <p>Không có người theo dõi</p>}
       </div>
     </div>
   );

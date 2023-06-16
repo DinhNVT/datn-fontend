@@ -17,9 +17,13 @@ import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
 import Loader from "../../../components/Loader/Loader";
 import { deleteAlert } from "../../../utils/customAlert";
 import ROUTES from "../../../constants/routes";
+import ProfilePostSkeleton from "../../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
 
 const Published = () => {
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [totalPosts, setTotalPost] = useState(0);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
@@ -40,6 +44,7 @@ const Published = () => {
   };
 
   const getAllPostMe = async (page) => {
+    setPostsLoading(true);
     const query = `limit=${10}&status=published&page=${page}`;
     try {
       const res = await apiGetPostsMe(query);
@@ -56,6 +61,9 @@ const Published = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -65,6 +73,7 @@ const Published = () => {
   };
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     getAllPostMe(1);
   }, []);
 
@@ -89,12 +98,20 @@ const Published = () => {
   return (
     <div className="me-published-container">
       <div className="me-published-content">
-        {totalPosts > 0 ? (
+        {posts.length > 0 && !isFetchPosts && (
           <p className="total-post">{`Có ${totalPosts} bài viết công khai`}</p>
-        ) : (
-          "Không có bài viết nào"
+        )}
+        {posts.length <= 0 && !isFetchPosts && (
+          <p className="total-post">Không có bài viết nào</p>
+        )}
+        {isFetchPosts && postsLoading && (
+          <>
+            <ProfilePostSkeleton />
+            <ProfilePostSkeleton />
+          </>
         )}
         {posts.length > 0 &&
+          !isFetchPosts &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
               <div className="blog-item-content">

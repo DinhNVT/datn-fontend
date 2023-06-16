@@ -1,0 +1,123 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.post-content-skeleton {
+  padding: 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: white;
+  width: 100%;
+  margin-bottom: 40px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  .post-content-header {
+    .thumbnail-skeleton {
+      width: 100%;
+      height: 375px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+
+    .title-skeleton {
+      width: 100%;
+      height: 32px;
+      border-radius: 4px;
+      margin: auto;
+      margin-bottom: 8px;
+
+      &.small {
+        width: 70%;
+      }
+    }
+
+    .interact {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+
+      .interact-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .interact-item-left {
+          width: 50px;
+          height: 32px;
+          border-radius: 4px;
+          margin-bottom: 8px;
+        }
+
+        .interact-item-right {
+          width: 150px;
+          height: 32px;
+          border-radius: 4px;
+          margin-bottom: 8px;
+        }
+      }
+    }
+  }
+
+  .content-skeleton {
+    margin-top: 16px;
+    margin-bottom: 32px;
+    .content-text {
+      width: 100%;
+      height: 24px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+
+      &:last-child {
+        width: 70%;
+      }
+    }
+  }
+
+  .title-tag {
+    width: 200px;
+    height: 32px;
+    border-radius: 4px;
+    margin: auto;
+  }
+
+  .item-tag {
+    display: flex;
+    margin-top: 16px;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    .tag {
+      width: 200px;
+      height: 32px;
+      border-radius: 500px;
+
+      &:nth-child(odd) {
+        width: 100px;
+      }
+    }
+  }
+
+  .border-skeleton {
+    width: 100%;
+    height: 2px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .title-share {
+    width: 200px;
+    height: 32px;
+    border-radius: 4px;
+    margin: auto;
+    margin-top: 32px;
+  }
+
+  .input-share {
+    width: 400px;
+    height: 40px;
+    border-radius: 4px;
+    margin: auto;
+    margin-top: 16px;
+  }
+}

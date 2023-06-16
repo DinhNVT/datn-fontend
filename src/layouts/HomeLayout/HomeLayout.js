@@ -36,11 +36,20 @@ import youtubeIcon from "../../assets/images/youtube.png";
 import instagramIcon from "../../assets/images/instagram.png";
 import tiktokIcon from "../../assets/images/tiktok.png";
 import { capitalizeFirstLetter } from "../../utils/convertString";
+import PostMostSkeleton from "../../components/Skeleton/PostMostSkeleton/PostMostSkeleton";
+import TagCloudSkeleton from "../../components/Skeleton/TagCloudSkeleton/TagCloudSkeleton";
+import FollowMeSkeleton from "../../components/Skeleton/FollowMeSkeleton/FollowMeSkeleton";
 
 const HomeLayout = (props) => {
   const [latestPosts, setLatestPosts] = useState([]);
+
   const [mostViewedPosts, setMostViewedPosts] = useState([]);
+  const [mostViewedPostsLoading, setMostViewedPostsLoading] = useState(false);
+  const [isFetchMostViewedPosts, setIsFetchMostViewedPosts] = useState(true);
+
   const [popularTags, setPopularTags] = useState([]);
+  const [popularTagsLoading, setPopularTagsLoading] = useState(false);
+  const [isFetchPopularTags, setIsFetchPopularTags] = useState(true);
 
   const [copied, setCopied] = useState(false);
   const [copySlug, setCopySlug] = useState("");
@@ -67,20 +76,28 @@ const HomeLayout = (props) => {
   };
 
   const getMostViewedPosts = async () => {
+    setMostViewedPostsLoading(true);
     try {
       const res = await apiGetMostViewedPosts(`limit=${4}`);
       setMostViewedPosts(res.data.posts);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFetchMostViewedPosts(false);
+      setMostViewedPostsLoading(false);
     }
   };
 
   const getMostPopularTags = async () => {
+    setPopularTagsLoading(true);
     try {
       const res = await apiGetMostPopularTags(`limit=${6}`);
       setPopularTags(res.data.tags);
     } catch (error) {
       console.log(error);
+    } finally {
+      setPopularTagsLoading(false);
+      setIsFetchPopularTags(false);
     }
   };
 
@@ -308,13 +325,16 @@ const HomeLayout = (props) => {
             <div className="home-children">
               <div className="children-left">{props.children}</div>
               <div className="children-right">
-                <div className="post-most">
-                  <div className="title">
-                    <h2>Bài viết nổi bật</h2>
-                  </div>
-                  <div className="item-blog-container">
-                    {mostViewedPosts.length > 0 &&
-                      mostViewedPosts.map((post, index) => (
+                {(isFetchMostViewedPosts || mostViewedPostsLoading) && (
+                  <PostMostSkeleton />
+                )}
+                {mostViewedPosts.length > 0 && !isFetchMostViewedPosts && (
+                  <div className="post-most">
+                    <div className="title">
+                      <h2>Bài viết nổi bật</h2>
+                    </div>
+                    <div className="item-blog-container">
+                      {mostViewedPosts.map((post, index) => (
                         <div key={post._id} className="item-blog">
                           <div className="img-blog">
                             <Link
@@ -347,15 +367,19 @@ const HomeLayout = (props) => {
                           </div>
                         </div>
                       ))}
+                    </div>
                   </div>
-                </div>
-                <div className="tag-cloud">
-                  <div className="title">
-                    <h3>Khám phá</h3>
-                  </div>
-                  <div className="tag-container">
-                    {popularTags.length > 0 &&
-                      popularTags.map((tag, index) => (
+                )}
+                {(popularTagsLoading || isFetchPopularTags) && (
+                  <TagCloudSkeleton />
+                )}
+                {popularTags.length > 0 && !isFetchPopularTags && (
+                  <div className="tag-cloud">
+                    <div className="title">
+                      <h3>Khám phá</h3>
+                    </div>
+                    <div className="tag-container">
+                      {popularTags.map((tag, index) => (
                         <Link
                           to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
                           key={tag._id}
@@ -365,42 +389,48 @@ const HomeLayout = (props) => {
                           {truncateTitle(tag.name, 25)}
                         </Link>
                       ))}
+                    </div>
                   </div>
-                </div>
-                <div className="follow-me">
-                  <div className="title">
-                    <h2>Theo dõi chúng tôi</h2>
+                )}
+                {(isFetchMostViewedPosts || isFetchPopularTags) && (
+                  <FollowMeSkeleton />
+                )}
+                {!isFetchMostViewedPosts && !isFetchPopularTags && (
+                  <div className="follow-me">
+                    <div className="title">
+                      <h2>Theo dõi chúng tôi</h2>
+                    </div>
+                    <div className="follow-container">
+                      <Link className={"item-follow"}>
+                        <div className="img">
+                          <img src={facebookIcon} alt="" />
+                        </div>
+                        <h3>Facebook</h3>
+                      </Link>
+                      <Link
+                        to={"https://www.youtube.com/"}
+                        className={"item-follow"}
+                      >
+                        <div className="img">
+                          <img src={youtubeIcon} alt="" />
+                        </div>
+                        <h3>Youtube</h3>
+                      </Link>
+                      <Link className={"item-follow"}>
+                        <div className="img">
+                          <img src={instagramIcon} alt="" />
+                        </div>
+                        <h3>Instagram</h3>
+                      </Link>
+                      <Link className={"item-follow"}>
+                        <div className="img">
+                          <img src={tiktokIcon} alt="" />
+                        </div>
+                        <h3>TikTok</h3>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="follow-container">
-                    <Link className={"item-follow"}>
-                      <div className="img">
-                        <img src={facebookIcon} alt="" />
-                      </div>
-                      <h3>Facebook</h3>
-                    </Link>
-                    <Link
-                      to={"https://www.youtube.com/"}
-                      className={"item-follow"}
-                    >
-                      <div className="img">
-                        <img src={youtubeIcon} alt="" />
-                      </div>
-                      <h3>Youtube</h3>
-                    </Link>
-                    <Link className={"item-follow"}>
-                      <div className="img">
-                        <img src={instagramIcon} alt="" />
-                      </div>
-                      <h3>Instagram</h3>
-                    </Link>
-                    <Link className={"item-follow"}>
-                      <div className="img">
-                        <img src={tiktokIcon} alt="" />
-                      </div>
-                      <h3>TikTok</h3>
-                    </Link>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

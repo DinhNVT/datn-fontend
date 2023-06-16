@@ -21,11 +21,18 @@ import { BsCheckAll } from "react-icons/bs";
 import { apiAddToFavorites, apiDeleteFavoritePost } from "../../apis/user";
 import { useDispatch, useSelector } from "react-redux";
 import { errorAlert } from "../../utils/customAlert";
-import { addToFavoritesSlice, removeFromFavoritesSlice } from "../../stores/postSlice";
+import {
+  addToFavoritesSlice,
+  removeFromFavoritesSlice,
+} from "../../stores/postSlice";
+import HomePostSkeleton from "../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
@@ -70,6 +77,7 @@ const HomePage = () => {
 
   const getAllPostMe = async (page) => {
     const query = `limit=${10}&page=${page}`;
+    setPostsLoading(true);
     try {
       const res = await apiGetAllPosts(query);
       if (res.data.posts.length > 0) {
@@ -84,6 +92,9 @@ const HomePage = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -94,12 +105,20 @@ const HomePage = () => {
 
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     getAllPostMe(1);
   }, []);
 
   return (
     <div className="for-you-container">
+      {isFetchPosts && postsLoading && (
+        <>
+          <HomePostSkeleton />
+          <HomePostSkeleton />
+        </>
+      )}
       {posts.length > 0 &&
+        !isFetchPosts &&
         posts.map((post, index) => (
           <div key={post._id} className="for-you-item">
             <div className="for-you-item-content">
@@ -222,7 +241,6 @@ const HomePage = () => {
             </div>
           </div>
         ))}
-
       {page > 0 && (
         <div className="see-more">
           <button onClick={handleClickSeeMore} className="btn-see-more">

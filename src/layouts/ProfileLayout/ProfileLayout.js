@@ -26,6 +26,7 @@ const ProfileLayout = (props) => {
   const navigate = useNavigate();
   const [getUser, setGetUser] = useState(null);
   const { user } = useSelector((state) => state?.auth?.login);
+  const [found, setFound] = useState(true);
 
   const getUserByUsername = async (params) => {
     try {
@@ -36,6 +37,7 @@ const ProfileLayout = (props) => {
         setGetUser("none");
       }
     } catch (error) {
+      setFound(false);
       console.log(error);
     }
   };
@@ -67,6 +69,15 @@ const ProfileLayout = (props) => {
   const isFollowed = (userId) => {
     return followingIds.some((followingId) => followingId.following === userId);
   };
+
+  if (!found) {
+    return (
+      <div className="profile-layout">
+        <Header />
+        <NotFoundPage />
+      </div>
+    );
+  }
 
   return (
     <div className="profile-layout">

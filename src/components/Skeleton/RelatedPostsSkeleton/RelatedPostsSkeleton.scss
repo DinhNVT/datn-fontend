@@ -1,0 +1,65 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.post-comment-skeleton {
+  margin-top: 50px;
+  padding: 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: white;
+  width: 100%;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  .title {
+    width: 200px;
+    height: 32px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .title-border {
+    width: 100%;
+    height: 2px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+
+  .item-blog-container {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+
+    .item-blog {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+      width: 47%;
+
+      .img-blog {
+        width: 62px;
+        height: 70px;
+        border-radius: 8px;
+        display: block;
+      }
+
+      .title-blog {
+        flex: 1;
+
+        .title {
+          width: 100%;
+          height: 28px;
+          border-radius: 4px;
+        }
+
+        .time-text {
+          width: 100%;
+          height: 20px;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+}

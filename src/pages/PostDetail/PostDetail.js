@@ -6,7 +6,6 @@ import { AiOutlineEye, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
 import { MdContentCopy } from "react-icons/md";
 import { BsCheckAll } from "react-icons/bs";
-import NotFoundPage from "../404/NotFoundPage";
 import {
   apiCreatePostComments,
   apiCreateReportPostComments,
@@ -44,13 +43,26 @@ import {
 import { capitalizeFirstLetter } from "../../utils/convertString";
 import { followUserSlice, unFollowUserSlice } from "../../stores/userSlice";
 import ROUTES from "../../constants/routes";
+import PostContentSkeleton from "../../components/Skeleton/PostContentSkeleton/PostContentSkeleton";
+import AuthorPostHorizontalSkeleton from "../../components/Skeleton/AuthorPostHorizontalSkeleton/AuthorPostHorizontalSkeleton";
+import PostCommentSkeleton from "../../components/Skeleton/PostCommentSkeleton/PostCommentSkeleton";
+import RelatedPostsSkeleton from "../../components/Skeleton/RelatedPostsSkeleton/RelatedPostsSkeleton";
+import PostMostSkeleton from "../../components/Skeleton/PostMostSkeleton/PostMostSkeleton";
+import TagCloudSkeleton from "../../components/Skeleton/TagCloudSkeleton/TagCloudSkeleton";
+import FollowMeSkeleton from "../../components/Skeleton/FollowMeSkeleton/FollowMeSkeleton";
+import AuthorPostVerticalSkeleton from "../../components/Skeleton/AuthorPostVerticalSkeleton/AuthorPostVerticalSkeleton";
 
 const PostDetail = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
+  const [postLoading, setPostLoading] = useState(false);
+  const [isFetchPost, setIsFetchPost] = useState(true);
+
   const [postComments, setPostComments] = useState(null);
+  const [postCommentsLoading, setPostCommentsLoading] = useState(false);
+  const [isFetchPostComments, setIsFetchPostComments] = useState(true);
+
   const [postsUserNewest, setPostsUserNewest] = useState(null);
-  const [found, setFound] = useState(true);
   const [replyInputVisible, setReplyInputVisible] = useState(false);
   const [commentId, setCommentId] = useState("");
   const [subCommentId, setSubCommentId] = useState("");
@@ -78,9 +90,18 @@ const PostDetail = () => {
   const [showDropdownSubId, setShowDropdownSubId] = useState("");
   const [isBaseEdit, setIsBaseEdit] = useState(false);
   const [isSubEdit, setIsSubEdit] = useState(false);
+
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [relatedPostsLoading, setRelatedPostsLoading] = useState(false);
+  const [isFetchRelatedPosts, setIsFetchRelatedPosts] = useState(true);
+
   const [popularTags, setPopularTags] = useState([]);
+  const [popularTagsLoading, setPopularTagsLoading] = useState(false);
+  const [isFetchPopularTags, setIsFetchPopularTags] = useState(true);
+
   const [mostViewedPosts, setMostViewedPosts] = useState([]);
+  const [mostViewedPostsLoading, setMostViewedPostsLoading] = useState(false);
+  const [isFetchMostViewedPosts, setIsFetchMostViewedPosts] = useState(true);
 
   const [visibleComments, setVisibleComments] = useState(5);
   const numberCommentVisible = 5;
@@ -106,16 +127,19 @@ const PostDetail = () => {
     };
   }, [dropdownRef]);
 
-  const getPostComment = (postId) => {
-    apiGetPostComments(postId)
-      .then((res) => {
-        if (res.data.result) {
-          setPostComments(res.data.result);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const getPostComment = async (postId) => {
+    setPostCommentsLoading(true);
+    try {
+      const res = await apiGetPostComments(postId);
+      if (res.data.result) {
+        setPostComments(res.data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPostCommentsLoading(false);
+      setIsFetchPostComments(false);
+    }
   };
 
   const getPostOption = (userId) => {
@@ -132,6 +156,7 @@ const PostDetail = () => {
   };
 
   const getRelatedPosts = async (postId) => {
+    setRelatedPostsLoading(true);
     const query = `limit=4&postId=${postId}`;
     try {
       const res = await apiGetRelatedPosts(query);
@@ -140,49 +165,68 @@ const PostDetail = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFetchRelatedPosts(false);
+      setRelatedPostsLoading(false);
     }
   };
 
   const getMostPopularTags = async () => {
+    setPopularTagsLoading(true);
     try {
       const res = await apiGetMostPopularTags(`limit=${6}`);
       setPopularTags(res.data.tags);
     } catch (error) {
       console.log(error);
+    } finally {
+      setPopularTagsLoading(false);
+      setIsFetchPopularTags(false);
     }
   };
 
   const getMostViewedPosts = async () => {
+    setMostViewedPostsLoading(true);
     try {
       const res = await apiGetMostViewedPosts(`limit=${4}`);
       setMostViewedPosts(res.data.posts);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFetchMostViewedPosts(false);
+      setMostViewedPostsLoading(false);
     }
   };
 
   const getPostDetail = useCallback(async () => {
-    const post = await apiGetDetailPost(slug)
-      .then((res) => {
-        if (!res.data.result) {
-          setFound(false);
-        } else {
-          setPost(res.data.result);
-          window.scrollTo(0, 0);
-          return res.data.result;
-        }
-      })
-      .catch((error) => {
-        setFound(false);
-        console.log(error);
-      });
-    getPostComment(post?._id);
-    getRelatedPosts(post?._id);
-    getPostOption(post?.userId?._id);
+    setPostLoading(true);
+    window.scrollTo(0, 0);
+    try {
+      const res = await apiGetDetailPost(slug);
+      if (!res.data.result) {
+        console.log("error");
+      } else {
+        setPost(res.data.result);
+        getPostComment(res.data.result?._id);
+        getRelatedPosts(res.data.result?._id);
+        getPostOption(res.data.result?.userId?._id);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPostLoading(false);
+      setIsFetchPost(false);
+      setPostCommentsLoading(false);
+      setIsFetchPostComments(false);
+      setIsFetchRelatedPosts(false);
+      setRelatedPostsLoading(false);
+    }
   }, [slug]);
 
   useEffect(() => {
-    setFound(true);
+    setPost(null);
+    setIsFetchPost(true);
+    setIsFetchPostComments(true);
+    setIsFetchRelatedPosts(true);
     getPostDetail();
     getMostPopularTags();
     getMostViewedPosts();
@@ -427,15 +471,15 @@ const PostDetail = () => {
     return followingIds.some((followingId) => followingId.following === userId);
   };
 
-  if (!found) {
-    return <NotFoundPage />;
-  }
-
   return (
     <div className="post-detail-container">
       <div className="post-detail-content">
         <div className="post-detail-left">
-          {!!post && (
+          {!isFetchPost && !post && (
+            <p className="text-not-found">Không có bài viết này</p>
+          )}
+          {(isFetchPost || postLoading) && <PostContentSkeleton />}
+          {!!post && !isFetchPost && (
             <div className="post-content">
               <div className="post-content-header">
                 <img src={post?.thumbnail_url} alt={post?.title} />
@@ -522,7 +566,8 @@ const PostDetail = () => {
               </div>
             </div>
           )}
-          {!!post && (
+          {(isFetchPost || postLoading) && <AuthorPostHorizontalSkeleton />}
+          {!!post && !isFetchPost && (
             <div className="author">
               <div className="title">
                 <h1>Tác giả</h1>
@@ -652,8 +697,10 @@ const PostDetail = () => {
               </div>
             </div>
           )}
-
-          {!!postComments && (
+          {(isFetchPostComments || postCommentsLoading) && (
+            <PostCommentSkeleton />
+          )}
+          {!!postComments && !isFetchPostComments && !!post && (
             <div className="comment">
               <div className="title">
                 <h1>Bình luận</h1>
@@ -1045,14 +1092,16 @@ const PostDetail = () => {
               </div>
             </div>
           )}
-
-          <div className="related-posts">
-            <div className="title">
-              <h1>Bài viết liên quan</h1>
-            </div>
-            <div className="posts">
-              {relatedPosts.length > 0 &&
-                relatedPosts.map((post) => (
+          {(isFetchRelatedPosts || relatedPostsLoading) && (
+            <RelatedPostsSkeleton />
+          )}
+          {relatedPosts.length > 0 && !isFetchRelatedPosts && !!post && (
+            <div className="related-posts">
+              <div className="title">
+                <h1>Bài viết liên quan</h1>
+              </div>
+              <div className="posts">
+                {relatedPosts.map((post) => (
                   <div key={post._id} className="item-blog-container">
                     <div className="item-blog">
                       <div className="img-blog">
@@ -1087,11 +1136,13 @@ const PostDetail = () => {
                     </div>{" "}
                   </div>
                 ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="post-detail-right">
-          {!!post && (
+          {(isFetchPost || postLoading) && <AuthorPostVerticalSkeleton />}
+          {!!post && !isFetchPost && (
             <div className="author">
               <div className="title">
                 <h2>Tác giả</h2>
@@ -1189,13 +1240,16 @@ const PostDetail = () => {
               </div>
             </div>
           )}
-          <div className="post-most">
-            <div className="title">
-              <h2>Bài viết nổi bật</h2>
-            </div>
-            <div className="item-blog-container">
-              {mostViewedPosts.length > 0 &&
-                mostViewedPosts.map((post, index) => (
+          {(isFetchMostViewedPosts || mostViewedPostsLoading) && (
+            <PostMostSkeleton />
+          )}
+          {mostViewedPosts.length > 0 && !isFetchMostViewedPosts && (
+            <div className="post-most">
+              <div className="title">
+                <h2>Bài viết nổi bật</h2>
+              </div>
+              <div className="item-blog-container">
+                {mostViewedPosts.map((post, index) => (
                   <div key={post._id} className="item-blog">
                     <div className="img-blog">
                       <Link
@@ -1228,15 +1282,17 @@ const PostDetail = () => {
                     </div>
                   </div>
                 ))}
+              </div>
             </div>
-          </div>
-          <div className="tag-cloud">
-            <div className="title">
-              <h3>Khám phá</h3>
-            </div>
-            <div className="tag-container">
-              {popularTags.length > 0 &&
-                popularTags.map((tag, index) => (
+          )}
+          {(popularTagsLoading || isFetchPopularTags) && <TagCloudSkeleton />}
+          {popularTags.length > 0 && !isFetchPopularTags && (
+            <div className="tag-cloud">
+              <div className="title">
+                <h3>Khám phá</h3>
+              </div>
+              <div className="tag-container">
+                {popularTags.map((tag, index) => (
                   <Link
                     to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
                     key={tag._id}
@@ -1246,39 +1302,45 @@ const PostDetail = () => {
                     {truncateTitle(tag.name, 25)}
                   </Link>
                 ))}
+              </div>
             </div>
-          </div>
-          <div className="follow-me">
-            <div className="title">
-              <h2>Theo dõi chúng tôi</h2>
+          )}
+          {(isFetchMostViewedPosts || isFetchPopularTags) && (
+            <FollowMeSkeleton />
+          )}
+          {!isFetchMostViewedPosts && !isFetchPopularTags && (
+            <div className="follow-me">
+              <div className="title">
+                <h2>Theo dõi chúng tôi</h2>
+              </div>
+              <div className="follow-container">
+                <Link className={"item-follow"}>
+                  <div className="img">
+                    <img src={facebookIcon} alt="" />
+                  </div>
+                  <h3>Facebook</h3>
+                </Link>
+                <Link to={"https://www.youtube.com/"} className={"item-follow"}>
+                  <div className="img">
+                    <img src={youtubeIcon} alt="" />
+                  </div>
+                  <h3>Youtube</h3>
+                </Link>
+                <Link className={"item-follow"}>
+                  <div className="img">
+                    <img src={instagramIcon} alt="" />
+                  </div>
+                  <h3>Instagram</h3>
+                </Link>
+                <Link className={"item-follow"}>
+                  <div className="img">
+                    <img src={tiktokIcon} alt="" />
+                  </div>
+                  <h3>TikTok</h3>
+                </Link>
+              </div>
             </div>
-            <div className="follow-container">
-              <Link className={"item-follow"}>
-                <div className="img">
-                  <img src={facebookIcon} alt="" />
-                </div>
-                <h3>Facebook</h3>
-              </Link>
-              <Link to={"https://www.youtube.com/"} className={"item-follow"}>
-                <div className="img">
-                  <img src={youtubeIcon} alt="" />
-                </div>
-                <h3>Youtube</h3>
-              </Link>
-              <Link className={"item-follow"}>
-                <div className="img">
-                  <img src={instagramIcon} alt="" />
-                </div>
-                <h3>Instagram</h3>
-              </Link>
-              <Link className={"item-follow"}>
-                <div className="img">
-                  <img src={tiktokIcon} alt="" />
-                </div>
-                <h3>TikTok</h3>
-              </Link>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

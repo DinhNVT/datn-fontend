@@ -25,11 +25,14 @@ import {
 import ROUTES from "../../../constants/routes";
 import { errorAlert } from "../../../utils/customAlert";
 import avtDefault from "../../../assets/images/avatar_default.png";
+import ProfilePostSkeleton from "../../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
 
 const Favorites = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.auth?.login);
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
 
   const [copied, setCopied] = useState(false);
   const [copySlug, setCopySlug] = useState("");
@@ -47,6 +50,7 @@ const Favorites = (props) => {
   };
 
   const getFavoriteUser = async (id) => {
+    setPostsLoading(true);
     try {
       const res = await apiGetFavoriteUser(id);
       if (res.data.posts) {
@@ -54,6 +58,9 @@ const Favorites = (props) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFetchPosts(false);
+      setPostsLoading(false);
     }
   };
 
@@ -91,7 +98,17 @@ const Favorites = (props) => {
       ) : (
         <div className="favorite-container">
           <div className="favorite-content">
+            {isFetchPosts && postsLoading && (
+              <>
+                <ProfilePostSkeleton />
+                <ProfilePostSkeleton />
+              </>
+            )}
+            {posts.length === 0 && !isFetchPosts && (
+              <p className="text-not-found">Không có bài viết yêu thích nào</p>
+            )}
             {posts.length > 0 &&
+              !isFetchPosts &&
               posts.map((post, index) => (
                 <div key={post._id} className="blog-item">
                   <div className="blog-item-content">
@@ -219,7 +236,6 @@ const Favorites = (props) => {
                   </div>
                 </div>
               ))}
-            {posts.length <= 0 && <p>Không có bài viết yêu thích nào</p>}
           </div>
         </div>
       )}

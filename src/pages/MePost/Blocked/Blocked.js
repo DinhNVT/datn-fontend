@@ -10,14 +10,19 @@ import { getCreatedAtString } from "../../../utils/convertTime";
 import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
 import Loader from "../../../components/Loader/Loader";
 import { deleteAlert } from "../../../utils/customAlert";
+import ProfilePostSkeleton from "../../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
 
 const Blocked = () => {
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [totalPosts, setTotalPost] = useState(0);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
   const getAllPostMe = async (page) => {
+    setPostsLoading(true);
     const query = `limit=${10}&status=blocked&page=${page}`;
     try {
       const res = await apiGetPostsMe(query);
@@ -34,6 +39,9 @@ const Blocked = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -43,6 +51,7 @@ const Blocked = () => {
   };
   useEffect(() => {
     getAllPostMe(1);
+    setIsFetchPosts(true);
   }, []);
 
   const handleDelete = (id) => {
@@ -65,12 +74,20 @@ const Blocked = () => {
   return (
     <div className="me-blocked-container">
       <div className="me-blocked-content">
-        {totalPosts > 0 ? (
+        {posts.length > 0 && !isFetchPosts && (
           <p className="total-post">{`Có ${totalPosts} bài viết bị chặn`}</p>
-        ) : (
-          "Không có bài viết nào bị chặn"
+        )}
+        {posts.length <= 0 && !isFetchPosts && (
+          <p className="total-post">Không có bài viết nào bị chặn</p>
+        )}
+        {isFetchPosts && postsLoading && (
+          <>
+            <ProfilePostSkeleton />
+            <ProfilePostSkeleton />
+          </>
         )}
         {posts.length > 0 &&
+          !isFetchPosts &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
               <div className="blog-item-content">

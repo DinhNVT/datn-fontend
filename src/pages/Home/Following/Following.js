@@ -25,10 +25,14 @@ import {
   addToFavoritesSlice,
   removeFromFavoritesSlice,
 } from "../../../stores/postSlice";
+import HomePostSkeleton from "../../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
 
 const Following = () => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
@@ -74,6 +78,7 @@ const Following = () => {
 
   const getAllPostMe = async (page) => {
     const query = `limit=${10}&page=${page}`;
+    setPostsLoading(true);
     try {
       const res = await apiGetFollowedPosts(query);
       if (res.data.posts.length > 0) {
@@ -88,6 +93,9 @@ const Following = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setIsFetchPosts(false);
+      setPostsLoading(false);
     }
   };
 
@@ -98,12 +106,20 @@ const Following = () => {
 
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     getAllPostMe(1);
   }, []);
 
   return (
     <div className="following-container">
+      {isFetchPosts && postsLoading && (
+        <>
+          <HomePostSkeleton />
+          <HomePostSkeleton />
+        </>
+      )}
       {posts.length > 0 &&
+        !isFetchPosts &&
         posts.map((post, index) => (
           <div key={post._id} className="following-item">
             <div className="following-item-content">
