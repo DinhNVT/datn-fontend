@@ -64,6 +64,10 @@ const SearchModal = (props) => {
     getMostPopularTags();
   }, []);
 
+  const handleTagClick = () => {
+    props.closeModalSearch();
+  };
+
   return (
     <div
       className={`search-modal-container${props.isShowSearch ? " show" : ""}`}
@@ -93,26 +97,6 @@ const SearchModal = (props) => {
               {errorInput}
             </span>
           )}
-          {/* <div className="suggest-container">
-            <div className="suggest-item">
-              <img
-                src="https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg"
-                alt=""
-              />
-              <h4>
-                {" "}
-                Ổi trồng trong nhà Ổi trồng trong nhàỔi trồng trong nhà Ổi trồng
-                trong nhà
-              </h4>
-            </div>
-            <div className="suggest-item">
-              <img
-                src="https://thuthuatnhanh.com/wp-content/uploads/2021/11/hinh-anh-chill-dep.jpg"
-                alt=""
-              />
-              <h4>Ổi trồng trong nhà Ổi trồng trong nhà</h4>
-            </div>
-          </div> */}
         </div>
         <div className="or-keyword">
           <h3>Hoặc tìm kiếm bằng từ khóa...</h3>
@@ -120,6 +104,7 @@ const SearchModal = (props) => {
             {popularTags.length > 0 &&
               popularTags.map((tag, index) => (
                 <Link
+                  onClick={handleTagClick}
                   key={tag._id}
                   to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
                   className={`item-tag tag-${index + 1}`}

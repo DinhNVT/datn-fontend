@@ -26,12 +26,16 @@ import {
   removeFromFavoritesSlice,
 } from "../../stores/postSlice";
 import { apiAddToFavorites, apiDeleteFavoritePost } from "../../apis/user";
+import HomePostSkeleton from "../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
 
 const Category = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
   const [category, setCategory] = useState(null);
@@ -76,6 +80,7 @@ const Category = () => {
   };
 
   const getAllPostByCategory = async (page, slug) => {
+    setPostsLoading(true);
     const query = `limit=${10}&page=${page}&category=${slug}`;
     try {
       const res = await apiGetPostsOption(query);
@@ -90,6 +95,9 @@ const Category = () => {
       setIsLoadingSeeMore(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFetchPosts(false);
+      setPostsLoading(false);
       setIsLoadingSeeMore(false);
     }
   };
@@ -112,6 +120,7 @@ const Category = () => {
 
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     if (!!params.slug) {
       getCategoryDetail(params.slug);
       getAllPostByCategory(1, params.slug);
@@ -125,12 +134,19 @@ const Category = () => {
           <h1 className="title">
             Danh mục:{" "}
             <span className="title-hight">
-              {!!category ? category.name : ""}
+              {!!category ? category.name : "..."}
             </span>
           </h1>
         </div>
         <div className="category-body">
+          {isFetchPosts && postsLoading && (
+            <>
+              <HomePostSkeleton />
+              <HomePostSkeleton />
+            </>
+          )}
           {posts.length > 0 &&
+            !isFetchPosts &&
             posts.map((post, index) => (
               <div key={post._id} className="for-you-item">
                 <div className="for-you-item-content">
@@ -262,7 +278,9 @@ const Category = () => {
                 </div>
               </div>
             ))}
-          {posts.length === 0 && <p>Không có bài viết nào </p>}
+          {posts.length === 0 && !isFetchPosts && (
+            <p className="text-not-found">Không có bài viết nào </p>
+          )}
           {page > 0 && (
             <div className="see-more">
               <button onClick={handleClickSeeMore} className="btn-see-more">

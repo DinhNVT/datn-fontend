@@ -12,14 +12,19 @@ import { apiDeletePost, apiGetPostsMe } from "../../../apis/post";
 import Loader from "../../../components/Loader/Loader";
 import { deleteAlert } from "../../../utils/customAlert";
 import ROUTES from "../../../constants/routes";
+import ProfilePostSkeleton from "../../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
 
 const Drafts = () => {
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [totalPosts, setTotalPost] = useState(0);
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
   const getAllPostMe = async (page) => {
+    setPostsLoading(true);
     const query = `limit=${10}&status=draft&page=${page}`;
     try {
       const res = await apiGetPostsMe(query);
@@ -36,6 +41,9 @@ const Drafts = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -45,6 +53,7 @@ const Drafts = () => {
   };
   useEffect(() => {
     setPosts([]);
+    setPostsLoading(true);
     getAllPostMe(1);
   }, []);
 
@@ -68,12 +77,20 @@ const Drafts = () => {
   return (
     <div className="me-drafts-container">
       <div className="me-drafts-content">
-        {totalPosts > 0 ? (
+        {posts.length > 0 && !isFetchPosts && (
           <p className="total-post">{`Có ${totalPosts} bản nháp`}</p>
-        ) : (
-          "Không có bản nháp nào"
+        )}
+        {posts.length <= 0 && !isFetchPosts && (
+          <p className="total-post">Không có bản nháp nào</p>
+        )}
+        {isFetchPosts && postsLoading && (
+          <>
+            <ProfilePostSkeleton />
+            <ProfilePostSkeleton />
+          </>
         )}
         {posts.length > 0 &&
+          !isFetchPosts &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
               <div className="blog-item-content">

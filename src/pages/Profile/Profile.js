@@ -23,10 +23,14 @@ import {
   removeFromFavoritesSlice,
 } from "../../stores/postSlice";
 import { apiAddToFavorites, apiDeleteFavoritePost } from "../../apis/user";
+import ProfilePostSkeleton from "../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
@@ -46,6 +50,7 @@ const Profile = (props) => {
   };
 
   const getAllPost = async (page, userName) => {
+    setPostsLoading(true);
     const query = `limit=${10}&userAllPost=${userName}&page=${page}`;
     try {
       const res = await apiGetPostsOption(query);
@@ -61,6 +66,9 @@ const Profile = (props) => {
     } catch (error) {
       console.log(error);
       setIsLoadingSeeMore(false);
+    } finally {
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -71,6 +79,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     getAllPost(1, props.data.username);
   }, [props.data.username]);
 
@@ -102,7 +111,17 @@ const Profile = (props) => {
   return (
     <div className="profile-container">
       <div className="profile-content">
+        {isFetchPosts && postsLoading && (
+          <>
+            <ProfilePostSkeleton />
+            <ProfilePostSkeleton />
+          </>
+        )}
+        {posts.length === 0 && !isFetchPosts && (
+          <p className="text-not-found">Không có bài viết nào</p>
+        )}
         {posts.length > 0 &&
+          !isFetchPosts &&
           posts.map((post, index) => (
             <div key={post._id} className="blog-item">
               <div className="blog-item-content">

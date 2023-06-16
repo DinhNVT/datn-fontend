@@ -1,0 +1,50 @@
+@import "../../../assets/AppStyles/variables.scss";
+
+.follow-item-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  padding: 10px;
+  border-radius: 16px;
+  background-color: white;
+  padding: 20px 20px;
+  margin-bottom: 40px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .img-avt {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 8px;
+      .name {
+        width: 250px;
+        height: 32px;
+        border-radius: 4px;
+      }
+
+      .email {
+        width: 150px;
+        height: 24px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .btn-follow {
+    width: 150px;
+    height: 40px;
+    border-radius: 500px;
+  }
+}

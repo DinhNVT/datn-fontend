@@ -2,6 +2,11 @@
 
 .search-container {
   margin-top: 40px;
+
+  .text-not-found {
+    text-align: center;
+  }
+  
   .search-content {
     max-width: 900px;
     margin: 0 auto;

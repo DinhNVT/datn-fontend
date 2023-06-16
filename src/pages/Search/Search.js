@@ -26,6 +26,7 @@ import {
   removeFromFavoritesSlice,
 } from "../../stores/postSlice";
 import { apiAddToFavorites, apiDeleteFavoritePost } from "../../apis/user";
+import HomePostSkeleton from "../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
 
 const Search = () => {
   const location = useLocation();
@@ -34,7 +35,11 @@ const Search = () => {
 
   const [keyword, setKeyword] = useState("");
   const [errorInput, setErrorInput] = useState("");
+
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [isFetchPosts, setIsFetchPosts] = useState(true);
+
   const [page, setPage] = useState(0);
   const [isLoadingSeeMore, setIsLoadingSeeMore] = useState(false);
 
@@ -78,6 +83,7 @@ const Search = () => {
   };
 
   const getAllPostMe = async (page, keyword) => {
+    setPostsLoading(true);
     const query = `limit=${10}&page=${page}&search=${keyword}`;
     try {
       const res = await apiGetPostsOption(query);
@@ -92,7 +98,10 @@ const Search = () => {
       setIsLoadingSeeMore(false);
     } catch (error) {
       console.log(error);
+    } finally {
       setIsLoadingSeeMore(false);
+      setPostsLoading(false);
+      setIsFetchPosts(false);
     }
   };
 
@@ -131,6 +140,7 @@ const Search = () => {
 
   useEffect(() => {
     setPosts([]);
+    setIsFetchPosts(true);
     const searchParams = new URLSearchParams(location.search);
     const keyword = searchParams.get("s");
     if (!!keyword) {
@@ -149,7 +159,7 @@ const Search = () => {
               {`"${
                 !!new URLSearchParams(location.search).get("s")
                   ? new URLSearchParams(location.search).get("s")
-                  : ""
+                  : "..."
               }"`}
             </span>
           </h1>
@@ -177,7 +187,17 @@ const Search = () => {
           )}
         </div>
         <div className="search-body">
+          {isFetchPosts && postsLoading && (
+            <>
+              <HomePostSkeleton />
+              <HomePostSkeleton />
+            </>
+          )}
+          {posts.length === 0 && !isFetchPosts && (
+            <p className="text-not-found">Không có bài viết nào </p>
+          )}
           {posts.length > 0 &&
+            !isFetchPosts &&
             posts.map((post, index) => (
               <div key={post._id} className="for-you-item">
                 <div className="for-you-item-content">
@@ -309,7 +329,6 @@ const Search = () => {
                 </div>
               </div>
             ))}
-          {posts.length === 0 && <p>Không có bài viết nào </p>}
           {page > 0 && (
             <div className="see-more">
               <button onClick={handleClickSeeMore} className="btn-see-more">
