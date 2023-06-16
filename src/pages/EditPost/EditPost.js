@@ -42,7 +42,7 @@ const EditPost = () => {
       setImage(res.data.result.thumbnail_url);
       setContent(res.data.result.content);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
@@ -191,7 +191,7 @@ const EditPost = () => {
       }
     } catch (error) {
       errorAlert("Đã xảy ra lỗi");
-      console.log(error.res.data);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

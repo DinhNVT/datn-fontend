@@ -7,6 +7,13 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid #272727;
+      background-color: white;
+      overflow: hidden;
+      padding: 20px 20px;
+      margin-bottom: 40px;
 
       .right {
         display: flex;
@@ -30,9 +37,9 @@
 
       .btn-following {
         @include button-black;
-        padding: 8px 16px;
+        padding: 12px 16px;
 
-        &.following {
+        &.follow {
           background-color: white;
           color: $gray-700;
         }

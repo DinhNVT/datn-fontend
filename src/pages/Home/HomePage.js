@@ -51,7 +51,7 @@ const HomePage = () => {
       dispatch(addToFavoritesSlice(postId));
       await apiAddToFavorites({ postId: postId });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -60,7 +60,7 @@ const HomePage = () => {
       dispatch(removeFromFavoritesSlice(postId));
       await apiDeleteFavoritePost(postId);
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
@@ -82,7 +82,7 @@ const HomePage = () => {
       }
       setIsLoadingSeeMore(false);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       setIsLoadingSeeMore(false);
     }
   };

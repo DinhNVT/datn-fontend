@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Favorites.scss";
-import { useSelector } from "react-redux";
-import { apiGetFavoriteUser } from "../../../apis/user";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  apiAddToFavorites,
+  apiDeleteFavoritePost,
+  apiGetFavoriteUser,
+} from "../../../apis/user";
 import { Link } from "react-router-dom";
 import { createSummary, truncateTitle } from "../../../utils/truncateString";
 import { getCreatedAtString } from "../../../utils/convertTime";
@@ -11,10 +15,19 @@ import {
   AiOutlineEye,
   AiOutlineShareAlt,
   AiOutlineHeart,
+  AiFillHeart,
 } from "react-icons/ai";
 import { RxCountdownTimer } from "react-icons/rx";
+import {
+  addToFavoritesSlice,
+  removeFromFavoritesSlice,
+} from "../../../stores/postSlice";
+import ROUTES from "../../../constants/routes";
+import { errorAlert } from "../../../utils/customAlert";
+import avtDefault from "../../../assets/images/avatar_default.png";
 
 const Favorites = (props) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.auth?.login);
   const [posts, setPosts] = useState([]);
 
@@ -40,13 +53,37 @@ const Favorites = (props) => {
         setPosts(res.data.posts);
       }
     } catch (error) {
-      console.log(error?.res?.data?.message);
+      console.log(error);
     }
   };
 
   useEffect(() => {
     getFavoriteUser(props.data._id);
   }, [props]);
+
+  const { favoritePosts } = useSelector((state) => state?.post);
+
+  const addToFavorites = async (postId) => {
+    try {
+      dispatch(addToFavoritesSlice(postId));
+      await apiAddToFavorites({ postId: postId });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeFromFavorites = async (postId) => {
+    try {
+      dispatch(removeFromFavoritesSlice(postId));
+      await apiDeleteFavoritePost(postId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isPostLiked = (postId) => {
+    return favoritePosts.some((favoritePost) => favoritePost.postId === postId);
+  };
   return (
     <div>
       {user?.username !== props.data.username ? (
@@ -62,73 +99,121 @@ const Favorites = (props) => {
                       <img src={post?.thumbnail_url} alt={post?.title} />
                     </Link>
                     <div className="blog-post-info">
-                      <Link
-                        target="_blank"
-                        to={`/post/${post.slug}`}
-                        className="title"
-                      >
-                        <h2>{truncateTitle(post.title, 85)}</h2>
-                      </Link>
-                      <div className="interact">
-                        <div className="interact-item">
-                          <RxCountdownTimer className={"icon"} size={22} />{" "}
-                          <p>{getCreatedAtString(post.createdAt)}</p>
+                      <div>
+                        <Link
+                          target="_blank"
+                          to={`/post/${post.slug}`}
+                          className="title"
+                        >
+                          <h2>{truncateTitle(post.title, 85)}</h2>
+                        </Link>
+                        <div className="interact">
+                          <div className="interact-item">
+                            <RxCountdownTimer className={"icon"} size={22} />{" "}
+                            <p>{getCreatedAtString(post.createdAt)}</p>
+                          </div>
+                          <div className="interact-item">
+                            <FaRegComment className={"icon"} size={22} />{" "}
+                            <p>{post.comment_count} bình luận</p>
+                          </div>
+                          <div className="interact-item">
+                            <AiOutlineEye className={"icon"} size={24} />{" "}
+                            <p>{post.view_count} lượt xem</p>
+                          </div>
                         </div>
-                        <div className="interact-item">
-                          <FaRegComment className={"icon"} size={22} />{" "}
-                          <p>{post.comment_count} bình luận</p>
-                        </div>
-                        <div className="interact-item">
-                          <AiOutlineEye className={"icon"} size={24} />{" "}
-                          <p>{post.view_count} lượt xem</p>
-                        </div>
-                      </div>
-                      {createSummary(post.content, 300)}
-                      <div className="tags">
-                        {post.tags.length > 0 &&
-                          post.tags.map((tag, index) => (
+                        <div className="info-post">
+                          <div className="author">
                             <Link
-                              key={tag._id}
-                              className={`item-tag tag-${index + 1}`}
+                              to={ROUTES.PROFILE_PAGE.path.replace(
+                                ":username",
+                                post?.userId?.username
+                              )}
                             >
-                              <span># </span>
-                              {tag.name}
+                              <img
+                                src={
+                                  !!post?.userId?.avatar
+                                    ? post?.userId?.avatar
+                                    : avtDefault
+                                }
+                                alt={post?.userId?.name}
+                                className="avt"
+                              />
+                              <h4>{post?.userId?.name}</h4>
                             </Link>
-                          ))}
+                          </div>
+                        </div>
+                        {createSummary(post.content, 300)}
+                        <div className="tags">
+                          {post.tags.length > 0 &&
+                            post.tags.map((tag, index) => (
+                              <Link
+                                to={`${ROUTES.POST_SEARCH_PAGE.path}?s=${tag.name}`}
+                                key={tag._id}
+                                className={`item-tag tag-${index + 1}`}
+                              >
+                                <span># </span>
+                                {tag.name}
+                              </Link>
+                            ))}
+                        </div>
                       </div>
                       <div className="read-more-btn">
                         <Link
-                          onClick={() => {
-                            handleCopyClick(post.slug);
-                          }}
-                          className="btn-share"
-                        >
-                          {copied && copySlug === post.slug ? (
-                            <p>
-                              Copied
-                              <BsCheckAll size={24} className={"arrow"} />
-                            </p>
-                          ) : (
-                            <p>
-                              Chia sẻ
-                              <AiOutlineShareAlt
-                                size={24}
-                                className={"arrow"}
-                              />
-                            </p>
+                          to={ROUTES.POST_DETAIL_PAGE.path.replace(
+                            ":slug",
+                            post.slug
                           )}
-                        </Link>
-                        <Link
-                          to={`/me/post/edit/${post._id}`}
-                          className=" btn-edit"
                         >
-                          Yêu thích
-                          <AiOutlineHeart size={24} className={"arrow"} />
-                        </Link>
-                        <Link target="_blank" to={`/post/${post.slug}`}>
                           Đọc thêm
                           <BsArrowRight size={24} className={"arrow"} />
                         </Link>
+                        <div>
+                          <button
+                            onClick={() => {
+                              if (!user) {
+                                errorAlert(
+                                  "Bạn chưa đăng nhập",
+                                  "Bạn cần phải đăng nhập để thêm bài viết vào yêu thích"
+                                );
+                              } else {
+                                isPostLiked(post._id)
+                                  ? removeFromFavorites(post._id)
+                                  : addToFavorites(post._id);
+                              }
+                            }}
+                          >
+                            {isPostLiked(post._id) && !!user ? (
+                              <AiFillHeart
+                                size={32}
+                                className={"arrow liked"}
+                              />
+                            ) : (
+                              <AiOutlineHeart size={32} className={"arrow"} />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleCopyClick(post.slug);
+                            }}
+                            type="button"
+                          >
+                            {copied && copySlug === post.slug ? (
+                              <p>
+                                <BsCheckAll
+                                  size={32}
+                                  className={"arrow check-all"}
+                                />
+                              </p>
+                            ) : (
+                              <p>
+                                <AiOutlineShareAlt
+                                  size={32}
+                                  className={"arrow"}
+                                />
+                              </p>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

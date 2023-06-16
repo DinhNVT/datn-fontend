@@ -190,7 +190,7 @@ const WritePost = () => {
       }
     } catch (error) {
       errorAlert("Đã xảy ra lỗi");
-      console.log(error.res.data);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

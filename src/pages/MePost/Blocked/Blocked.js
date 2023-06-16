@@ -32,7 +32,7 @@ const Blocked = () => {
       setTotalPost(res.data.total);
       setIsLoadingSeeMore(false);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       setIsLoadingSeeMore(false);
     }
   };
