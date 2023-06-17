@@ -6,7 +6,7 @@
   .text-not-found {
     text-align: center;
   }
-  
+
   .search-content {
     max-width: 900px;
     margin: 0 auto;
@@ -306,10 +306,18 @@
   }
 }
 
-
 @media screen and (max-width: 767px) {
   .search-container {
     .search-content {
+      .search-header {
+        .input-bar {
+          position: relative;
+          .input {
+            width: 100%;
+            min-width: 100%;
+          }
+        }
+      }
       .search-body {
         .for-you-item {
           margin-bottom: 30px;
