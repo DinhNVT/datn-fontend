@@ -156,7 +156,7 @@
 
           .input-tag-container {
             position: relative;
-            
+
             .input-tag {
               outline: none;
               border: none;
@@ -254,6 +254,16 @@
         display: none;
         opacity: 0;
         visibility: hidden;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .edit-post-container {
+    .edit-post-content {
+      .btn-post-group {
+        flex-wrap: wrap;
       }
     }
   }

@@ -1,4 +1,4 @@
-@import '../../assets/AppStyles/variables.scss';
+@import "../../assets/AppStyles/variables.scss";
 
 .main-layout {
   background-color: $body-bg;
@@ -7,7 +7,23 @@
   display: flex;
   flex-direction: column;
 
-  .main-children{
+  .main-children {
     flex-grow: 1;
+  }
+}
+
+@media screen and (max-width: 1240px) {
+  .main-layout {
+    .main-children {
+      padding: 0 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .main-layout {
+    .main-children {
+      padding: 0 12px;
+    }
   }
 }

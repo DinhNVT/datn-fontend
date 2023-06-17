@@ -116,3 +116,14 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+  .edit-profile-container {
+    .edit-profile-content {
+      .info-list {
+        width: 100%;
+        margin: 30px 0;
+      }
+    }
+  }
+}

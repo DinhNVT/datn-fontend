@@ -78,14 +78,14 @@
             align-items: center;
             gap: 8px;
             margin-top: 8px;
-  
+
             .author {
               margin-bottom: 8px;
               a {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-  
+
                 .avt {
                   width: 42px;
                   height: 42px;
@@ -94,7 +94,7 @@
                   border: 1px solid white;
                   overflow: hidden;
                 }
-  
+
                 h4 {
                   display: -webkit-box;
                   -webkit-box-orient: vertical;
@@ -104,13 +104,13 @@
                   transition: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
                   @include background-hover;
                 }
-  
+
                 &:hover h4 {
                   @include tag-a-hover;
                   color: $primary-normal;
                   background-size: 100% $primary-normal;
                 }
-  
+
                 &:hover .avt {
                   transform: translate(-2px, -2px);
                   box-shadow: $small-shadow;
@@ -214,6 +214,96 @@
         .arrow {
           vertical-align: middle;
           margin-left: 6px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .favorite-container {
+    .favorite-content {
+      .blog-item {
+        padding: 16px;
+        margin-bottom: 30px;
+
+        .blog-item-content {
+          gap: 16px;
+
+          a {
+            img {
+              width: 270px;
+              height: 400px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .favorite-container {
+    .favorite-content {
+      .blog-item {
+        margin-bottom: 30px;
+        padding: 16px 8px;
+
+        .blog-item-content {
+          gap: 16px;
+          flex-direction: column;
+          position: relative;
+
+          a {
+            img {
+              width: 100%;
+              height: 225px;
+            }
+          }
+
+          .blog-post-info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .title {
+              min-height: 50px;
+              display: block;
+
+              h2 {
+                font-size: 20px;
+              }
+            }
+
+            .info-post {
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: flex-start;
+              align-items: center;
+              gap: 8px;
+              margin-top: 8px;
+            }
+
+            .normal-summary {
+              display: block;
+              min-height: 100px;
+            }
+
+            .large-summary {
+              display: none;
+            }
+
+            .tags {
+              position: absolute;
+              top: 0;
+              left: 10px;
+
+              .item-tag {
+                padding: 4px 8px;
+              }
+            }
+          }
         }
       }
     }

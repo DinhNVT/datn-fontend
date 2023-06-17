@@ -11,3 +11,19 @@
     flex-grow: 1;
   }
 }
+
+@media screen and (max-width: 1240px) {
+  .no-header-layout {
+    .no-header-children {
+      padding: 0 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .no-header-layout {
+    .no-header-children {
+      padding: 0 12px;
+    }
+  }
+}

@@ -47,3 +47,16 @@
     }
   }
 }
+
+@media screen and (max-width: 550px) {
+  .follower-container {
+    .follower-content {
+      .follower-item {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: start;
+        gap: 16px;
+      }
+    }
+  }
+}

@@ -129,3 +129,75 @@
     }
   }
 }
+
+@media screen and (max-width: 1240px) {
+  .profile-layout {
+    .profile-children {
+      padding: 0 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .profile-layout {
+    .profile-children {
+      padding: 0 12px;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .profile-layout {
+    .profile-children {
+      .profile-container {
+        .profile-menu {
+          .profile-info {
+            flex-direction: column;
+            .left {
+              margin-bottom: 16px;
+            }
+
+            .avt {
+              width: 90px;
+              height: 90px;
+              margin-right: 8px;
+            }
+
+            .name {
+              h1 {
+                font-size: 20px;
+              }
+              h3 {
+                width: 250px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .profile-layout {
+    .profile-children {
+      .profile-container {
+        .profile-menu {
+          .profile-navbar {
+            ul {
+              li {
+                .active {
+                  color: $primary-normal;
+                  border: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

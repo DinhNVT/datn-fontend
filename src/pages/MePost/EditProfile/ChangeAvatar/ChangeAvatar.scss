@@ -66,3 +66,12 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+  .change-avatar-container {
+    padding: 0px;
+    .change-avatar-content {
+      flex-direction: column;
+    }
+  }
+}

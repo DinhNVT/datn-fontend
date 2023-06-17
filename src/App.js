@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { checkRefreshTokenFetch } from "./stores/apiAuthRequest";
 import { fetchFavoritePosts } from "./stores/apiPostRequest";
 import { fetchFollowingsUser } from "./stores/apiUserRequest";
+import BackToTopButton from "./components/BackToTopButton/BackToTopButton";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ function App() {
   return (
     <div className="App">
       <AppRouter />
+      <BackToTopButton />
     </div>
   );
 }

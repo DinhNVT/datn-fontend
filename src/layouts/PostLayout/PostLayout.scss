@@ -69,3 +69,19 @@
     }
   }
 }
+
+@media screen and (max-width: 1240px) {
+  .me-post-layout {
+    .me-post-children {
+      padding: 0 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .me-post-layout {
+    .me-post-children {
+      padding: 0 12px;
+    }
+  }
+}
