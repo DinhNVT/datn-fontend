@@ -195,3 +195,85 @@
     }
   }
 }
+
+@media screen and (max-width: 1240px) {
+  .footer-container {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .footer-container {
+    .grid-container {
+      padding: 50px 0;
+
+      .content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        .item {
+          width: 50%;
+          margin-bottom: 24px;
+
+          .title {
+            position: unset;
+            h3 {
+              width: 80%;
+              display: inline-block;
+              background-color: $primary-light-active;
+              border: none;
+              border-bottom: 2px solid $primary-normal;
+              border-radius: 0px;
+              padding: 10px 0px;
+              margin-bottom: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .footer-container {
+    .grid-container {
+      padding: 50px 0;
+
+      .content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        .item {
+          width: 100%;
+          margin-bottom: 24px;
+
+          .title {
+            position: unset;
+            h3 {
+              width: 100%;
+              display: inline-block;
+              background-color: $primary-light-active;
+              border: none;
+              border-bottom: 2px solid $primary-normal;
+              border-radius: 0px;
+              padding: 10px 0px;
+              margin-bottom: 16px;
+            }
+          }
+        }
+
+        .tag-cloud {
+          padding-right: 0px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .footer-container {
+    padding: 0 12px;
+  }
+}

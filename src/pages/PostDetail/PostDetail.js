@@ -680,7 +680,7 @@ const PostDetail = () => {
                               <h4>
                                 {truncateTitle(
                                   capitalizeFirstLetter(postUserNewest.title),
-                                  55
+                                  45
                                 )}
                               </h4>
                             </Link>
@@ -697,7 +697,7 @@ const PostDetail = () => {
               </div>
             </div>
           )}
-          {(isFetchPostComments || postCommentsLoading) && (
+          {isFetchPostComments && postCommentsLoading && (
             <PostCommentSkeleton />
           )}
           {!!postComments && !isFetchPostComments && !!post && (
@@ -1124,7 +1124,7 @@ const PostDetail = () => {
                           <h4>
                             {truncateTitle(
                               capitalizeFirstLetter(post?.title),
-                              55
+                              window.innerWidth < 1023 ? 60 : 50
                             )}
                           </h4>
                         </Link>
@@ -1271,7 +1271,7 @@ const PostDetail = () => {
                         <h4>
                           {truncateTitle(
                             capitalizeFirstLetter(post?.title),
-                            40
+                            window.innerWidth < 1023 ? 60 : 40
                           )}
                         </h4>
                       </Link>

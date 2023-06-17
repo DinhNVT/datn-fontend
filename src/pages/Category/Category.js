@@ -27,6 +27,7 @@ import {
 } from "../../stores/postSlice";
 import { apiAddToFavorites, apiDeleteFavoritePost } from "../../apis/user";
 import HomePostSkeleton from "../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
+import { capitalizeFirstLetter } from "../../utils/convertString";
 
 const Category = () => {
   const params = useParams();
@@ -120,6 +121,7 @@ const Category = () => {
 
   useEffect(() => {
     setPosts([]);
+    window.scrollTo(0, 0);
     setIsFetchPosts(true);
     if (!!params.slug) {
       getCategoryDetail(params.slug);
@@ -167,7 +169,9 @@ const Category = () => {
                         )}
                         className="title"
                       >
-                        <h2>{truncateTitle(post.title, 75)}</h2>
+                        <h2>
+                          {truncateTitle(capitalizeFirstLetter(post.title), 75)}
+                        </h2>
                       </Link>
                       <div className="interact">
                         <div className="interact-item">
@@ -175,12 +179,20 @@ const Category = () => {
                           <p>{getCreatedAtString(post.createdAt)}</p>
                         </div>
                         <div className="interact-item">
-                          <FaRegComment className={"icon"} size={22} />{" "}
-                          <p>{post.comment_count} bình luận</p>
+                          <FaRegComment size={22} className={"icon"} />
+                          <p>
+                            {window.innerWidth < 1023
+                              ? post.comment_count
+                              : `${post.comment_count} bình luận`}
+                          </p>
                         </div>
                         <div className="interact-item">
-                          <AiOutlineEye className={"icon"} size={24} />{" "}
-                          <p>{post.view_count} lượt xem</p>
+                          <AiOutlineEye size={24} className={"icon"} />
+                          <p>
+                            {window.innerWidth < 1023
+                              ? post.view_count
+                              : `${post.view_count} lượt xem`}
+                          </p>
                         </div>
                       </div>
                       <div className="info-post">
@@ -204,7 +216,10 @@ const Category = () => {
                           </Link>
                         </div>
                       </div>
-                      {createSummary(post.content, 300)}
+                      {createSummary(
+                        post.content,
+                        window.innerWidth < 1023 ? 200 : 300
+                      )}
                       <div className="tags">
                         {post.tags.length > 0 &&
                           post.tags.map((tag, index) => (

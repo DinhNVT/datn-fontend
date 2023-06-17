@@ -158,7 +158,7 @@ const HomeLayout = (props) => {
   return (
     <div className="home-layout">
       <Header />
-      <div className="home-children">
+      <div className="home-layout-children">
         <div className="home-container">
           <div className="home-content">
             <div className="slider-container">
@@ -182,8 +182,27 @@ const HomeLayout = (props) => {
                         </div>
                         <div className="summary-container">
                           <div className="summary">
-                            <Link to={`/post/${post.slug}`}>
-                              <h1>{truncateTitle(post.title, 85)}</h1>
+                            <Link
+                              className="title-large"
+                              to={`/post/${post.slug}`}
+                            >
+                              <h1>
+                                {truncateTitle(
+                                  capitalizeFirstLetter(post.title),
+                                  85
+                                )}
+                              </h1>
+                            </Link>
+                            <Link
+                              className="title-normal"
+                              to={`/post/${post.slug}`}
+                            >
+                              <h2>
+                                {truncateTitle(
+                                  capitalizeFirstLetter(post.title),
+                                  60
+                                )}
+                              </h2>
                             </Link>
                             <div className="info-post">
                               <div className="author">
@@ -206,24 +225,28 @@ const HomeLayout = (props) => {
                                 </Link>
                               </div>
                               <div className="interact-item">
-                                <RxCountdownTimer size={22} />{" "}
+                                <RxCountdownTimer size={22} />
                                 <p>{getCreatedAtString(post.createdAt)}</p>
                               </div>
                               <div className="interact-item">
-                                <FaRegComment size={22} />{" "}
-                                <p>{post.comment_count} bình luận</p>
+                                <FaRegComment size={22} />
+                                <p>
+                                  {window.innerWidth < 1023
+                                    ? post.comment_count
+                                    : `${post.comment_count} bình luận`}
+                                </p>
                               </div>
                               <div className="interact-item">
-                                <AiOutlineEye size={24} />{" "}
-                                <p>{post.view_count} lượt xem</p>
+                                <AiOutlineEye size={24} />
+                                <p>
+                                  {window.innerWidth < 1023
+                                    ? post.view_count
+                                    : `${post.view_count} lượt xem`}
+                                </p>
                               </div>
                             </div>
                           </div>
                           <div className="read-more-btn">
-                            {/* <Link>
-                            Đọc thêm
-                            <BsArrowRight size={24} className={"arrow"} />
-                          </Link> */}
                             <button
                               onClick={() => {
                                 if (!user) {
@@ -293,7 +316,6 @@ const HomeLayout = (props) => {
                 </div>
               )}
             </div>
-            <div></div>
             <div className="home-menu-bar">
               <ul>
                 <li>
@@ -356,7 +378,7 @@ const HomeLayout = (props) => {
                               <h4>
                                 {truncateTitle(
                                   capitalizeFirstLetter(post?.title),
-                                  45
+                                  window.innerWidth < 1023 ? 60 : 40
                                 )}
                               </h4>
                             </Link>

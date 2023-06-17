@@ -13,6 +13,7 @@ import Loader from "../../../components/Loader/Loader";
 import { deleteAlert } from "../../../utils/customAlert";
 import ROUTES from "../../../constants/routes";
 import ProfilePostSkeleton from "../../../components/Skeleton/ProfilePostSkeleton/ProfilePostSkeleton";
+import { capitalizeFirstLetter } from "../../../utils/convertString";
 
 const Drafts = () => {
   const [posts, setPosts] = useState([]);
@@ -97,22 +98,35 @@ const Drafts = () => {
                 <img src={post?.thumbnail_url} alt={post?.title} />
                 <div className="blog-post-info">
                   <div>
-                    <h2>{truncateTitle(post.title, 85)}</h2>
+                    <h2>
+                      {truncateTitle(capitalizeFirstLetter(post.title), 75)}
+                    </h2>
                     <div className="interact">
                       <div className="interact-item">
                         <RxCountdownTimer className={"icon"} size={22} />{" "}
                         <p>{getCreatedAtString(post.createdAt)}</p>
                       </div>
                       <div className="interact-item">
-                        <FaRegComment className={"icon"} size={22} />{" "}
-                        <p>{post.comment_count} bình luận</p>
+                        <FaRegComment size={22} className={"icon"} />
+                        <p>
+                          {window.innerWidth < 1023
+                            ? post.comment_count
+                            : `${post.comment_count} bình luận`}
+                        </p>
                       </div>
                       <div className="interact-item">
-                        <AiOutlineEye className={"icon"} size={24} />{" "}
-                        <p>{post.view_count} lượt xem</p>
+                        <AiOutlineEye size={24} className={"icon"} />
+                        <p>
+                          {window.innerWidth < 1023
+                            ? post.view_count
+                            : `${post.view_count} lượt xem`}
+                        </p>
                       </div>
                     </div>
-                    {createSummary(post.content, 300)}
+                    {createSummary(
+                      post.content,
+                      window.innerWidth < 1023 ? 300 : 400
+                    )}
                     <div className="tags">
                       {post.tags.length > 0 &&
                         post.tags.map((tag, index) => (

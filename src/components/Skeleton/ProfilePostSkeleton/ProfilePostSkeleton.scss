@@ -125,3 +125,52 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+  .profile-post-item-skeleton {
+    padding: 8px 16px;
+    margin-bottom: 30px;
+
+    .profile-post-item-content {
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+
+      .img-skeleton {
+        width: 100%;
+        height: 225px;
+      }
+
+      .profile-post-info {
+        width: 100%;
+
+        .title {
+          width: 100%;
+          height: 28px;
+          border-radius: 4px;
+          margin-bottom: 8px;
+        }
+
+        .interact {
+          .interact-item {
+            &:nth-child(odd) {
+              display: none;
+            }
+          }
+        }
+
+        .summary {
+          .text {
+            &:last-child {
+              display: none;
+            }
+          }
+        }
+
+        .tags {
+          display: none;
+        }
+      }
+    }
+  }
+}

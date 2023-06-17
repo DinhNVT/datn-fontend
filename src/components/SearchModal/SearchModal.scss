@@ -135,3 +135,21 @@
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+  .search-modal-container {
+    .search-modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+
+      .input-search {
+        .input-bar {
+          .input {
+            min-width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

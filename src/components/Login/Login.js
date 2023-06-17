@@ -1,7 +1,7 @@
 import React from "react";
 import "./Login.scss";
 import { Link } from "react-router-dom";
-import Google from "../../assets/images/google.png";
+// import Google from "../../assets/images/google.png";
 import Logo from "../../assets/images/circle_logo.png";
 import { TfiClose } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
@@ -147,10 +147,10 @@ const Login = (props) => {
           >
             {isLoading ? <Loader /> : "Đăng nhập"}
           </button>
-          <Link className={"google"}>
+          {/* <Link className={"google"}>
             <img src={Google} alt="" />
             Login with Google
-          </Link>
+          </Link> */}
         </div>
         <p className="sign-up">
           Bạn chưa có tài khoản?{" "}

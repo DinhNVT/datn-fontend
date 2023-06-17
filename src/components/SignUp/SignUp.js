@@ -1,7 +1,7 @@
 import React from "react";
 import "./SignUp.scss";
 import { Link } from "react-router-dom";
-import Google from "../../assets/images/google.png";
+// import Google from "../../assets/images/google.png";
 import Logo from "../../assets/images/circle_logo.png";
 import { TfiClose } from "react-icons/tfi";
 import { useState } from "react";
@@ -280,10 +280,10 @@ const SignUp = (props) => {
               >
                 {isLoading ? <Loader /> : "Đăng ký"}
               </button>
-              <Link className={"google"}>
+              {/* <Link className={"google"}>
                 <img src={Google} alt="" />
                 Login with Google
-              </Link>
+              </Link> */}
             </div>
             <p className="login-in">
               Bạn đã có tài khoản?{" "}

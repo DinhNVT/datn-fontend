@@ -26,6 +26,7 @@ import {
   removeFromFavoritesSlice,
 } from "../../stores/postSlice";
 import HomePostSkeleton from "../../components/Skeleton/HomePostSkeleton/HomePostSkeleton";
+import { capitalizeFirstLetter } from "../../utils/convertString";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -136,7 +137,9 @@ const HomePage = () => {
                     )}
                     className="title"
                   >
-                    <h2>{truncateTitle(post.title, 65)}</h2>
+                    <h2>
+                      {truncateTitle(capitalizeFirstLetter(post.title), 65)}
+                    </h2>
                   </Link>
                   <div className="interact">
                     <div className="interact-item">
@@ -144,12 +147,28 @@ const HomePage = () => {
                       <p>{getCreatedAtString(post.createdAt)}</p>
                     </div>
                     <div className="interact-item">
-                      <FaRegComment className={"icon"} size={22} />{" "}
-                      <p>{post.comment_count} bình luận</p>
+                      <FaRegComment size={22} className={"icon"} />
+                      <p>
+                        {window.innerWidth < 1023
+                          ? post.comment_count
+                          : `${post.comment_count} bình luận`}
+                      </p>
                     </div>
                     <div className="interact-item">
+                      <AiOutlineEye size={24} className={"icon"} />
+                      <p>
+                        {window.innerWidth < 1023
+                          ? post.view_count
+                          : `${post.view_count} lượt xem`}
+                      </p>
+                    </div>
+                    <div className="interact-item only-icon">
+                      <FaRegComment className={"icon"} size={22} />{" "}
+                      <p>{post.comment_count}</p>
+                    </div>
+                    <div className="interact-item only-icon">
                       <AiOutlineEye className={"icon"} size={24} />{" "}
-                      <p>{post.view_count} lượt xem</p>
+                      <p>{post.view_count}</p>
                     </div>
                   </div>
                   <div className="info-post">
@@ -173,7 +192,12 @@ const HomePage = () => {
                       </Link>
                     </div>
                   </div>
-                  {createSummary(post.content, 300)}
+                  <div className="large-summary">
+                    {createSummary(post.content, 300)}
+                  </div>
+                  <div className="normal-summary">
+                    {createSummary(post.content, 200)}
+                  </div>
                   <div className="tags">
                     {post.tags.length > 0 &&
                       post.tags.map((tag, index) => (

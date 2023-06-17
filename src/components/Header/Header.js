@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Header.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoHorizontal from "../../assets/images/LogoHorizontal.png";
+import LogoCircle from "../../assets/images/circle_logo.png";
 import { FaRegUser, FaRegEdit } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import Modal from "../Modal/Modal";
@@ -16,6 +17,8 @@ import { clearErrorLogin } from "../../stores/authSlice";
 import ROUTES from "../../constants/routes";
 import SearchModal from "../SearchModal/SearchModal";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { TfiClose } from "react-icons/tfi";
 import { getAllCategories } from "../../apis/category";
 
 const Header = () => {
@@ -27,6 +30,19 @@ const Header = () => {
   const [isForget, setIsForget] = useState(false);
   const [isShowSearch, setIsShowSearch] = useState(false);
   const [categories, setCategories] = useState([]);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    document.body.style.overflow = isMenuOpen ? "auto" : "hidden";
+  };
+
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  const toggleCategory = () => {
+    setIsCategoryOpen(!isCategoryOpen);
+  };
 
   const { user } = useSelector((state) => state?.auth?.login);
   const setFixed = () => {
@@ -76,10 +92,12 @@ const Header = () => {
   //Search
   const showModalSearch = () => {
     setIsShowSearch(true);
+    document.body.style.overflow = isShowSearch ? "auto" : "hidden";
   };
 
   const closeModalSearch = () => {
     setIsShowSearch(false);
+    document.body.style.overflow = isShowSearch ? "auto" : "hidden";
   };
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -125,9 +143,23 @@ const Header = () => {
       />
       <div className={`header-container${fix ? " header-fixed" : ""}`}>
         <div className="menu-bar grid-container">
-          <Link to="/">
-            <img src={LogoHorizontal} alt="GaFast" />
-          </Link>
+          <div className="menu-icon-logo">
+            <HiOutlineMenuAlt1
+              onClick={toggleMenu}
+              className={"icon-menu"}
+              size={42}
+            />
+            {window.innerWidth < 767 ? (
+              <Link to="/">
+                <img src={LogoCircle} alt="GaFast" />
+              </Link>
+            ) : (
+              <Link to="/">
+                <img src={LogoHorizontal} alt="GaFast" />
+              </Link>
+            )}
+          </div>
+
           <ul className="ul-menu">
             <li
               className={
@@ -168,6 +200,82 @@ const Header = () => {
               <Link to={"/contact"}>Liên hệ</Link>
             </li>
           </ul>
+          <>
+            <div
+              className={`menu-overlay ${isMenuOpen ? " visible" : ""}`}
+              onClick={toggleMenu}
+            >
+              <ul
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                className="ul-menu-overlay"
+              >
+                <TfiClose
+                  onClick={toggleMenu}
+                  size={24}
+                  className={"close-menu"}
+                />
+                <Link onClick={toggleMenu} className="img-logo-a" to="/">
+                  <img className="img-logo" src={LogoHorizontal} alt="GaFast" />
+                </Link>
+                <li
+                  className={
+                    location.pathname.includes("/post") ||
+                    location.pathname === "/"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <Link onClick={toggleMenu} to={"/"}>
+                    Bài viết
+                  </Link>
+                </li>
+                <li
+                  className={`category-menu ${
+                    location.pathname.includes("/category") ? "active" : ""
+                  }`}
+                >
+                  <div onClick={toggleCategory} className="category-text">
+                    <p>Danh mục</p>
+                    <MdKeyboardArrowDown size={24} className={"arrow"} />
+                  </div>
+                  {categories.length > 0 && isCategoryOpen && (
+                    <div className="category-list">
+                      <ul>
+                        {categories.map((category, index) => (
+                          <Link
+                            className={`${
+                              location.pathname.includes(category.slug)
+                                ? "active"
+                                : ""
+                            }`}
+                            onClick={toggleMenu}
+                            to={ROUTES.CATEGORY_PAGE.path.replace(
+                              ":slug",
+                              category.slug
+                            )}
+                            key={category._id}
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+                <li
+                  className={
+                    location.pathname.includes("/contact") ? "active" : ""
+                  }
+                >
+                  <Link onClick={toggleMenu} to={"/contact"}>
+                    Liên hệ
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </>
           <div className="right-header">
             {!!user && location.pathname !== ROUTES.WRITE_PAGE.path ? (
               <button
@@ -175,7 +283,8 @@ const Header = () => {
                   navigate(ROUTES.WRITE_PAGE.path);
                 }}
               >
-                Viết bài <FaRegEdit className="write-icon" />
+                {window.innerWidth < 450 ? "" : "Viết bài "}
+                <FaRegEdit className="write-icon" />
               </button>
             ) : undefined}
 
@@ -189,7 +298,12 @@ const Header = () => {
             </Link>
             {!!user ? (
               <div className="user-avt" ref={dropdownRef}>
-                <Link className="btn-avt">
+                <Link
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                  className="btn-avt"
+                >
                   <img
                     onClick={handleAvatarClick}
                     src={user.avatar ? user.avatar : avtDefault}

@@ -4,7 +4,7 @@
   padding: 20px;
   .input-content {
     h3 {
-      margin-bottom: 20px
+      margin-bottom: 20px;
     }
     .input-container {
       margin-top: 20px;
@@ -62,5 +62,11 @@
         color: $gray-700;
       }
     }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .change-password-content {
+    padding: 0px;
   }
 }
