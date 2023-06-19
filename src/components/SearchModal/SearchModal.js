@@ -101,7 +101,7 @@ const SearchModal = (props) => {
         <div className="or-keyword">
           <h3>Hoặc tìm kiếm bằng từ khóa...</h3>
           <div className="tags">
-            {popularTags.length > 0 &&
+            {popularTags?.length > 0 &&
               popularTags.map((tag, index) => (
                 <Link
                   onClick={handleTagClick}

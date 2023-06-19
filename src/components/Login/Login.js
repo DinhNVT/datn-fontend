@@ -59,7 +59,7 @@ const Login = (props) => {
         {error && (
           <div>
             <span className="error-text" aria-hidden="true">
-              {errorMessage.message === "username does not exist"
+              {errorMessage.message === "user does not exist"
                 ? "Email không tồn tại"
                 : errorMessage.message === "incorrect password"
                 ? "Mật khẩu không chính xác"

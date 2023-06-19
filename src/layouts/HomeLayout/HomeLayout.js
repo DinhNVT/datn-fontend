@@ -350,7 +350,7 @@ const HomeLayout = (props) => {
                 {(isFetchMostViewedPosts || mostViewedPostsLoading) && (
                   <PostMostSkeleton />
                 )}
-                {mostViewedPosts.length > 0 && !isFetchMostViewedPosts && (
+                {mostViewedPosts?.length > 0 && !isFetchMostViewedPosts && (
                   <div className="post-most">
                     <div className="title">
                       <h2>Bài viết nổi bật</h2>
@@ -395,7 +395,7 @@ const HomeLayout = (props) => {
                 {(popularTagsLoading || isFetchPopularTags) && (
                   <TagCloudSkeleton />
                 )}
-                {popularTags.length > 0 && !isFetchPopularTags && (
+                {popularTags?.length > 0 && !isFetchPopularTags && (
                   <div className="tag-cloud">
                     <div className="title">
                       <h3>Khám phá</h3>
