@@ -10,14 +10,14 @@ const instance = axios.create({
 
 const refreshToken = async () => {
   try {
+    const refreshTokenGet = await localStorage.getItem("refreshToken");
     const res = await instance.post(
       "/auth/refresh-token",
-      {},
+      { refreshToken: refreshTokenGet },
       {
         withCredentials: true,
       }
     );
-    localStorage.setItem("refreshToken", res.data.refreshToken);
     return res.data;
   } catch (err) {
     console.log(err);
@@ -38,6 +38,7 @@ instanceJWT.interceptors.request.use(
     const decodedToken = await jwt_decode(accessToken);
     if (decodedToken.exp - 60 < date.getTime() / 1000) {
       const data = await refreshToken();
+      localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("accessToken", data.accessToken);
       config.headers.Authorization = `Bearer ${data.accessToken}`;
     } else {
