@@ -377,7 +377,7 @@
     background: $body-bg;
 
     .menu-bar {
-      padding: 20px 0;
+      padding: 8px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -400,8 +400,9 @@
         }
 
         img {
-          height: 60px;
+          height: 45px;
           width: auto;
+          vertical-align: top;
         }
       }
 

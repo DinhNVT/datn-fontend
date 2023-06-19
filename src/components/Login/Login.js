@@ -13,8 +13,8 @@ import { validateEmail } from "../../utils/validates";
 import { clearErrorLogin } from "../../stores/authSlice";
 
 const Login = (props) => {
-  const [email, setEmail] = useState("huudinhnguyen001k@gmail.com");
-  const [password, setPassword] = useState("Dinh123@");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [errorInput, setErrorInput] = useState({
     email: "",
