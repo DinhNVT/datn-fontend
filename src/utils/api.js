@@ -17,6 +17,7 @@ const refreshToken = async () => {
         withCredentials: true,
       }
     );
+    localStorage.setItem("refreshToken", res.data.refreshToken);
     return res.data;
   } catch (err) {
     console.log(err);

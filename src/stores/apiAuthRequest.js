@@ -23,6 +23,7 @@ export const loginFetch = async (user, dispatch, closeModal) => {
     const response = await login(user);
     dispatch(loginSuccess(response.data));
     localStorage.setItem("accessToken", response?.data?.accessToken);
+    localStorage.setItem("refreshToken", response?.data?.refreshToken);
     closeModal();
   } catch (error) {
     dispatch(loginFailed(error.response.data));
@@ -43,8 +44,10 @@ export const registerFetch = async (user, dispatch) => {
 // Create an async thunk for logging in
 export const checkRefreshTokenFetch = async (dispatch) => {
   try {
-    const response = await refreshToken();
+    const refreshTokenGet = await localStorage.getItem("refreshToken");
+    const response = await refreshToken({ refreshToken: refreshTokenGet });
     localStorage.setItem("accessToken", response.data.accessToken);
+    localStorage.setItem("refreshToken", response.data.refreshToken);
     refreshUserFetch(dispatch);
   } catch (error) {
     if (
@@ -53,6 +56,7 @@ export const checkRefreshTokenFetch = async (dispatch) => {
       error.response.status < 500
     ) {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       dispatch(clearUser());
     }
     console.log(error);
@@ -61,10 +65,12 @@ export const checkRefreshTokenFetch = async (dispatch) => {
 
 export const logoutUserFetch = async (dispatch, closeDropdown) => {
   try {
-    await logoutUser();
+    const refreshTokenGet = await localStorage.getItem("refreshToken");
+    await logoutUser({ refreshToken: refreshTokenGet });
     closeDropdown();
     dispatch(clearUser());
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.clear();
   } catch (error) {
     console.log(error);
