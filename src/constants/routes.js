@@ -21,6 +21,7 @@ import FollowingHome from "../pages/Home/Following/Following";
 import Search from "../pages/Search/Search";
 import Category from "../pages/Category/Category";
 import EditProfile from "../pages/MePost/EditProfile/EditProfile";
+import Video from "../pages/Video/Video";
 
 const ROUTES = {
   HOME_PAGE: {
@@ -131,6 +132,13 @@ const ROUTES = {
   CATEGORY_PAGE: {
     path: "/category/:slug",
     component: Category,
+    layout: MainLayout,
+    isPrivate: false,
+  },
+
+  VIDEO_PAGE: {
+    path: "/video",
+    component: Video,
     layout: MainLayout,
     isPrivate: false,
   },

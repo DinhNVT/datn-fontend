@@ -119,6 +119,11 @@ const Following = () => {
           <HomePostSkeleton />
         </>
       )}
+      {posts.length === 0 && !isFetchPosts && (
+        <>
+          <p>Không có bài viết nào</p>
+        </>
+      )}
       {posts.length > 0 &&
         !isFetchPosts &&
         posts.map((post, index) => (
