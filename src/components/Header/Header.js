@@ -195,6 +195,15 @@ const Header = () => {
               )}
             </li>
             <li
+              className={
+                location.pathname.includes(ROUTES.VIDEO_PAGE.path)
+                  ? "active"
+                  : ""
+              }
+            >
+              <Link to={ROUTES.VIDEO_PAGE.path}>Video</Link>
+            </li>
+            <li
               className={location.pathname.includes("/contact") ? "active" : ""}
             >
               <Link to={"/contact"}>Liên hệ</Link>
@@ -263,6 +272,15 @@ const Header = () => {
                       </ul>
                     </div>
                   )}
+                </li>
+                <li
+                  className={
+                    location.pathname.includes(ROUTES.VIDEO_PAGE.path)
+                      ? "active"
+                      : ""
+                  }
+                >
+                  <Link to={ROUTES.VIDEO_PAGE.path}>Video</Link>
                 </li>
                 <li
                   className={
