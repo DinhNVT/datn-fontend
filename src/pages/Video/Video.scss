@@ -40,14 +40,17 @@
       gap: 24px 16px;
       margin-bottom: 24px;
       flex-wrap: wrap;
+      justify-content: center;
     }
+
     .video-list {
       display: flex;
       flex-wrap: wrap;
       width: 100%;
-      justify-content: flex-start;
+      justify-content: center;
       gap: 24px 20px;
       align-content: flex-start;
+      margin: auto;
 
       .video-item {
         border: 1px solid $border-color;
@@ -113,101 +116,63 @@
   }
 }
 
-// @media screen and (min-width: 768px) and (max-width: 1023px) {
-//   .category-container {
-//     .category-content {
-//       .category-body {
-//         .for-you-item {
-//           padding: 16px;
-//           margin-bottom: 30px;
+@media screen and (max-width: 1260px) {
+  .video-container {
+    .video-content {
+      .input-bar {
+        .input {
+          width: 100%;
+          min-width: auto;
+        }
+      }
 
-//           .for-you-item-content {
-//             gap: 16px;
-//             a {
-//               img {
-//                 width: 270px;
-//                 height: 400px;
-//               }
-//             }
+      .list-skeleton {
+        display: flex;
+        gap: 24px 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
 
-//             .for-you-post-info {
-//               h2 {
-//                 font-size: 22px;
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+      .video-list {
+        align-content: flex-start;
 
-// @media screen and (max-width: 767px) {
-//   .category-container {
-//     .category-content {
-//       .category-body {
-//         .for-you-item {
-//           margin-bottom: 30px;
-//           padding: 16px 8px;
+        .video-item {
+          width: 48%;
 
-//           .for-you-item-content {
-//             gap: 16px;
-//             flex-direction: column;
-//             position: relative;
+          .youtube-video {
+            width: 100%;
+            height: 23vw;
+          }
 
-//             a {
-//               img {
-//                 width: 100%;
-//                 height: 225px;
-//               }
-//             }
+          a {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
 
-//             .for-you-post-info {
-//               width: 100%;
-//               display: flex;
-//               flex-direction: column;
-//               justify-content: space-between;
+@media screen and (max-width: 1260px) {
+  .video-container {
+    .video-content {
+      .video-list {
+        .video-item {
+          width: 100%;
 
-//               .title {
-//                 min-height: 50px;
-//                 display: block;
+          .youtube-video {
+            width: 100%;
+            height: 50vw;
+          }
 
-//                 h2 {
-//                   font-size: 20px;
-//                 }
-//               }
-
-//               .info-post {
-//                 display: flex;
-//                 flex-wrap: wrap;
-//                 justify-content: flex-start;
-//                 align-items: center;
-//                 gap: 8px;
-//                 margin-top: 8px;
-//               }
-
-//               .normal-summary {
-//                 display: block;
-//                 min-height: 100px;
-//               }
-
-//               .large-summary {
-//                 display: none;
-//               }
-
-//               .tags {
-//                 position: absolute;
-//                 top: 0;
-//                 left: 10px;
-
-//                 .item-tag {
-//                   padding: 4px 8px;
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+          a {
+            .title {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

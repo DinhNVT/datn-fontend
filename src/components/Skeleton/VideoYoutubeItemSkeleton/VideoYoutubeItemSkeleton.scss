@@ -17,8 +17,46 @@
     margin-bottom: 8px;
     border-radius: 4px;
 
-    &:last-child{
+    &:last-child {
       width: 250px;
+    }
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .video-item-skeleton {
+    width: 48%;
+
+    .video {
+      width: 100%;
+      height: 23vw;
+    }
+
+    .title {
+      width: 100%;
+
+      &:last-child {
+        width: 70%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .video-item-skeleton {
+    width: 100%;
+
+    .video {
+      width: 100%;
+      height: 50vw;
+    }
+
+    .title {
+      width: 100%;
+
+      &:last-child {
+        width: 70%;
+      }
     }
   }
 }

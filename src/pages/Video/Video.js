@@ -7,7 +7,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { truncateTitle } from "../../utils/truncateString";
 import VideoYoutubeItemSkeleton from "../../components/Skeleton/VideoYoutubeItemSkeleton/VideoYoutubeItemSkeleton";
 import { FiSearch } from "react-icons/fi";
-import { errorAlert } from "../../utils/customAlert";
 
 const Video = () => {
   const [videos, setVideos] = useState([]);
