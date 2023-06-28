@@ -284,6 +284,7 @@
 
             .slick-dots {
               li {
+                list-style: none;
                 &.slick-active {
                   button {
                     &::before {
@@ -366,6 +367,10 @@
             display: flex;
             gap: 16px;
             font-weight: 500;
+
+            li {
+              list-style: none;
+            }
 
             a {
               padding-bottom: 10px;
@@ -852,6 +857,7 @@
                 bottom: 0;
 
                 li {
+                  list-style: none;
                   button {
                     &::before {
                       font-size: 8px;

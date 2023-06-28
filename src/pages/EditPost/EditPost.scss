@@ -178,6 +178,7 @@
               min-width: 300px;
               ul {
                 li {
+                  list-style: none;
                   padding: 6px 10px;
                   display: block;
 
@@ -200,6 +201,7 @@
       position: relative;
 
       .choose-image {
+        background-color: white;
         border: 3px dashed $gray-400;
         border-radius: 8px;
         padding: 20px 40px;

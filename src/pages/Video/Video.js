@@ -7,7 +7,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { truncateTitle } from "../../utils/truncateString";
 import VideoYoutubeItemSkeleton from "../../components/Skeleton/VideoYoutubeItemSkeleton/VideoYoutubeItemSkeleton";
 import { FiSearch } from "react-icons/fi";
-import { errorAlert } from "../../utils/customAlert";
 
 const Video = () => {
   const [videos, setVideos] = useState([]);
@@ -67,14 +66,10 @@ const Video = () => {
   };
 
   const handleInputConfirm = () => {
-    if (!keyword && videos.length > 0) {
-      errorAlert("Nhập từ khóa");
-    } else {
-      window.scrollTo(0, 0);
-      setVideos([]);
-      setIsFetchVideos(true);
-      getAllVideosYoutube(1, keyword);
-    }
+    window.scrollTo(0, 0);
+    setVideos([]);
+    setIsFetchVideos(true);
+    getAllVideosYoutube(1, keyword);
   };
 
   return (

@@ -33,7 +33,7 @@
   }
 
   .search-modal-content {
-    background-color: white;
+    background-color: $body-bg;
     padding: 20px;
     border-radius: 8px;
 
@@ -139,7 +139,7 @@
 @media screen and (max-width: 767px) {
   .search-modal-container {
     .search-modal-content {
-      background-color: white;
+      background-color: $body-bg;
       padding: 20px;
       border-radius: 8px;
 
