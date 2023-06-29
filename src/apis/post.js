@@ -52,3 +52,5 @@ export const apiGetMostPopularTags = (query) =>
   instance.get(`/posts/most-tags?${query}`);
 export const apiGetRelatedPosts = (query) =>
   instance.get(`/posts/relate-posts?${query}`);
+export const apiGetRecommendPosts = (query) =>
+  instance.get(`/posts/get-all/recommend?${query}`);
