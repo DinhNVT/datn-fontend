@@ -12,7 +12,7 @@ import {
 } from "react-icons/ai";
 import { BsArrowRight } from "react-icons/bs";
 import ROUTES from "../../constants/routes";
-import { apiGetAllPosts } from "../../apis/post";
+import { apiGetAllPosts, apiGetRecommendPosts } from "../../apis/post";
 import { createSummary, truncateTitle } from "../../utils/truncateString";
 import { getCreatedAtString } from "../../utils/convertTime";
 import Loader from "../../components/Loader/Loader";
@@ -54,6 +54,8 @@ const HomePage = () => {
   const { user } = useSelector((state) => state?.auth?.login);
   const { favoritePosts } = useSelector((state) => state?.post);
 
+  const [postIdRandom, setPostIdRandom] = useState("");
+
   const addToFavorites = async (postId) => {
     try {
       dispatch(addToFavoritesSlice(postId));
@@ -76,11 +78,13 @@ const HomePage = () => {
     return favoritePosts.some((favoritePost) => favoritePost.postId === postId);
   };
 
-  const getAllPostMe = async (page) => {
-    const query = `limit=${10}&page=${page}`;
+  const getAllPostMe = async (page, postId) => {
+    const query = `limit=${10}&page=${page}&randomPostId=${postId}`;
     setPostsLoading(true);
     try {
-      const res = await apiGetAllPosts(query);
+      let res;
+      if (postId === "") res = await apiGetAllPosts(query);
+      else res = await apiGetRecommendPosts(query);
       if (res.data.posts.length > 0) {
         setPosts((prevPosts) => [...prevPosts, ...res.data.posts]);
       }
@@ -101,13 +105,22 @@ const HomePage = () => {
 
   const handleClickSeeMore = () => {
     setIsLoadingSeeMore(true);
-    getAllPostMe(page);
+    getAllPostMe(page, postIdRandom);
   };
 
   useEffect(() => {
     setPosts([]);
     setIsFetchPosts(true);
-    getAllPostMe(1);
+    if (favoritePosts.length > 0) {
+      const randomIndex = Math.floor(Math.random() * favoritePosts.length);
+      const randomPostId = favoritePosts[randomIndex].postId;
+      setPostIdRandom(randomPostId);
+      getAllPostMe(1, randomPostId);
+    } else {
+      setPostIdRandom("");
+      getAllPostMe(1, "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -193,7 +206,7 @@ const HomePage = () => {
                     </div>
                   </div>
                   <div className="large-summary">
-                    {createSummary(post.content, 300)}
+                    {createSummary(post.content, 250)}
                   </div>
                   <div className="normal-summary">
                     {createSummary(post.content, 200)}

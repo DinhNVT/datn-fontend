@@ -375,7 +375,6 @@ const WritePost = () => {
           <CKEditor
             editor={ClassicEditor}
             config={{
-              // extraPlugins: [uploadPlugin],
               removePlugins: ["MarkDown"],
               placeholder: "Nhập nội dung ở đây...",
               toolbar: { shouldNotGroupWhenFull: true },
@@ -386,6 +385,7 @@ const WritePost = () => {
             data={content}
             onChange={handleEditorChange}
           />
+          {/* <div>{content}</div> */}
         </div>
       )}
     </div>

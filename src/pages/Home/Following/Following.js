@@ -199,7 +199,7 @@ const Following = () => {
                     </div>
                   </div>
                   <div className="large-summary">
-                    {createSummary(post.content, 300)}
+                    {createSummary(post.content, 250)}
                   </div>
                   <div className="normal-summary">
                     {createSummary(post.content, 200)}
